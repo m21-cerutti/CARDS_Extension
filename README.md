@@ -75,3 +75,6 @@ http://thomasmountainborn.com/2017/03/05/unity-and-opencv-part-three-passing-det
 - Base project 
 
 https://github.com/iseta/UnityAndOpenCV
+
+## Authors 
+
