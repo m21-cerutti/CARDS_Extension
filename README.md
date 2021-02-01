@@ -1,6 +1,6 @@
 # Extension of CARDS project
 
-Project done for project "MarkerLess methods for Interactive tool in Augmented Reality with RGB-Camera", student project, University of Bordeaux.
+Project "MarkerLess methods for Interactive tool in Augmented Reality with RGB-Camera", student project, University of Bordeaux.
 
 IDE recommended:  Visual Studio Community 2019.
 
@@ -82,11 +82,13 @@ https://github.com/iseta/UnityAndOpenCV
 ---
 
 Researchers :
-Philippe Giraudeau <philippe.giraudeau@inria.fr>
-Joan Odicio vilchez <joan.odicio-vilchez@inria.fr>
+---
+- Philippe Giraudeau <philippe.giraudeau@inria.fr>
+- Joan Odicio vilchez <joan.odicio-vilchez@inria.fr>
 
 Students :
-Marc Cerutti <marc.cerutti@u-bordeaux.fr>
-Gabriel Lorrain <gabriel.lorrain@u-bordeaux.fr>
-Johann Kadionik <johann.kadionik@etu.u-bordeaux.fr>
-Kevin Durou <kevin.durou@etu.u-bordeaux.fr>
+---
+- Marc Cerutti <marc.cerutti@u-bordeaux.fr>
+- Gabriel Lorrain <gabriel.lorrain@u-bordeaux.fr>
+- Johann Kadionik <johann.kadionik@etu.u-bordeaux.fr>
+- Kevin Durou <kevin.durou@etu.u-bordeaux.fr>
