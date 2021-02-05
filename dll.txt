@@ -1,12 +1,17 @@
-%OPENCV_DIR%/bin/Release/opencv_core451.dll
-%OPENCV_DIR%/bin/Release/opencv_highgui451.dll
-%OPENCV_DIR%/bin/Release/opencv_imgcodecs451.dll
-%OPENCV_DIR%/bin/Release/opencv_objdetect451.dll
-%OPENCV_DIR%/bin/Release/opencv_video451.dll
-%OPENCV_DIR%/bin/Release/opencv_videoio451.dll
-%OPENCV_DIR%/bin/Release/opencv_imgproc451.dll
-%OPENCV_DIR%/bin/Release/opencv_calib3d451.dll
-%OPENCV_DIR%/bin/Release/opencv_features2d451.dll
-%OPENCV_DIR%/bin/Release/opencv_flann451.dll
+# Watchout windows path
 
-./detectorCV/x64/Release/detectorCV.dll
+# First dependencies
+%OPENCV_DIR%\bin\Release\opencv_core451.dll
+%OPENCV_DIR%\bin\Release\opencv_highgui451.dll
+%OPENCV_DIR%\bin\Release\opencv_imgcodecs451.dll
+%OPENCV_DIR%\bin\Release\opencv_objdetect451.dll
+%OPENCV_DIR%\bin\Release\opencv_videoio451.dll
+%OPENCV_DIR%\bin\Release\opencv_imgproc451.dll
+
+.\cards_rgbtrack\x64\Release\cards_rgbtrack.dll
+
+# Subdependencies
+%OPENCV_DIR%\bin\Release\opencv_video451.dll
+%OPENCV_DIR%\bin\Release\opencv_calib3d451.dll
+%OPENCV_DIR%\bin\Release\opencv_features2d451.dll
+%OPENCV_DIR%\bin\Release\opencv_flann451.dll

@@ -75,16 +75,16 @@ public class OpenCVFaceDetection : MonoBehaviour
 // Define the functions which can be called from the .dll.
 internal static class OpenCVWrapper
 {
-	[DllImport("detectorCV")]
+	[DllImport("cards_rgbtrack")]
 	internal static extern int Init(ref int outCameraWidth, ref int outCameraHeight);
 
-	[DllImport("detectorCV")]
+	[DllImport("cards_rgbtrack")]
 	internal static extern int Close();
 
-	[DllImport("detectorCV")]
+	[DllImport("cards_rgbtrack")]
 	internal static extern int SetScale(int downscale);
 
-	[DllImport("detectorCV")]
+	[DllImport("cards_rgbtrack")]
 	internal unsafe static extern void Detect(CvCircle* outFaces, int maxOutFacesCount, ref int outDetectedFacesCount);
 }
 

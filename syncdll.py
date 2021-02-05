@@ -10,8 +10,9 @@ with open(DEP) as fp:
     lines = fp.readlines()
     for s in lines:
         s = s.replace("\n","")
-        if(s != ""):
-            path = os.path.expandvars(s)
+        if(s != "" and not s.startswith(("//", "#", "\\\\"))):
+            path_s = os.path.expandvars(s)
             for d in DEST:
-                print(">"+path+"\n"+d+"\n")
-                copy(path, d.replace("\n",""))
+                path_d = os.path.relpath(d.replace("\n",""))
+                print(">"+path_s+"\n"+path_d+"\n")
+                copy(path_s, path_d)

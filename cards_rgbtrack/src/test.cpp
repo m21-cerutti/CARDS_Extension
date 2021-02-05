@@ -1,26 +1,6 @@
-#include "opencv2/objdetect.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
+#include "test.h"
 
-#include <iostream>
-#include <stdio.h>
-
-using namespace std;
-using namespace cv;
-
-// Declare structure to be used to pass data from C++ to Mono.
-struct Circle
-{
-	Circle(int x, int y, int radius) : X(x), Y(y), Radius(radius) {}
-	int X, Y, Radius;
-};
-
-CascadeClassifier _faceCascade;
-String _windowName = "Unity OpenCV Interop Sample";
-VideoCapture _capture;
-int _scale = 1;
-
-extern "C" int __declspec(dllexport) __stdcall  Init(int& outCameraWidth, int& outCameraHeight)
+int Init(int& outCameraWidth, int& outCameraHeight)
 {
 	// Load LBP face cascade.
 	if (!_faceCascade.load("lbpcascade_frontalface.xml"))
@@ -37,17 +17,17 @@ extern "C" int __declspec(dllexport) __stdcall  Init(int& outCameraWidth, int& o
 	return 0;
 }
 
-extern "C" void __declspec(dllexport) __stdcall  Close()
+void Close()
 {
 	_capture.release();
 }
 
-extern "C" void __declspec(dllexport) __stdcall SetScale(int scale)
+void  SetScale(int scale)
 {
 	_scale = scale;
 }
 
-extern "C" void __declspec(dllexport) __stdcall Detect(Circle * outFaces, int maxOutFacesCount, int& outDetectedFacesCount)
+void  Detect(Circle* outFaces, int maxOutFacesCount, int& outDetectedFacesCount)
 {
 	Mat frame;
 	_capture >> frame;
