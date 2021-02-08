@@ -51,10 +51,11 @@ The builds will take a couple of minutes. Once the builds are done, we can finis
 Now it will have all set up to use the project. For testing on Unity, just open the folder ./unity/ with Unity3D (Add project on Unity Hub) and go on the scene "RedCircleAroundFace".
 Since the dll are already compiled, if you press "Play" it will open your default camera and execute a face tracker.
 
-To modify or recompile the detectorCV.dll, you need to open ./detectorCV/detectorCV.sln and build the solution. Replace with the dll produce the one in ./unity/Assets/Plugins (you need to restart Unity to be effective). The development and how to add other OpenCV modules will work like any other C++ Console OpenCV project.
+To modify or recompile the cards_rgbtrack.dll, you need to open ./cards_rgbtrack/cards_rgbtrack.sln and build the solution. It will automatically update the library to Unity and the console programm if you haven't rename the folders, in ./console/x64/Release or Debug and ./unity/Assets/Plugins(you need to restart Unity to be effective). 
 
-Also if you add Libraries in the C++ code, don't forget to copy dll from $(OPENCV_DIR)/build/Realease to Unity. To know what dll we need, we recommend using 
-https://github.com/lucasg/Dependencies to analyse the detectorCV.dll and know the ones missing in the folder Plugins.
+The development and how to add other OpenCV modules will work like any other C++ Console OpenCV project. In order to simplify test, add to the dll.txt the dll needed for the library, and use syncdll.py for syncrhronising the dll to unity and the console. Use the %OPENCV_DIR%\ in dll.txt to automate the copy of the opencv dll (set with environment variables).
+
+Use https://github.com/lucasg/Dependencies to analyse the cards_rgbtrack.dll and know the ones missing in the dll.txt.
 
 ## Dependencies
 ---
