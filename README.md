@@ -33,7 +33,7 @@ https://visualstudio.microsoft.com/fr/vs/
 
 9. Once done, now navigate to the build directory you set up in step 6, and open OpenCV.sln . You should give Visual Studio some time to initialize the projects and scan all #included files before going next – wait for the “Ready” status at the bottom of the window. If there is error, maybe you have forgotten the required components in step 4.
 
-10. Build (F6) for both the Debug and Release x64 version of OpenCV. 
+10. Build (F6) for both the Debug and Release x64 version of OpenCV. Make sure the INSTALL is set as active projet (set it in properties> StartupProject otherwise BatchBuild to build the INSTALL in Debug/Release).
 
 The builds will take a couple of minutes. Once the builds are done, we can finish setting everything up.
 
