@@ -1,17 +1,21 @@
 # Watchout windows path
 
 # First dependencies
-%OPENCV_DIR%\bin\Release\opencv_core451.dll
-%OPENCV_DIR%\bin\Release\opencv_highgui451.dll
-%OPENCV_DIR%\bin\Release\opencv_imgcodecs451.dll
-%OPENCV_DIR%\bin\Release\opencv_objdetect451.dll
-%OPENCV_DIR%\bin\Release\opencv_videoio451.dll
-%OPENCV_DIR%\bin\Release\opencv_imgproc451.dll
+%OPENCV_DIR%\bin\Release\opencv_core3413.dll
+%OPENCV_DIR%\bin\Release\opencv_highgui3413.dll
+%OPENCV_DIR%\bin\Release\opencv_imgcodecs3413.dll
+%OPENCV_DIR%\bin\Release\opencv_objdetect3413.dll
+%OPENCV_DIR%\bin\Release\opencv_videoio3413.dll
+%OPENCV_DIR%\bin\Release\opencv_imgproc3413.dll
 
 .\cards_rgbtrack\x64\Release\cards_rgbtrack.dll
 
 # Subdependencies
-%OPENCV_DIR%\bin\Release\opencv_video451.dll
-%OPENCV_DIR%\bin\Release\opencv_calib3d451.dll
-%OPENCV_DIR%\bin\Release\opencv_features2d451.dll
-%OPENCV_DIR%\bin\Release\opencv_flann451.dll
+%OPENCV_DIR%\bin\Release\opencv_video3413.dll
+%OPENCV_DIR%\bin\Release\opencv_calib3d3413.dll
+%OPENCV_DIR%\bin\Release\opencv_features2d3413.dll
+%OPENCV_DIR%\bin\Release\opencv_flann3413.dll
+
+# Contrib
+
+%OPENCV_DIR%\bin\Release\opencv_tracking3413.dll

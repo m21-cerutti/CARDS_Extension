@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include "opencv2/objdetect.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -29,3 +29,4 @@ extern "C" void __declspec(dllexport) __stdcall  Close();
 extern "C" void __declspec(dllexport) __stdcall SetScale(int scale);
 
 extern "C" void __declspec(dllexport) __stdcall Detect(Circle * outFaces, int maxOutFacesCount, int& outDetectedFacesCount);
+*/

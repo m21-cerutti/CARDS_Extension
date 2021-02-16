@@ -20,9 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\test.cpp" />
+    <ClCompile Include="src\tracker.cpp" />
+    <ClCompile Include="src\utilitaries.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\test.h" />
+    <ClInclude Include="include\tracker.h" />
+    <ClInclude Include="include\utilitaries.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -138,7 +142,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib\Debug\;$(OPENCV_DIR)\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core451.lib;opencv_highgui451.lib;opencv_imgcodecs451.lib;opencv_objdetect451.lib;opencv_videoio451.lib;opencv_imgproc451.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core3413.lib;opencv_highgui3413.lib;opencv_imgcodecs3413.lib;opencv_objdetect3413.lib;opencv_videoio3413.lib;opencv_imgproc3413.lib;opencv_tracking3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\unity\Assets\Plugins\$(TargetName).dll"
@@ -163,7 +167,7 @@ copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\console\$(IntDir)$(Tar
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib\Debug\;$(OPENCV_DIR)\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core451.lib;opencv_highgui451.lib;opencv_imgcodecs451.lib;opencv_objdetect451.lib;opencv_videoio451.lib;opencv_imgproc451.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core3413.lib;opencv_highgui3413.lib;opencv_imgcodecs3413.lib;opencv_objdetect3413.lib;opencv_videoio3413.lib;opencv_imgproc3413.lib;opencv_tracking3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\unity\Assets\Plugins\$(TargetName).dll"

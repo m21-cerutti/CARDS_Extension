@@ -1,5 +1,6 @@
 #include "test.h"
 
+/*
 int Init(int& outCameraWidth, int& outCameraHeight)
 {
 	// Load LBP face cascade.
@@ -63,3 +64,4 @@ void  Detect(Circle* outFaces, int maxOutFacesCount, int& outDetectedFacesCount)
 	// Display debug output.
 	imshow(_windowName, frame);
 }
+*/
