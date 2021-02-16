@@ -14,7 +14,7 @@ using namespace cv;
 
 
 /*Tacker definition*/
-enum class State_Tracker {
+enum class StateTracker {
 	Undefined = -1,
 	Live,
 	Occluded,
@@ -23,16 +23,16 @@ enum class State_Tracker {
 
 struct Target
 {
-	Target(short id) : ID(id), pos(0), size(0), state() {}
+	Target() : ID(-1), object(), state() {}
 	short ID;
-	Vec2i pos;
-	Vec2i size;
-	State_Tracker state;
+	Rect2d object;
+	StateTracker state;
 };
 
 /*Use for frame pass from C# to C++*/
 struct Color32
 {
+	Color32() : red(0), green(0), blue(0), alpha(0) {}
 	uchar red;
 	uchar green;
 	uchar blue;
@@ -41,9 +41,10 @@ struct Color32
 
 struct Frame
 {
-	Color32** rawData;
+	Frame() : rawData(), width(0), height(0) {}
 	int width;
 	int height;
+	Color32* rawData;
 };
 
 /**
