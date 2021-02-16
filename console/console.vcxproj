@@ -128,7 +128,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib\Debug\;$(OPENCV_DIR)\lib\Release\;..\cards_rgbtrack\$(IntDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core3413.lib;opencv_highgui3413.lib;opencv_imgcodecs3413.lib;opencv_objdetect3413.lib;opencv_videoio3413.lib;opencv_imgproc3413.lib;cards_rgbtrack.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core3413d.lib;opencv_highgui3413d.lib;opencv_imgcodecs3413d.lib;opencv_objdetect3413d.lib;opencv_videoio3413d.lib;opencv_imgproc3413d.lib;cards_rgbtrackd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

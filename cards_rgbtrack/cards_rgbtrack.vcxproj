@@ -89,6 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <PublicIncludeDirectories>.\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -142,7 +143,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib\Debug\;$(OPENCV_DIR)\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core3413.lib;opencv_highgui3413.lib;opencv_imgcodecs3413.lib;opencv_objdetect3413.lib;opencv_videoio3413.lib;opencv_imgproc3413.lib;opencv_tracking3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core3413d.lib;opencv_highgui3413d.lib;opencv_imgcodecs3413d.lib;opencv_objdetect3413d.lib;opencv_videoio3413d.lib;opencv_imgproc3413d.lib;opencv_tracking3413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\unity\Assets\Plugins\$(TargetName).dll"
