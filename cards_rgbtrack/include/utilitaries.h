@@ -18,32 +18,16 @@ using namespace cv;
 extern struct Color32;
 extern struct Frame;
 
-/**
- * @brief
- * @param texData
- * @param width
- * @param height
-*/
+// Transforme texture frame in Mat OpenCV
 Mat TextureToCVMat(Frame& frame);
 
-/**
- * @brief
- * @param frame
-*/
+// Debug an image with waitkey
 void DebugMat(const Mat& frame);
 
-/**
- * @brief
- * @param mat
- * @param objects
-*/
+// Debug targets represented by rect2d
 void DebugTargets(const Mat& mat, const std::vector<Rect2d>& objects, int number);
 
-/**
- * @brief
- * @param name
- * @return
-*/
+// Create tracker by name
 Ptr<Tracker> createTrackerByName(const std::string& name);
 
 

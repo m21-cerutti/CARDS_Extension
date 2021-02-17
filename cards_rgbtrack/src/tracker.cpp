@@ -1,13 +1,14 @@
 #include "tracker.h"
 #include "utilitaries.h"
 
-
+/* Intern memory */
 String trackingAlg = "MOSSE";
 MultiTracker trackers;
 int ID_PROVIDER = 0;
 
 int Init()
 {
+	//TODO init frame memory ?
 	return 0;
 }
 
@@ -48,6 +49,9 @@ void Detect(Frame& frame, Target* targets, int& nbTarget, int maxTarget)
 void Track(Frame& frame, Target* targets, int nbTarget)
 {
 	Mat img = TextureToCVMat(frame);
+	//TODO preprocess to gray ? Color treshold ? etc.
+
+	//TODO Update only some trackers ? Need to reimplement multitracker in this case.
 	trackers.update(img);
 	for (unsigned i = 0; i < trackers.getObjects().size(); i++)
 	{

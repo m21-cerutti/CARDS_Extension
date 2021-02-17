@@ -6,6 +6,7 @@ using namespace cv;
 
 Mat TextureToCVMat(Frame& frame)
 {
+	// TODO Need some checks (frame initialised)
 	Mat texture(frame.height, frame.width, CV_8UC4, frame.rawData);
 	cv::cvtColor(texture, texture, cv::COLOR_RGBA2BGR);
 	return texture;

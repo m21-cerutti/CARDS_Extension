@@ -14,7 +14,7 @@ void TestWebcam()
 {
 
 	std::cerr << "Opening camera...\r";
-
+	//TODO Need to accelerate opening
 	VideoCapture cap;
 	// open the default camera, use something different from 0 otherwise;
 	// Check VideoCapture documentation.
@@ -71,6 +71,7 @@ void TestWorkflowWebcam()
 			std::cerr << "Warning! Empty frame." << std::endl;
 			break;
 		}
+		//TODO need to know camera format
 		//frame.convertTo(frame, CV_8UC4);
 		cvtColor(frame, frame, CV_BGR2RGBA);
 

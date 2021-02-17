@@ -2,6 +2,8 @@
 
 Project "MarkerLess methods for Interactive tool in Augmented Reality with RGB-Camera", student project, University of Bordeaux.
 
+OS : Windows
+
 IDE recommended:  Visual Studio Community 2019.
 
 ## Installation OpenCV
