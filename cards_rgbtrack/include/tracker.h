@@ -67,7 +67,7 @@ extern "C"  void __declspec(dllexport) __stdcall Close();
  * @param maxTarget
  * @return
 */
-extern "C"  void __declspec(dllexport) __stdcall Detect(Frame & frame, Target * targets, int& nbTarget, int maxTarget);
+extern "C"  void __declspec(dllexport) __stdcall Detect(const Frame & frame, Target * targets, int& nbTarget, const int maxTarget);
 
 /**
  * @brief
@@ -76,4 +76,4 @@ extern "C"  void __declspec(dllexport) __stdcall Detect(Frame & frame, Target * 
  * @param nbTarget
  * @return
 */
-extern "C"  void __declspec(dllexport) __stdcall Track(Frame & frame, Target * targets, int nbTarget);
+extern "C"  void __declspec(dllexport) __stdcall Track(const Frame & frame, Target * targets, const int nbTarget);

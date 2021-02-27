@@ -17,7 +17,7 @@ void Close()
 
 }
 
-void Detect(Frame& frame, Target* targets, int& nbTarget, int maxTarget)
+void Detect(const Frame& frame, Target* targets, int& nbTarget, const int maxTarget)
 {
 	Mat img = TextureToCVMat(frame);
 
@@ -46,7 +46,7 @@ void Detect(Frame& frame, Target* targets, int& nbTarget, int maxTarget)
 
 }
 
-void Track(Frame& frame, Target* targets, int nbTarget)
+void Track(const Frame& frame, Target* targets, const int nbTarget)
 {
 	Mat img = TextureToCVMat(frame);
 	//TODO preprocess to gray ? Color treshold ? etc.

@@ -1,4 +1,5 @@
 #include "console.h"
+#include "videoprovider.h"
 
 using namespace std;
 using namespace cv;
@@ -7,17 +8,15 @@ int main(int argc, char** argv)
 {
 	TestDLL();
 	//TestWebcam();
-	TestWorkflowWebcam();
+	TestWorkflowVideo();
+	//TestWorkflowWebcam();
 }
 
 void TestWebcam()
 {
-
 	std::cerr << "Opening camera...\r";
 	//TODO Need to accelerate opening
 	VideoCapture cap;
-	// open the default camera, use something different from 0 otherwise;
-	// Check VideoCapture documentation.
 	if (!cap.open(0, cv::CAP_ANY))
 	{
 		std::cerr << "Test camera failed ! Can't open." << std::endl;
@@ -33,8 +32,8 @@ void TestWebcam()
 			std::cerr << "Warning! Empty frame." << std::endl;
 			break;
 		}
-		//imshow("Test webcam", frame);
-		//if (waitKey(10) == 27) break; // stop capturing by pressing ESC
+		imshow("Test webcam", frame);
+		if (waitKey(10) == 27) break; // stop capturing by pressing ESC
 	}
 	cv::destroyAllWindows();
 	cap.release();
@@ -49,67 +48,89 @@ void TestDLL()
 	std::cout << "End test DLL." << endl;
 }
 
-void TestWorkflowWebcam()
+void TestWorkflowVideo()
 {
-	VideoCapture cap;
-	if (!cap.open(0, cv::CAP_ANY))
+	std::cerr << "Opening video test.mp4 ...\r";
+
+	VideoProvider video("test.avi");
+
+	int nbtargets = 0, maxTargets = 5;
+	Target targets[5];
+	bool initialised = false;
+
+	for (int i = -1;;)
 	{
-		std::cerr << "Test WorkflowWebcam failed ! Can't open." << std::endl;
-		return;
+		const Frame& fr = video.GetFrame();
+		if (fr.rawData == nullptr)
+		{
+			break;
+		}
+
+		if (!initialised)
+		{
+			Mat texture(fr.height, fr.width, CV_8UC4, fr.rawData);
+			cvtColor(texture, texture, COLOR_RGBA2BGR);
+			cv::imshow("Init", texture);
+
+			if (waitKey(10) == 27) initialised = true;
+		}
+		else if (initialised && i < 0)
+		{
+			Init();
+		}
+		else if (i < 1)
+		{
+			Detect(fr, targets, nbtargets, maxTargets);
+		}
+		else if (i > 0)
+		{
+			Track(fr, targets, nbtargets);
+		}
+
+		if (initialised) { i++; }
 	}
 
-	Frame fr;
+	cv::destroyAllWindows();
+	Close();
+	std::cout << "End test WorkflowWebcam." << endl;
+}
+
+void TestWorkflowWebcam()
+{
+	std::cerr << "Opening camera...\r";
+	VideoProvider video;
+
 	int nbtargets = 0, maxTargets = 5;
 	Target targets[5];
 
 	for (int i = 0;; i++)
 	{
-		Mat frame;
-		cap >> frame;
-		if (frame.empty())
+		const Frame& fr = video.GetFrame();
+		if (fr.rawData == nullptr)
 		{
-			std::cerr << "Warning! Empty frame." << std::endl;
 			break;
 		}
-		//TODO need to know camera format
-		//frame.convertTo(frame, CV_8UC4);
-		cvtColor(frame, frame, CV_BGR2RGBA);
-
-		//imshow("Test", frame);
-		//if (waitKey(50) == 27) break;
 
 		if (i == 50)
 		{
 			Init();
 
-			//Copy frame data to test struct pass
-			//TODO displace to Init ?
-			fr.height = frame.rows;
-			fr.width = frame.cols;
-			fr.rawData = new Color32[fr.height * fr.width];
-			memcpy(fr.rawData, frame.data, 4 * frame.total());
-
 			//Debug
 			Mat texture(fr.height, fr.width, CV_8UC4, fr.rawData);
+			cvtColor(texture, texture, COLOR_RGBA2BGR);
 			cv::imshow("Init", texture);
 		}
 		else if (i == 100)
 		{
-			memcpy(fr.rawData, frame.data, 4 * frame.total());
 			Detect(fr, targets, nbtargets, maxTargets);
 		}
 		else if (i > 100)
 		{
-			memcpy(fr.rawData, frame.data, 4 * frame.total());
 			Track(fr, targets, nbtargets);
 		}
 	}
 
-	//TODO Displace to Close ?
-	free(fr.rawData);
-
 	cv::destroyAllWindows();
-	cap.release();
 	Close();
 	std::cout << "End test WorkflowWebcam." << endl;
 }

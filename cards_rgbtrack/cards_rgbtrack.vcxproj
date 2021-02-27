@@ -19,12 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\test.cpp" />
     <ClCompile Include="src\tracker.cpp" />
     <ClCompile Include="src\utilitaries.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\test.h" />
     <ClInclude Include="include\tracker.h" />
     <ClInclude Include="include\utilitaries.h" />
   </ItemGroup>

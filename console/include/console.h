@@ -7,4 +7,6 @@ void TestWebcam();
 
 void TestDLL();
 
+void TestWorkflowVideo();
+
 void TestWorkflowWebcam();

@@ -13,6 +13,8 @@
 %OPENCV_DIR%\bin\Release\opencv_calib3d3413.dll
 %OPENCV_DIR%\bin\Release\opencv_features2d3413.dll
 %OPENCV_DIR%\bin\Release\opencv_flann3413.dll
+%OPENCV_DIR%\bin\Release\opencv_ffmpeg3413_64.dll
+%OPENCV_DIR%\bin\Release\opencv_videoio_ffmpeg451_64.dll
 
 # Contrib
 %OPENCV_DIR%\bin\Release\opencv_tracking3413.dll
@@ -34,6 +36,8 @@
 //%OPENCV_DIR%\bin\Debug\opencv_calib3d3413d.dll
 //%OPENCV_DIR%\bin\Debug\opencv_features2d3413d.dll
 //%OPENCV_DIR%\bin\Debug\opencv_flann3413d.dll
+//%OPENCV_DIR%\bin\Debug\opencv_ffmpeg3413_64d.dll
+//%OPENCV_DIR%\bin\Debug\opencv_videoio_ffmpeg451_64d.dll
 //
 //%OPENCV_DIR%\bin\Debug\opencv_tracking3413d.dll
 //%OPENCV_DIR%\bin\Debug\opencv_dnn3413d.dll

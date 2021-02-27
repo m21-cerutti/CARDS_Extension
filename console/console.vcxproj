@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\videoprovider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\console.h" />
+    <ClInclude Include="include\videoprovider.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

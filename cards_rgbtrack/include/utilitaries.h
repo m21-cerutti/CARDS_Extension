@@ -19,7 +19,7 @@ extern struct Color32;
 extern struct Frame;
 
 // Transforme texture frame in Mat OpenCV
-Mat TextureToCVMat(Frame& frame);
+Mat TextureToCVMat(const Frame& frame);
 
 // Debug an image with waitkey
 void DebugMat(const Mat& frame);

@@ -4,7 +4,7 @@
 using namespace std;
 using namespace cv;
 
-Mat TextureToCVMat(Frame& frame)
+Mat TextureToCVMat(const Frame& frame)
 {
 	// TODO Need some checks (frame initialised)
 	Mat texture(frame.height, frame.width, CV_8UC4, frame.rawData);
