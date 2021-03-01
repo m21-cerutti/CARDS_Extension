@@ -16,22 +16,22 @@ namespace Plugin
 
 	public struct Matrix4x4
 	{
-		public float m_00;
-		public float m_01;
-		public float m_02;
-		public float m_03;
-		public float m_10;
-		public float m_11;
-		public float m_12;
-		public float m_13;
-		public float m_20;
-		public float m_21;
-		public float m_22;
-		public float m_23;
-		public float m_30;
-		public float m_31;
-		public float m_32;
-		public float m_33;
+		public float c_00;
+		public float c_01;
+		public float c_02;
+		public float c_03;
+		public float c_10;
+		public float c_11;
+		public float c_12;
+		public float c_13;
+		public float c_20;
+		public float c_21;
+		public float c_22;
+		public float c_23;
+		public float c_30;
+		public float c_31;
+		public float c_32;
+		public float c_33;
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -69,7 +69,7 @@ namespace Plugin
 	{
 		public int width;
 		public int height;
-		public unsafe IntPtr rawData;
+		public IntPtr rawData;
 	};
 
 	[PluginAttr("cards_rgbtrack")]

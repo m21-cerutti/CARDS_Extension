@@ -58,7 +58,7 @@ public class VirtualCameraTexture : MonoBehaviour
 				fixed(Target* outTargets = targets)
 				{
 					Debug.Log("Detect");
-					Debug.Log(fr.rawData);
+					//Debug.Log(fr.rawData);
 					SARPlugin.DetectWrapped(ref fr, outTargets, ref nbtargets, maxTargets);
 				}
 			}
