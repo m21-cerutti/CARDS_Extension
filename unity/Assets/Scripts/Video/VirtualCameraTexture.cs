@@ -33,12 +33,12 @@ public class VirtualCameraTexture : MonoBehaviour
 	void Update()
 	{
 		Texture2D tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
-
 		RenderTexture.active = renderTexture;
 		tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
 		tex.Apply();
 		pixels = tex.GetPixels32();
 
+		//Texture memory
 		GCHandle pixelHandle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
 		fr.rawData = pixelHandle.AddrOfPinnedObject();
 
@@ -59,7 +59,7 @@ public class VirtualCameraTexture : MonoBehaviour
 				{
 					Debug.Log("Detect");
 					Debug.Log(fr.rawData);
-					//SARPlugin.DetectWrapped(ref fr, outTargets, ref nbtargets, maxTargets);
+					SARPlugin.DetectWrapped(ref fr, outTargets, ref nbtargets, maxTargets);
 				}
 			}
 		}
@@ -70,7 +70,7 @@ public class VirtualCameraTexture : MonoBehaviour
 				fixed(Target* outTargets = targets)
 				{
 					Debug.Log("Track");
-					//SARPlugin.TrackWrapped(ref fr, outTargets, nbtargets);
+					SARPlugin.TrackWrapped(ref fr, outTargets, nbtargets);
 				}
 			}
 		}
@@ -80,6 +80,6 @@ public class VirtualCameraTexture : MonoBehaviour
 			i++;
 		}
 
-		//RenderTexture.active = null;
+		RenderTexture.active = null;
 	}
 }
