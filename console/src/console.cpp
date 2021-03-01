@@ -4,7 +4,7 @@
 using namespace std;
 using namespace cv;
 
-int main(int argc, char** argv)
+int main( int argc,char** argv )
 {
 	TestDLL();
 	//TestWebcam();
@@ -17,23 +17,23 @@ void TestWebcam()
 	std::cerr << "Opening camera...\r";
 	//TODO Need to accelerate opening
 	VideoCapture cap;
-	if (!cap.open(0, cv::CAP_ANY))
+	if(!cap.open( 0,cv::CAP_ANY ))
 	{
 		std::cerr << "Test camera failed ! Can't open." << std::endl;
 		return;
 	}
 
-	for (int i = 0; i < 200; i++)
+	for(int i = 0; i < 200; i++)
 	{
 		Mat frame;
 		cap >> frame;
-		if (frame.empty())
+		if(frame.empty())
 		{
 			std::cerr << "Warning! Empty frame." << std::endl;
 			break;
 		}
-		imshow("Test webcam", frame);
-		if (waitKey(10) == 27) break; // stop capturing by pressing ESC
+		imshow( "Test webcam",frame );
+		if(waitKey( 10 ) == 27) break; // stop capturing by pressing ESC
 	}
 	cv::destroyAllWindows();
 	cap.release();
@@ -52,42 +52,45 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening video test.mp4 ...\r";
 
-	VideoProvider video("test.avi");
+	VideoProvider video( "test.avi" );
 
-	int nbtargets = 0, maxTargets = 5;
+	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
-	bool initialised = false;
+	bool isinitialised = false;
 
-	for (int i = -1;;)
+	for(int i = -1;;)
 	{
 		const Frame& fr = video.GetFrame();
-		if (fr.rawData == nullptr)
+		if(fr.rawData == nullptr)
 		{
 			break;
 		}
 
-		if (!initialised)
+		if(!isinitialised)
 		{
-			Mat texture(fr.height, fr.width, CV_8UC4, fr.rawData);
-			cvtColor(texture, texture, COLOR_RGBA2BGR);
-			cv::imshow("Init", texture);
+			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
+			cvtColor( texture,texture,COLOR_RGBA2BGR );
+			cv::imshow( "Init",texture );
 
-			if (waitKey(10) == 27) initialised = true;
+			if(waitKey( 10 ) == 27) isinitialised = true;
 		}
-		else if (initialised && i < 0)
+		else if(isinitialised && i < 0)
 		{
 			Init();
 		}
-		else if (i < 1)
+		else if(i < 1)
 		{
-			Detect(fr, targets, nbtargets, maxTargets);
+			Detect( fr,targets,nbtargets,maxTargets );
 		}
-		else if (i > 0)
+		else if(i > 0)
 		{
-			Track(fr, targets, nbtargets);
+			Track( fr,targets,nbtargets );
 		}
 
-		if (initialised) { i++; }
+		if(isinitialised)
+		{
+			i++;
+		}
 	}
 
 	cv::destroyAllWindows();
@@ -100,33 +103,33 @@ void TestWorkflowWebcam()
 	std::cerr << "Opening camera...\r";
 	VideoProvider video;
 
-	int nbtargets = 0, maxTargets = 5;
+	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 
-	for (int i = 0;; i++)
+	for(int i = 0;; i++)
 	{
 		const Frame& fr = video.GetFrame();
-		if (fr.rawData == nullptr)
+		if(fr.rawData == nullptr)
 		{
 			break;
 		}
 
-		if (i == 50)
+		if(i == 50)
 		{
 			Init();
 
 			//Debug
-			Mat texture(fr.height, fr.width, CV_8UC4, fr.rawData);
-			cvtColor(texture, texture, COLOR_RGBA2BGR);
-			cv::imshow("Init", texture);
+			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
+			cvtColor( texture,texture,COLOR_RGBA2BGR );
+			cv::imshow( "Init",texture );
 		}
-		else if (i == 100)
+		else if(i == 100)
 		{
-			Detect(fr, targets, nbtargets, maxTargets);
+			Detect( fr,targets,nbtargets,maxTargets );
 		}
-		else if (i > 100)
+		else if(i > 100)
 		{
-			Track(fr, targets, nbtargets);
+			Track( fr,targets,nbtargets );
 		}
 	}
 

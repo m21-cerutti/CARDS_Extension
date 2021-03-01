@@ -1,5 +1,11 @@
 #pragma once
 
+#if _MSC_VER // this is defined when compiling with Visual Studio
+#define EXPORT_API __declspec(dllexport) // Visual Studio needs annotating exported functions with this
+#else
+#define EXPORT_API // XCode does not need annotating exported functions, so define is empty
+#endif
+
 #include "opencv2/objdetect.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -12,6 +18,41 @@
 using namespace std;
 using namespace cv;
 
+/*Structure data*/
+
+struct Vector3f {
+	float x;
+	float y;
+	float z;
+};
+
+struct Matrix4x4
+{
+	float m_00;
+	float m_01;
+	float m_02;
+	float m_03;
+	float m_10;
+	float m_11;
+	float m_12;
+	float m_13;
+	float m_20;
+	float m_21;
+	float m_22;
+	float m_23;
+	float m_30;
+	float m_31;
+	float m_32;
+	float m_33;
+};
+
+struct RectStruct
+{
+	float x; //in cm
+	float y; //in cm
+	float width;
+	float height;
+};
 
 /*Tacker definition*/
 enum class StateTracker {
@@ -23,11 +64,13 @@ enum class StateTracker {
 
 struct Target
 {
-	Target() : ID(-1), object(), state() {}
+	Target() : ID(-1), rect(), state() {}
 	short ID;
-	Rect2d object;
+	RectStruct rect;
 	StateTracker state;
 };
+
+//TODO Structure export ?
 
 /*Use for frame pass from C# to C++*/
 struct Color32
@@ -47,33 +90,14 @@ struct Frame
 	Color32* rawData;
 };
 
-/**
- * @brief
- * @return
-*/
-extern "C"  int __declspec(dllexport) __stdcall Init();
 
-/**
- * @brief
- * @return
-*/
-extern "C"  void __declspec(dllexport) __stdcall Close();
+extern "C"
+{
+	EXPORT_API int __stdcall Init();
 
-/**
- * @brief
- * @param rawImage
- * @param targets
- * @param nbTarget
- * @param maxTarget
- * @return
-*/
-extern "C"  void __declspec(dllexport) __stdcall Detect(const Frame & frame, Target * targets, int& nbTarget, const int maxTarget);
+	EXPORT_API void __stdcall Close();
 
-/**
- * @brief
- * @param rawImage
- * @param targets
- * @param nbTarget
- * @return
-*/
-extern "C"  void __declspec(dllexport) __stdcall Track(const Frame & frame, Target * targets, const int nbTarget);
+	EXPORT_API void __stdcall Detect(const Frame& frame, Target* targets, int& nbTarget, const int maxTarget);
+
+	EXPORT_API void __stdcall Track(const Frame& frame, Target* targets, const int nbTarget);
+}

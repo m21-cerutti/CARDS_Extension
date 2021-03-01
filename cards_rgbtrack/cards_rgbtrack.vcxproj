@@ -26,6 +26,9 @@
     <ClInclude Include="include\tracker.h" />
     <ClInclude Include="include\utilitaries.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cpp.editorconfig" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -169,8 +172,8 @@ copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\console\$(IntDir)$(Tar
       <AdditionalDependencies>opencv_core3413.lib;opencv_highgui3413.lib;opencv_imgcodecs3413.lib;opencv_objdetect3413.lib;opencv_videoio3413.lib;opencv_imgproc3413.lib;opencv_tracking3413.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\unity\Assets\Plugins\$(TargetName).dll"
-copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\console\$(IntDir)$(TargetName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

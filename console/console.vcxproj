@@ -26,6 +26,9 @@
     <ClInclude Include="include\console.h" />
     <ClInclude Include="include\videoprovider.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\cpp.editorconfig" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

@@ -15,17 +15,21 @@
 using namespace std;
 using namespace cv;
 
+extern struct RectStruct;
 extern struct Color32;
 extern struct Frame;
 
 // Transforme texture frame in Mat OpenCV
 Mat TextureToCVMat(const Frame& frame);
 
+//Convert Rect2d to Rect
+RectStruct Rect2dToRectStruct(const Rect2d& rect);
+
 // Debug an image with waitkey
 void DebugMat(const Mat& frame);
 
 // Debug targets represented by rect2d
-void DebugTargets(const Mat& mat, const std::vector<Rect2d>& objects, int number);
+void DebugTargets(const Mat& mat,const std::vector<Rect2d>& objects,int number);
 
 // Create tracker by name
 Ptr<Tracker> createTrackerByName(const std::string& name);

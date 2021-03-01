@@ -17,7 +17,7 @@ void Close()
 
 }
 
-void Detect(const Frame& frame, Target* targets, int& nbTarget, const int maxTarget)
+void Detect(const Frame& frame,Target* targets,int& nbTarget,const int maxTarget)
 {
 	Mat img = TextureToCVMat(frame);
 
@@ -27,40 +27,40 @@ void Detect(const Frame& frame, Target* targets, int& nbTarget, const int maxTar
 	//TODO to fill with rect of new objects 
 	vector<Rect> ROIs;
 	//TODO to delete (using for test, after set it to size of objects automatically)
-	selectROIs("tracker", img, ROIs);
+	selectROIs("tracker",img,ROIs);
 
 	//quit when the tracked object(s) is not provided
-	if (ROIs.size() < 1)
+	if(ROIs.size() < 1)
 		return;
 
 	// initialize the tracker of new objects
-	for (size_t i = 0; i < ROIs.size(); i++)
+	for(size_t i = 0; i < ROIs.size(); i++)
 	{
 		//TODO not effective, need to know available free place in targets.
 		targets[nbTarget + i].ID = ID_PROVIDER++;
 		targets[nbTarget + i].state = StateTracker::Live;
-		targets[nbTarget + i].object = ROIs[i];
-		trackers.add(createTrackerByName(trackingAlg), img, targets[nbTarget + i].object);
+		targets[nbTarget + i].rect = Rect2dToRectStruct(ROIs[i]);
+		trackers.add(createTrackerByName(trackingAlg),img,ROIs[i]);
 	}
-	nbTarget += ROIs.size();
+	nbTarget += (int)ROIs.size();
 
 }
 
-void Track(const Frame& frame, Target* targets, const int nbTarget)
+void Track(const Frame& frame,Target* targets,const int nbTarget)
 {
 	Mat img = TextureToCVMat(frame);
 	//TODO preprocess to gray ? Color treshold ? etc.
 
 	//TODO Update only some trackers ? Need to reimplement multitracker in this case.
 	trackers.update(img);
-	for (unsigned i = 0; i < trackers.getObjects().size(); i++)
+	for(unsigned i = 0; i < trackers.getObjects().size(); i++)
 	{
-		if (targets[i].state == StateTracker::Live)
+		if(targets[i].state == StateTracker::Live)
 		{
 			Rect2d object = trackers.getObjects()[i];
-			targets[i].object = object;
+			targets[i].rect = Rect2dToRectStruct(object);
 		}
 	}
-	if (trackers.getObjects().size() > 0)
-		DebugTargets(img, trackers.getObjects(), trackers.getObjects().size());
+	if(trackers.getObjects().size() > 0)
+		DebugTargets(img,trackers.getObjects(),(int)trackers.getObjects().size());
 }
