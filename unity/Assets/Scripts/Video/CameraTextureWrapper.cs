@@ -1,4 +1,4 @@
-﻿//
+//
 // SART Unity class implementation.
 // Author : Joan Odicio
 // Date : 02 February 2021
@@ -10,6 +10,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using Plugin;
 
 using UnityEngine;
 using UnityEngine.UI;

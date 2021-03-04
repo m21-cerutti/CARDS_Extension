@@ -16,23 +16,28 @@ using namespace std;
 using namespace cv;
 
 extern struct RectStruct;
+extern struct Target;
 extern struct Color32;
 extern struct Frame;
 
 // Transforme texture frame in Mat OpenCV
-Mat TextureToCVMat(const Frame& frame);
+Mat TextureToCVMat( const Frame& frame );
 
 //Convert Rect2d to Rect
-RectStruct Rect2dToRectStruct(const Rect2d& rect);
+RectStruct Rect2dToRectStruct( const Rect2d& rect );
+
+//Convert Rect to Rect2d
+Rect2d Rect2dToRectStruct( const RectStruct& rect );
 
 // Debug an image with waitkey
-void DebugMat(const Mat& frame);
+void DebugMat( const Mat& frame );
 
 // Debug targets represented by rect2d
-void DebugTargets(const Mat& mat,const std::vector<Rect2d>& objects,int number);
+void DebugCVTargets( const Mat& mat,const std::vector<Rect2d>& objects,int number );
+void DebugCVTargets( const Mat& mat,const Target* targets,int number );
 
 // Create tracker by name
-Ptr<Tracker> createTrackerByName(const std::string& name);
+Ptr<Tracker> createTrackerByName( const std::string& name );
 
 
 #endif // !UTLITARIES_HPP

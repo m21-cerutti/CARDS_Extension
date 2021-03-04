@@ -23,18 +23,43 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect )
 	return rectstruct;
 }
 
+Rect2d Rect2dToRectStruct( const RectStruct& rect )
+{
+	Rect2d rect2d( (double)rect.x,
+				   (double)rect.y,
+				   (double)rect.width,
+				   (double)rect.height );
+	return rect2d;
+}
+
 void DebugMat( const Mat& mat )
 {
 	cv::imshow( "DebugOpenCV",mat );
 	cv::waitKey( 25 );
 }
 
-void DebugTargets( const Mat& mat,const std::vector<Rect2d>& objects,int number )
+void DebugCVTargets( const Mat& mat,const std::vector<Rect2d>& objects,int number )
 {
 	Mat img = mat.clone();
 	for(int i = 0; i < number; i++)
+	{
 		cv::rectangle( img,objects[i],Scalar( 255,0,0 ),2,cv::LINE_8 );
+	}
 	DebugMat( img );
+}
+
+void DebugCVTargets( const Mat& mat,const Target* targets,int number )
+{
+	if(targets == nullptr)
+		throw new std::runtime_error( "Empty target list debug." );
+
+	std::vector<Rect2d> objects;
+	for(int i = 0; i < number; i++)
+	{
+		objects.push_back( Rect2dToRectStruct( targets[i].rect ) );
+	}
+
+	DebugCVTargets( mat,objects,number );
 }
 
 Ptr<Tracker> createTrackerByName( const std::string& name )

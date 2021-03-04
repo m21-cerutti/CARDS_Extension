@@ -12,6 +12,9 @@ int main( int argc,char** argv )
 	//TestWorkflowWebcam();
 }
 
+
+static void TestWorkflow( VideoProvider& provider );
+
 void TestWebcam()
 {
 	std::cerr << "Opening camera...\r";
@@ -53,14 +56,29 @@ void TestWorkflowVideo()
 	std::cerr << "Opening video test.mp4 ...\r";
 
 	VideoProvider video( "test.avi" );
+	TestWorkflow( video );
 
+	std::cout << "End test WorkflowWebcam." << endl;
+}
+
+void TestWorkflowWebcam()
+{
+	std::cerr << "Opening camera...\r";
+	VideoProvider webcam;
+	TestWorkflow( webcam );
+
+	std::cout << "End test WorkflowWebcam." << endl;
+}
+
+void TestWorkflow( VideoProvider& provider )
+{
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 	bool isinitialised = false;
 
 	for(int i = -1;;)
 	{
-		const Frame& fr = video.GetFrame();
+		const Frame& fr = provider.GetFrame();
 		if(fr.rawData == nullptr)
 		{
 			break;
@@ -85,6 +103,7 @@ void TestWorkflowVideo()
 		else if(i > 0)
 		{
 			Track( fr,targets,nbtargets );
+			DebugTargets( fr,targets,nbtargets );
 		}
 
 		if(isinitialised)
@@ -95,45 +114,4 @@ void TestWorkflowVideo()
 
 	cv::destroyAllWindows();
 	Close();
-	std::cout << "End test WorkflowWebcam." << endl;
-}
-
-void TestWorkflowWebcam()
-{
-	std::cerr << "Opening camera...\r";
-	VideoProvider video;
-
-	int nbtargets = 0,maxTargets = 5;
-	Target targets[5];
-
-	for(int i = 0;; i++)
-	{
-		const Frame& fr = video.GetFrame();
-		if(fr.rawData == nullptr)
-		{
-			break;
-		}
-
-		if(i == 50)
-		{
-			Init();
-
-			//Debug
-			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
-			cvtColor( texture,texture,COLOR_RGBA2BGR );
-			cv::imshow( "Init",texture );
-		}
-		else if(i == 100)
-		{
-			Detect( fr,targets,nbtargets,maxTargets );
-		}
-		else if(i > 100)
-		{
-			Track( fr,targets,nbtargets );
-		}
-	}
-
-	cv::destroyAllWindows();
-	Close();
-	std::cout << "End test WorkflowWebcam." << endl;
 }

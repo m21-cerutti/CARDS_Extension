@@ -6,6 +6,14 @@ String trackingAlg = "MOSSE";
 MultiTracker trackers;
 int ID_PROVIDER = 0;
 
+void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
+{
+	Mat img = TextureToCVMat( frame );
+
+	if(nbTarget > 0)
+		DebugCVTargets( img,targets,nbTarget );
+}
+
 int Init()
 {
 	//TODO init frame memory ?
@@ -17,9 +25,9 @@ void Close()
 
 }
 
-void Detect(const Frame& frame,Target* targets,int& nbTarget,const int maxTarget)
+void Detect( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = TextureToCVMat(frame);
+	Mat img = TextureToCVMat( frame );
 
 	//TODO Detect and verify already targets, and also put tracker of occluded on the top object.
 	//...
@@ -27,7 +35,7 @@ void Detect(const Frame& frame,Target* targets,int& nbTarget,const int maxTarget
 	//TODO to fill with rect of new objects 
 	vector<Rect> ROIs;
 	//TODO to delete (using for test, after set it to size of objects automatically)
-	selectROIs("tracker",img,ROIs);
+	selectROIs( "tracker",img,ROIs );
 
 	//quit when the tracked object(s) is not provided
 	if(ROIs.size() < 1)
@@ -39,28 +47,25 @@ void Detect(const Frame& frame,Target* targets,int& nbTarget,const int maxTarget
 		//TODO not effective, need to know available free place in targets.
 		targets[nbTarget + i].ID = ID_PROVIDER++;
 		targets[nbTarget + i].state = StateTracker::Live;
-		targets[nbTarget + i].rect = Rect2dToRectStruct(ROIs[i]);
-		trackers.add(createTrackerByName(trackingAlg),img,ROIs[i]);
+		targets[nbTarget + i].rect = Rect2dToRectStruct( ROIs[i] );
+		trackers.add( createTrackerByName( trackingAlg ),img,ROIs[i] );
 	}
 	nbTarget += (int)ROIs.size();
 
 }
 
-void Track(const Frame& frame,Target* targets,const int nbTarget)
+void Track( const Frame& frame,Target* targets,const int nbTarget )
 {
-	Mat img = TextureToCVMat(frame);
+	Mat img = TextureToCVMat( frame );
 	//TODO preprocess to gray ? Color treshold ? etc.
 
 	//TODO Update only some trackers ? Need to reimplement multitracker in this case.
-	trackers.update(img);
+	trackers.update( img );
 	for(unsigned i = 0; i < trackers.getObjects().size(); i++)
 	{
 		if(targets[i].state == StateTracker::Live)
 		{
-			Rect2d object = trackers.getObjects()[i];
-			targets[i].rect = Rect2dToRectStruct(object);
+			targets[i].rect = Rect2dToRectStruct( trackers.getObjects()[i] );
 		}
 	}
-	if(trackers.getObjects().size() > 0)
-		DebugTargets(img,trackers.getObjects(),(int)trackers.getObjects().size());
 }

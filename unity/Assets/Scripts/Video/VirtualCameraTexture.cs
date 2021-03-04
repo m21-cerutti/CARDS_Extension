@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 using UnityEngine;
-using Plugin;
 using System.Runtime.InteropServices;
 using System;
+using Plugin;
 
 public class VirtualCameraTexture : MonoBehaviour
 {
@@ -58,7 +58,6 @@ public class VirtualCameraTexture : MonoBehaviour
 				fixed(Target* outTargets = targets)
 				{
 					Debug.Log("Detect");
-					//Debug.Log(fr.rawData);
 					SARPlugin.DetectWrapped(ref fr, outTargets, ref nbtargets, maxTargets);
 				}
 			}
@@ -71,6 +70,7 @@ public class VirtualCameraTexture : MonoBehaviour
 				{
 					Debug.Log("Track");
 					SARPlugin.TrackWrapped(ref fr, outTargets, nbtargets);
+					SARPlugin.DebugTargetsWrapped(ref fr, outTargets, nbtargets);
 				}
 			}
 		}
