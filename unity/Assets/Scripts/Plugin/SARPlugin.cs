@@ -91,6 +91,10 @@ namespace Plugin
 		[PluginFunctionAttr("Track")]
 		public static Track track = null;
 		public unsafe delegate void Track(ref Frame frame, Target* targets, int nbTarget);
+
+		[PluginFunctionAttr("DebugTargets")]
+		public static DebugTargets debugTargets = null;
+		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #else
         [DllImport("cards_rgbtrack")]
 		internal static extern void Init(ref int size);
@@ -103,6 +107,9 @@ namespace Plugin
 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
+
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #endif
 
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
@@ -123,7 +130,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.close();
 #else
-            Init();
+            Close();
 #endif
 		}
 
@@ -141,7 +148,16 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.track(ref frame, targets, nbTarget);
 #else
-            Init(frame, targets, nbTarget);
+            Track(frame, targets, nbTarget);
+#endif
+		}
+
+		public unsafe static void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
+#if UNITY_EDITOR
+			SARPlugin.debugTargets(ref frame, targets, nbTarget);
+#else
+            DebugTargets(frame, targets, nbTarget);
 #endif
 		}
 
