@@ -243,7 +243,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &40472575
 MonoBehaviour:
@@ -1054,13 +1054,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d018c78099b4cd0439bde28312a27098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parameters: {fileID: 11400000, guid: b7622abc25827f44b9d23d41795698a1, type: 2}
-  _use_webcam: 0
-  _game_targets:
-  - {fileID: 1059688450}
-  - {fileID: 14837956}
-  - {fileID: 917458847}
-  - {fileID: 75360977}
+  _parameters: {fileID: 11400000, guid: 39cd6bd6271f85f4a9403f0acf4b1e99, type: 2}
+  _use_webcam: 1
+  _game_targets: []
 --- !u!4 &2121554695
 Transform:
   m_ObjectHideFlags: 0
@@ -1069,9 +1065,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121554693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: -0.226}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

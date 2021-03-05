@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Plugin
 {
+	[System.Serializable]
 	public struct Vector3f
 	{
 		public float x;
@@ -14,6 +15,7 @@ namespace Plugin
 		public float z;
 	};
 
+	[System.Serializable]
 	public struct Matrix4x4
 	{
 		public float c_00;
@@ -34,6 +36,7 @@ namespace Plugin
 		public float c_33;
 	};
 
+	[System.Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectStruct
 	{
@@ -52,6 +55,7 @@ namespace Plugin
 		Lost
 	};
 
+	[System.Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Target
 	{
@@ -64,6 +68,7 @@ namespace Plugin
 
 	/*Use for frame pass from C# to C++*/
 
+	[System.Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Frame
 	{
