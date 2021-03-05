@@ -6,80 +6,36 @@ using System.Runtime.InteropServices;
 using System;
 using Plugin;
 
-public class VirtualCameraTexture : MonoBehaviour
+public class VirtualCameraTexture : VideoProvider
 {
-	[SerializeField]
-	RenderTexture renderTexture;
+	private Camera _cam = null;
+	private RenderTexture _render_texture = null;
 
-	Frame fr;
-	private Color32[] pixels;
-
-	int nbtargets = 0, maxTargets = 5;
-	Target[] targets;
-
-	private bool is_initialised;
-	private int i = -1;
-
-	// Start is called before the first frame update
-	void Start()
+	override public void Init(int width, int height, int fps)
 	{
-		fr.height = renderTexture.height;
-		fr.width = renderTexture.width;
-		targets = new Target[5];
-		SARPlugin.InitWrapped();
+		_cam = GameObject.Find("CamTable").GetComponent<Camera>();
+		_render_texture = Resources.Load("CameraTarget", typeof(RenderTexture)) as RenderTexture;
+		Debug.Assert(_render_texture != null);
+		Debug.Assert(_cam != null);
+
+		base.Init(_render_texture.width, _render_texture.height, fps);
+		_cam.targetTexture = _render_texture;
 	}
 
-	// Update is called once per frame
-	void Update()
+	public override Frame GetFrame()
 	{
-		Texture2D tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
-		RenderTexture.active = renderTexture;
-		tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+		Texture2D tex = new Texture2D(_render_texture.width, _render_texture.height, TextureFormat.RGB24, false);
+		RenderTexture.active = _render_texture;
+		tex.ReadPixels(new Rect(0, 0, _render_texture.width, _render_texture.height), 0, 0);
 		tex.Apply();
 		pixels = tex.GetPixels32();
 
 		//Texture memory
 		GCHandle pixelHandle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
-		fr.rawData = pixelHandle.AddrOfPinnedObject();
-
-		if(!is_initialised)
-		{
-			if(Input.GetKeyDown(KeyCode.Escape))
-				is_initialised = true;
-		}
-		else if(is_initialised && i < 0)
-		{
-			SARPlugin.InitWrapped();
-		}
-		else if(i < 1)
-		{
-			unsafe
-			{
-				fixed(Target* outTargets = targets)
-				{
-					Debug.Log("Detect");
-					SARPlugin.DetectWrapped(ref fr, outTargets, ref nbtargets, maxTargets);
-				}
-			}
-		}
-		else if(i > 0)
-		{
-			unsafe
-			{
-				fixed(Target* outTargets = targets)
-				{
-					Debug.Log("Track");
-					SARPlugin.TrackWrapped(ref fr, outTargets, nbtargets);
-					SARPlugin.DebugTargetsWrapped(ref fr, outTargets, nbtargets);
-				}
-			}
-		}
-
-		if(is_initialised)
-		{
-			i++;
-		}
+		frame.rawData = pixelHandle.AddrOfPinnedObject();
 
 		RenderTexture.active = null;
+
+		return frame;
 	}
 }

@@ -19,13 +19,12 @@ using UnityEngine;
 
 public class ThreadedBehaviourInvokeSARPlugin : ThreadedBehaviourBase
 {
-	[SerializeField]
-	private CameraTextureWrapper cameraTextureWrapper;
+	//[SerializeField]
+	//private WebcamTexture cameraTextureWrapper;
 
 	protected override void InternalStart()
 	{
-		cameraTextureWrapper.Init(60);
-
+		//cameraTextureWrapper.Init(60);
 	}
 
 	/// <summary>
@@ -33,9 +32,9 @@ public class ThreadedBehaviourInvokeSARPlugin : ThreadedBehaviourBase
 	/// </summary>
 	protected override void InternalUpdate()
 	{
-		Debug.Assert(cameraTextureWrapper.CamTexture != null, "camTexture must be instantiated first!");
+		//Debug.Assert(cameraTextureWrapper.CamTexture != null, "camTexture must be instantiated first!");
 
-		cameraTextureWrapper.Update();
+		//cameraTextureWrapper.Update();
 	}
 
 	/// <summary>
@@ -44,6 +43,7 @@ public class ThreadedBehaviourInvokeSARPlugin : ThreadedBehaviourBase
 	/// </summary>
 	protected override void InternalChildLoop()
 	{
+		/*
 		if(cameraTextureWrapper.CamTexture != null && cameraTextureWrapper.TextureByteArray != null)
 		{
 			GCHandle arrayHandle = GCHandle.Alloc(cameraTextureWrapper.TextureByteArray, GCHandleType.Pinned);
@@ -61,11 +61,12 @@ public class ThreadedBehaviourInvokeSARPlugin : ThreadedBehaviourBase
 			// unreference textureByteArray
 			cameraTextureWrapper.UnreferenceTextureByteArray();
 		}
+		*/
 	}
 
 	public void StopCamera()
 	{
-		cameraTextureWrapper.StopCamera();
+		//cameraTextureWrapper.StopCamera();
 	}
 
 	/// <summary>
