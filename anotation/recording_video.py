@@ -2,7 +2,7 @@ import cv2 as cv
 
 webcam = cv.VideoCapture(0)
 fourcc = cv.VideoWriter_fourcc(*'MJPG')
-fichier = cv.VideoWriter('./test.avi',fourcc,20,(640,480))
+fichier = cv.VideoWriter('./record.avi',fourcc,20,(640,480))
 
 while(True):
     ret, img = webcam.read()

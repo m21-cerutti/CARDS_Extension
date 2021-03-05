@@ -2,6 +2,8 @@ import cv2 as cv
 import sys
 import xml.etree.cElementTree as ET
 
+FREQ_RECORD = 20
+
 video = cv.VideoCapture('./test.avi')
 if not video.isOpened():
         print("Could not open video")
@@ -20,8 +22,8 @@ while(True):
     if ret==True:
         cv.imshow('Frame to anotate',frame)
 
-        # Defining boundingbox and writing anotation every 10 frames
-        if num_frame % 10 == 0:
+        # Defining boundingbox and writing anotation every FREQ_RECORD frames
+        if num_frame % FREQ_RECORD == 0:
             bbox = cv.selectROI(frame, False)
             frame = ET.SubElement(root, "frame_number", value=str(num_frame))
             top_left = ET.SubElement(frame, "top_left_coord", value=str(bbox[0]) + ", " + str(bbox[1]))
