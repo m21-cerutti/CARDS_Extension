@@ -1054,9 +1054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d018c78099b4cd0439bde28312a27098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parameters: {fileID: 11400000, guid: 39cd6bd6271f85f4a9403f0acf4b1e99, type: 2}
-  _use_webcam: 1
-  _game_targets: []
+  _parameters: {fileID: 11400000, guid: b7622abc25827f44b9d23d41795698a1, type: 2}
 --- !u!4 &2121554695
 Transform:
   m_ObjectHideFlags: 0

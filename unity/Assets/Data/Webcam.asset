@@ -16,3 +16,4 @@ MonoBehaviour:
   camera_height: 270
   requested_camera_fps: 60
   starting_frame: 120
+  device_index: 0

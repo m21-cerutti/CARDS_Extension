@@ -7,7 +7,7 @@ public class SingleThread : MonoBehaviour
 {
 	[SerializeField]
 	private VideoParameters _parameters;
-	[SerializeField]
+
 	private bool _use_webcam = false;
 	private VideoProvider _video;
 
@@ -18,7 +18,6 @@ public class SingleThread : MonoBehaviour
 	private int _nb_frame = -1;
 
 	//Debug
-	[SerializeField]
 	private List<GameObject> _game_targets;
 
 	private void Awake()
@@ -28,6 +27,7 @@ public class SingleThread : MonoBehaviour
 		_is_initialised = false;
 		_nb_frame = -1;
 		_nb_targets = 0;
+		_use_webcam = _parameters.device_index >= 0;
 	}
 	private void Start()
 	{
@@ -40,7 +40,7 @@ public class SingleThread : MonoBehaviour
 		{
 			_video = new VirtualCameraTexture();
 		}
-		_video.Init(_parameters.camera_width, _parameters.camera_height, _parameters.requested_camera_fps);
+		_video.Init(_parameters);
 		_is_initialised = true;
 	}
 
@@ -147,8 +147,8 @@ public class SingleThread : MonoBehaviour
 			Vector3 point = GetCenterScreenTarget(t);
 			Vector3 prevision = Camera.main.ScreenToWorldPoint(point);
 			prevision.y = real_position.y;
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawCube(prevision, 0.1f * Vector3.one);
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(prevision, 0.1f);
 		}
 	}
 #endif

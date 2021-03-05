@@ -4,7 +4,7 @@
 /* Intern memory */
 String trackingAlg = "MOSSE";
 MultiTracker trackers;
-int ID_PROVIDER = 0;
+int ID_PROVIDER = 1;
 
 void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
 {

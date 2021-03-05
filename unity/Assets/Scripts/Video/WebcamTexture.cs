@@ -21,24 +21,24 @@ public class WebcamTexture : VideoProvider
 {
 	private WebCamTexture _cam_texture;
 
-	override public void Init(int width, int height, int fps)
+	override public void Init(VideoParameters parameters)
 	{
 		_cam_texture = new WebCamTexture();
-		_cam_texture.requestedFPS = fps;
-		_cam_texture.requestedWidth = width;
-		_cam_texture.requestedHeight = height;
+		_cam_texture.requestedFPS = parameters.requested_camera_fps;
+		_cam_texture.requestedWidth = parameters.camera_width;
+		_cam_texture.requestedHeight = parameters.camera_height;
 
 		WebCamDevice[] devices = WebCamTexture.devices;
 		if(devices.Length > 0)
 		{
-			// If you have more than 2 cameras, ex: a webcam conected in a laptop or a virtual camera like OBS Camera
-			// You should search in advance what is the index of the wanted camera, in the devices array.
-			// Or you can use directly the name of the device once you had found its name.
-			int deviceIndex = 0;
-			_cam_texture.deviceName = devices[deviceIndex].name;
+			_cam_texture.deviceName = devices[parameters.device_index].name;
 			_cam_texture.Play();
 
-			base.Init(_cam_texture.width, _cam_texture.height, fps);
+			parameters.requested_camera_fps = (int)_cam_texture.requestedFPS;
+			parameters.camera_width = _cam_texture.width;
+			parameters.camera_height = _cam_texture.height;
+
+			base.Init(parameters);
 			frame.is_flipped = true;
 		}
 	}

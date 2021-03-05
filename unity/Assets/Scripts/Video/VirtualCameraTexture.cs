@@ -11,14 +11,14 @@ public class VirtualCameraTexture : VideoProvider
 	private Camera _cam = null;
 	private RenderTexture _render_texture = null;
 
-	override public void Init(int width, int height, int fps)
+	override public void Init(VideoParameters parameters)
 	{
 		_cam = GameObject.Find("CamTable").GetComponent<Camera>();
 		_render_texture = Resources.Load("CameraTarget", typeof(RenderTexture)) as RenderTexture;
 		Debug.Assert(_render_texture != null);
 		Debug.Assert(_cam != null);
 
-		base.Init(_render_texture.width, _render_texture.height, fps);
+		base.Init(parameters);
 		_cam.targetTexture = _render_texture;
 	}
 
