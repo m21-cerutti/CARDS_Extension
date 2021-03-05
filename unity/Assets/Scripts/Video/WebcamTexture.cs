@@ -23,8 +23,6 @@ public class WebcamTexture : VideoProvider
 
 	override public void Init(int width, int height, int fps)
 	{
-		base.Init(width, height, fps);
-
 		_cam_texture = new WebCamTexture();
 		_cam_texture.requestedFPS = fps;
 		_cam_texture.requestedWidth = width;
@@ -39,10 +37,13 @@ public class WebcamTexture : VideoProvider
 			int deviceIndex = 0;
 			_cam_texture.deviceName = devices[deviceIndex].name;
 			_cam_texture.Play();
+
+			base.Init(_cam_texture.width, _cam_texture.height, fps);
+			frame.is_flipped = true;
 		}
 	}
 
-	public override Frame GetFrame()
+	public override bool GetFrame(out Frame fr)
 	{
 		if(_cam_texture.isPlaying)
 		{
@@ -51,8 +52,14 @@ public class WebcamTexture : VideoProvider
 			//Texture memory
 			GCHandle pixelHandle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
 			frame.rawData = pixelHandle.AddrOfPinnedObject();
+
+			fr = frame;
+			return true;
 		}
-		return frame;
+
+		Debug.LogError("No webcam");
+		fr = new Frame();
+		return false;
 	}
 
 	public void StopCamera()

@@ -22,7 +22,7 @@ public class VirtualCameraTexture : VideoProvider
 		_cam.targetTexture = _render_texture;
 	}
 
-	public override Frame GetFrame()
+	public override bool GetFrame(out Frame fr)
 	{
 		Texture2D tex = new Texture2D(_render_texture.width, _render_texture.height, TextureFormat.RGB24, false);
 		RenderTexture.active = _render_texture;
@@ -35,7 +35,8 @@ public class VirtualCameraTexture : VideoProvider
 		frame.rawData = pixelHandle.AddrOfPinnedObject();
 
 		RenderTexture.active = null;
+		fr = frame;
 
-		return frame;
+		return true;
 	}
 }

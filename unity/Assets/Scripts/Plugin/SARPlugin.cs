@@ -69,6 +69,7 @@ namespace Plugin
 	{
 		public int width;
 		public int height;
+		public bool is_flipped;
 		public IntPtr rawData;
 	};
 

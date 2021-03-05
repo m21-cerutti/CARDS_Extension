@@ -16,8 +16,8 @@ public abstract class VideoProvider
 		frame.width = width;
 		frame.height = height;
 		frame.rawData = new IntPtr();
+		pixels = new Color32[width * height];
 	}
 
-	abstract public Frame GetFrame();
-
+	abstract public bool GetFrame(out Frame fr);
 }

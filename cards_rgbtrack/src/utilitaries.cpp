@@ -9,6 +9,10 @@ Mat TextureToCVMat( const Frame& frame )
 	// TODO Need some checks (frame initialised)
 	Mat texture( frame.height,frame.width,CV_8UC4,frame.rawData );
 	cv::cvtColor( texture,texture,cv::COLOR_RGBA2BGR );
+	if(frame.is_flipped)
+	{
+		flip( texture,texture,-1 );
+	}
 	return texture;
 }
 

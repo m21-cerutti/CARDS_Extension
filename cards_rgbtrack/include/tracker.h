@@ -90,18 +90,19 @@ struct Color32
 
 struct Frame
 {
-	Frame() : rawData(),width( 0 ),height( 0 )
+	Frame() : rawData(),width( 0 ),height( 0 ),is_flipped( false )
 	{
 	}
 	int width;
 	int height;
+	bool is_flipped;
 	Color32* rawData;
 };
 
 
 extern "C"
 {
-#pragma region Plugin Methods
+#pragma region Debug Methods
 
 	EXPORT_API void __stdcall DebugTargets( const Frame& frame,Target* targets,const int nbTarget );
 

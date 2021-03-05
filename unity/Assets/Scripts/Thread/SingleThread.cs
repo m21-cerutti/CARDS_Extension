@@ -6,13 +6,11 @@ using Plugin;
 public class SingleThread : MonoBehaviour
 {
 	[SerializeField]
-	private int _camera_width = 256;
+	private VideoParameters _parameters;
 	[SerializeField]
-	private int _camera_height = 256;
-	[SerializeField]
-	private int _requested_camera_fps = 60;
-
+	private bool _use_webcam = false;
 	private VideoProvider _video;
+
 	private int _nb_targets = 0, _max_targets = 5;
 	private Target[] _targets;
 
@@ -26,7 +24,7 @@ public class SingleThread : MonoBehaviour
 	private void Awake()
 	{
 		_targets = new Target[5];
-		Application.targetFrameRate = _requested_camera_fps;
+		Application.targetFrameRate = _parameters.requested_camera_fps;
 		_is_initialised = false;
 		_nb_frame = -1;
 		_nb_targets = 0;
@@ -34,23 +32,34 @@ public class SingleThread : MonoBehaviour
 
 	void Update()
 	{
-
 		if(!_is_initialised && Input.GetKeyDown(KeyCode.Escape))
 		{
 			Debug.Log("Start tracking.");
-			//TODO Injection dependency to do
-			//_video = new WebcamTexture();
-			_video = new VirtualCameraTexture();
-			_video.Init(_camera_width, _camera_height, _requested_camera_fps);
+			if(_use_webcam)
+			{
+				_video = new WebcamTexture();
+			}
+			else
+			{
+				_video = new VirtualCameraTexture();
+			}
+			_video.Init(_parameters.camera_width, _parameters.camera_height, _parameters.requested_camera_fps);
 			_is_initialised = true;
+		}
+		else if(_is_initialised && _nb_frame < 0)
+		{
+			SARPlugin.InitWrapped();
+			_nb_frame = 0;
 		}
 		else if(_is_initialised)
 		{
-			Frame fr = _video.GetFrame();
+			Frame fr;
+			if(!_video.GetFrame(out fr))
+			{
+				return;
+			}
 
-			if(_nb_frame < 0)
-				SARPlugin.InitWrapped();
-			else if(_nb_frame < 1)
+			if(_nb_frame == _parameters.starting_frame)
 			{
 				unsafe
 				{
@@ -61,7 +70,7 @@ public class SingleThread : MonoBehaviour
 					}
 				}
 			}
-			else if(_nb_frame > 0)
+			else if(_nb_frame > _parameters.starting_frame)
 			{
 				unsafe
 				{

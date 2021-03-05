@@ -9,9 +9,7 @@ int ID_PROVIDER = 0;
 void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
 {
 	Mat img = TextureToCVMat( frame );
-
-	if(nbTarget > 0)
-		DebugCVTargets( img,targets,nbTarget );
+	DebugCVTargets( img,targets,nbTarget );
 }
 
 int Init()
