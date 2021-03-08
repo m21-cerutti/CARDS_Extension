@@ -39,6 +39,5 @@ void DebugCVTargets( const Mat& mat,const Target* targets,int number );
 // Create tracker by name
 Ptr<Tracker> createTrackerByName( const std::string& name );
 
-
 #endif // !UTLITARIES_HPP
 

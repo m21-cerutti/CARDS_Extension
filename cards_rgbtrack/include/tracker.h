@@ -66,7 +66,7 @@ enum class StateTracker
 
 struct Target
 {
-	Target() : ID( -1 ),rect(),state()
+	Target() : ID( -1 ),rect(),state( StateTracker::Undefined )
 	{
 	}
 	short ID;
@@ -104,6 +104,8 @@ extern "C"
 {
 #pragma region Debug Methods
 
+	EXPORT_API void __stdcall ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget );
+
 	EXPORT_API void __stdcall DebugTargets( const Frame& frame,Target* targets,const int nbTarget );
 
 #pragma endregion
@@ -114,9 +116,20 @@ extern "C"
 
 	EXPORT_API void __stdcall Close();
 
-	EXPORT_API void __stdcall Detect( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget );
+	EXPORT_API bool __stdcall Register( int id,const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
+
+	EXPORT_API void __stdcall UnRegister( int id,Target* targets,int& nbTarget );
+
+	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
+
+	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int nbTarget );
 
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
+
+#pragma endregion
+
+#pragma region Internal Methods
+	//TODO Register and UnRegister ?
 
 #pragma endregion
 }

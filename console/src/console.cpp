@@ -75,8 +75,10 @@ void TestWorkflow( VideoProvider& provider )
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 	bool isinitialised = false;
+	//TODO Init ? Automatic calculation ?
+	int detect_freq = 20;
 
-	for(int i = -1;;)
+	for(int i = 0;;)
 	{
 		const Frame& fr = provider.GetFrame();
 		if(fr.rawData == nullptr)
@@ -90,24 +92,30 @@ void TestWorkflow( VideoProvider& provider )
 			cvtColor( texture,texture,COLOR_RGBA2BGR );
 			cv::imshow( "Init",texture );
 
-			if(waitKey( 10 ) == 27) isinitialised = true;
+			if(waitKey( 10 ) == 27)
+			{
+				Init();
+				isinitialised = true;
+			}
 		}
-		else if(isinitialised && i < 0)
+		else if(isinitialised)
 		{
-			Init();
-		}
-		else if(i < 1)
-		{
-			Detect( fr,targets,nbtargets,maxTargets );
-		}
-		else if(i > 0)
-		{
-			Track( fr,targets,nbtargets );
-			DebugTargets( fr,targets,nbtargets );
-		}
-
-		if(isinitialised)
-		{
+			if(i == 0)
+			{
+				ManualRegister( fr,targets,nbtargets,maxTargets );
+				//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
+			}
+			else if(i % detect_freq == 0)
+			{
+				//std::cout << "Detect" << endl;
+				//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
+				DebugTargets( fr,targets,nbtargets );
+			}
+			else
+			{
+				Track( fr,targets,nbtargets );
+				DebugTargets( fr,targets,nbtargets );
+			}
 			i++;
 		}
 	}
