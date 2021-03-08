@@ -18,7 +18,7 @@ public class SingleThread : MonoBehaviour
 	private int _nb_frame = -1;
 
 	//Debug
-	private List<GameObject> _game_targets;
+	private List<GameObject> _game_targets = new List<GameObject>();
 
 	private void Awake()
 	{
@@ -140,6 +140,7 @@ public class SingleThread : MonoBehaviour
 #if UNITY_EDITOR
 	void OnDrawGizmos()
 	{
+
 		for(int i = 0; i < _nb_targets && !_use_webcam; i++)
 		{
 			Target t = _targets[i];
