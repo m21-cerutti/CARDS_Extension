@@ -49,7 +49,7 @@ namespace Plugin
 	/*Tacker definition*/
 	public enum StateTracker
 	{
-		Undefined = -1,
+		Undefined = 0,
 		Live,
 		Occluded,
 		Lost
@@ -75,7 +75,7 @@ namespace Plugin
 		public int width;
 		public int height;
 		public bool is_flipped;
-		public IntPtr rawData;
+		public IntPtr raw_data;
 	};
 
 	[PluginAttr("cards_rgbtrack")]
@@ -90,29 +90,57 @@ namespace Plugin
 		public static Close close = null;
 		public delegate void Close();
 
+		[PluginFunctionAttr("Register")]
+		public static Register register = null;
+		public unsafe delegate bool Register(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget);
+
+		[PluginFunctionAttr("UnRegister")]
+		public static UnRegister un_register = null;
+		public unsafe delegate void UnRegister(int id, Target* targets, ref int nbTarget);
+
 		[PluginFunctionAttr("Detect")]
 		public static Detect detect = null;
-		public unsafe delegate void Detect(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
+		public unsafe delegate void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
+
+		[PluginFunctionAttr("CheckTrack")]
+		public static CheckTrack check_track = null;
+		public unsafe delegate void CheckTrack(ref Frame frame, Target* targets, int nbTarget);
 
 		[PluginFunctionAttr("Track")]
 		public static Track track = null;
 		public unsafe delegate void Track(ref Frame frame, Target* targets, int nbTarget);
 
+		[PluginFunctionAttr("ManualRegister")]
+		public static ManualRegister manual_register = null;
+		public unsafe delegate void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
+
 		[PluginFunctionAttr("DebugTargets")]
-		public static DebugTargets debugTargets = null;
+		public static DebugTargets debug_targets = null;
 		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #else
         [DllImport("cards_rgbtrack")]
-		internal static extern void Init(ref int size);
+		internal static extern void Init();
 
 		[DllImport("cards_rgbtrack")]
 		internal static extern void Close();
+		
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern bool Register(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget);
+		 
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void UnRegister(int id, Target* targets, ref int nbTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void Detect(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
+		internal unsafe static extern internal unsafe static extern void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
+		
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void CheckTrack(ref Frame frame, Target* targets, int nbTarget);
 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
+		
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
@@ -139,13 +167,37 @@ namespace Plugin
             Close();
 #endif
 		}
-
-		public unsafe static void DetectWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget)
+		public unsafe static void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.detect(ref frame, targets, ref nbTarget, maxTarget);
+			SARPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #else
-            Detect(ref frame, targets, ref nbTarget, maxTarget);
+            Register(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+#endif
+		}
+		public unsafe static void UnRegisterWrapped(int id, Target* targets, ref int nbTarget)
+		{
+#if UNITY_EDITOR
+			SARPlugin.un_register(id, targets, ref nbTarget);
+#else
+            UnRegister(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+#endif
+		}
+
+		public unsafe static void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
+		{
+#if UNITY_EDITOR
+			SARPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+#else
+            Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+#endif
+		}
+		public unsafe static void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
+#if UNITY_EDITOR
+			SARPlugin.check_track(ref frame, targets, nbTarget);
+#else
+            CheckTrack(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #endif
 		}
 
@@ -158,10 +210,19 @@ namespace Plugin
 #endif
 		}
 
+		public unsafe static void ManualRegisterWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget)
+		{
+#if UNITY_EDITOR
+			SARPlugin.manual_register(ref frame, targets, ref nbTarget, maxTarget);
+#else
+            ManualRegister(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+#endif
+		}
+
 		public unsafe static void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.debugTargets(ref frame, targets, nbTarget);
+			SARPlugin.debug_targets(ref frame, targets, nbTarget);
 #else
             DebugTargets(frame, targets, nbTarget);
 #endif

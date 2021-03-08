@@ -14,7 +14,6 @@ public class SingleThread : MonoBehaviour
 	private int _nb_targets = 0, _max_targets = 5;
 	private Target[] _targets;
 
-	private bool _is_initialised = false;
 	private int _nb_frame = -1;
 
 	//Debug
@@ -24,11 +23,11 @@ public class SingleThread : MonoBehaviour
 	{
 		_targets = new Target[5];
 		Application.targetFrameRate = _parameters.requested_camera_fps;
-		_is_initialised = false;
 		_nb_frame = -1;
 		_nb_targets = 0;
 		_use_webcam = _parameters.device_index >= 0;
 	}
+
 	private void Start()
 	{
 		Debug.Log("Start tracking.");
@@ -41,40 +40,65 @@ public class SingleThread : MonoBehaviour
 			_video = new VirtualCameraTexture();
 		}
 		_video.Init(_parameters);
-		_is_initialised = true;
+		SARPlugin.InitWrapped();
+		_nb_frame = -1;
 	}
 
 	void Update()
 	{
-		if(_is_initialised && _nb_frame < 0)
+		Frame fr;
+		if(!_video.GetFrame(out fr))
 		{
-			SARPlugin.InitWrapped();
-			_nb_frame = 0;
+			return;
 		}
-		else if(_is_initialised)
+
+		if(_nb_frame == _parameters.starting_frame)
 		{
-			Frame fr;
-			if(!_video.GetFrame(out fr))
+			unsafe
 			{
-				return;
+				fixed(Target* outTargets = _targets)
+				{
+					//Debug.Log("Detect");
+					SARPlugin.ManualRegisterWrapped(ref fr, outTargets, ref _nb_targets, _max_targets);
+				}
+			}
+			Debug.Log("Total Tracked : " + _nb_targets);
+			if(!_use_webcam)
+				RegisterGameObjectVirtual();
+		}
+		else if(_nb_frame > _parameters.starting_frame)
+		{
+			//DETECTION
+			//TODO convert rect_detection
+			unsafe
+			{
+				fixed(Target* outTargets = _targets)
+				{
+					//Debug.Log("Detect");
+					//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
+				}
 			}
 
-			if(_nb_frame == _parameters.starting_frame)
+			//CHECK TRACK
+			if((_nb_frame % _parameters.detect_frequency) == 0)
 			{
+				/*
 				unsafe
 				{
 					fixed(Target* outTargets = _targets)
 					{
-						//Debug.Log("Detect");
-						SARPlugin.DetectWrapped(ref fr, outTargets, ref _nb_targets, _max_targets);
+						//Debug.Log("CheckTrack");
+						//TODO
+						//SARPlugin.CheckTrackWrapped(ref fr, outTargets, _nb_targets);
+						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, _nb_targets);
 					}
 				}
 
 				if(!_use_webcam)
-					RegisterGameObjectVirtual();
-
+					CompareGameObjectVirtual();
+				*/
 			}
-			else if(_nb_frame > _parameters.starting_frame)
+			else // TRACK
 			{
 				unsafe
 				{
@@ -85,12 +109,11 @@ public class SingleThread : MonoBehaviour
 						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, _nb_targets);
 					}
 				}
-				//Debug.Log("Total Tracked : " + _nb_targets);
 				if(!_use_webcam)
 					CompareGameObjectVirtual();
 			}
-			_nb_frame++;
 		}
+		_nb_frame++;
 	}
 
 	private void RegisterGameObjectVirtual()
@@ -138,6 +161,15 @@ public class SingleThread : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
+	/*
+	private void OnGUI()
+	{
+		GUI.color = Color.red;
+		GUI.Box(_parameters.rect_detection, Texture2D.whiteTexture);
+		GUI.color = Color.white;
+	}
+	*/
+
 	void OnDrawGizmos()
 	{
 

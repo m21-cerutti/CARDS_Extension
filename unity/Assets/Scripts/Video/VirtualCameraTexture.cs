@@ -32,7 +32,7 @@ public class VirtualCameraTexture : VideoProvider
 
 		//Texture memory
 		GCHandle pixelHandle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
-		frame.rawData = pixelHandle.AddrOfPinnedObject();
+		frame.raw_data = pixelHandle.AddrOfPinnedObject();
 
 		RenderTexture.active = null;
 		fr = frame;

@@ -16,3 +16,11 @@ MonoBehaviour:
   camera_height: 256
   requested_camera_fps: 60
   starting_frame: 1
+  device_index: -1
+  rect_detection:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  detect_frequency: 20

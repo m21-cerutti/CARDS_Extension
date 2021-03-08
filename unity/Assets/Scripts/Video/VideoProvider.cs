@@ -15,7 +15,7 @@ public abstract class VideoProvider
 	{
 		frame.width = parameters.camera_width;
 		frame.height = parameters.camera_height;
-		frame.rawData = new IntPtr();
+		frame.raw_data = new IntPtr();
 		pixels = new Color32[parameters.camera_width * parameters.camera_height];
 	}
 

@@ -51,7 +51,7 @@ public class WebcamTexture : VideoProvider
 
 			//Texture memory
 			GCHandle pixelHandle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
-			frame.rawData = pixelHandle.AddrOfPinnedObject();
+			frame.raw_data = pixelHandle.AddrOfPinnedObject();
 
 			fr = frame;
 			return true;

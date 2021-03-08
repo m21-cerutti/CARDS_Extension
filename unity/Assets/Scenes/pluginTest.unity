@@ -1055,6 +1055,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parameters: {fileID: 11400000, guid: b7622abc25827f44b9d23d41795698a1, type: 2}
+  _rect_detection:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!4 &2121554695
 Transform:
   m_ObjectHideFlags: 0
