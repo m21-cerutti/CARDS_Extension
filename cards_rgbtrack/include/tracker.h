@@ -58,7 +58,7 @@ struct RectStruct
 /*Tacker definition*/
 enum class StateTracker
 {
-	Undefined = -1,
+	Undefined = 0,
 	Live,
 	Occluded,
 	Lost
@@ -116,9 +116,9 @@ extern "C"
 
 	EXPORT_API void __stdcall Close();
 
-	EXPORT_API bool __stdcall Register( int id,const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
+	EXPORT_API bool __stdcall Register( const int id,const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
 
-	EXPORT_API void __stdcall UnRegister( int id,Target* targets,int& nbTarget );
+	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
 	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
 

@@ -43,21 +43,19 @@ void Close()
 	return;
 }
 
-bool Register( int id,const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
+bool Register( const int id,const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
 {
 	Mat img = TextureToCVMat( frame );
 
 	//quit when the tracked object(s) is not provided
-	if(nbTarget + 1 > maxTarget)
+	if(nbTarget >= maxTarget)
 	{
-		std::cerr << "Error: Limit of tracking object reach !" << endl;
-		return false;
+		throw std::runtime_error( "Error: Limit of tracking object reach !" );
 	}
 
 	if(targets[id].state != StateTracker::Undefined)
 	{
-		std::cerr << "Error: Already existing ID !" << endl;
-		return false;
+		throw std::runtime_error( "Error: Already existing ID or init to not Undefined !" );
 	}
 
 	//TODO internal structure to check free place instead of ID ?
@@ -72,7 +70,7 @@ bool Register( int id,const Frame& frame,const RectStruct& zone,Target* targets,
 	return true;
 }
 
-void UnRegister( int id,Target* targets,int& nbTarget )
+void UnRegister( const int id,Target* targets,int& nbTarget )
 {
 	//TODO
 	return;
