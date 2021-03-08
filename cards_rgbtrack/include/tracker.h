@@ -49,10 +49,10 @@ struct Matrix4x4
 
 struct RectStruct
 {
-	float x; //in cm
-	float y; //in cm
-	float width;
-	float height;
+	float x;      //in px
+	float y;      //in px
+	float width;  //in px
+	float height; //in px
 };
 
 /*Tacker definition*/
@@ -71,10 +71,9 @@ struct Target
 	}
 	short ID;
 	RectStruct rect;
+	//TODO angle or rotation matrix
 	StateTracker state;
 };
-
-//TODO Structure export ?
 
 /*Use for frame pass from C# to C++*/
 struct Color32
@@ -130,6 +129,7 @@ extern "C"
 
 #pragma region Internal Methods
 	//TODO Register and UnRegister ?
+	//With internal data ?
 
 #pragma endregion
 }

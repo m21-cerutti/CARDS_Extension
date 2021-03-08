@@ -131,7 +131,7 @@ namespace Plugin
 		internal unsafe static extern void UnRegister(int id, Target* targets, ref int nbTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern internal unsafe static extern void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
+		internal unsafe static extern void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
 		
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void CheckTrack(ref Frame frame, Target* targets, int nbTarget);
@@ -172,7 +172,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #else
-            Register(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+            Register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #endif
 		}
 		public unsafe static void UnRegisterWrapped(int id, Target* targets, ref int nbTarget)
@@ -180,7 +180,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.un_register(id, targets, ref nbTarget);
 #else
-            UnRegister(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+            UnRegister(id, targets, ref nbTarget);
 #endif
 		}
 
@@ -197,7 +197,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.check_track(ref frame, targets, nbTarget);
 #else
-            CheckTrack(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+            CheckTrack(ref frame, targets, nbTarget);
 #endif
 		}
 
@@ -206,7 +206,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.track(ref frame, targets, nbTarget);
 #else
-            Track(frame, targets, nbTarget);
+            Track(ref frame, targets, nbTarget);
 #endif
 		}
 
@@ -215,7 +215,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.manual_register(ref frame, targets, ref nbTarget, maxTarget);
 #else
-            ManualRegister(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+            ManualRegister(ref frame, targets, ref nbTarget, maxTarget);
 #endif
 		}
 
@@ -224,7 +224,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.debug_targets(ref frame, targets, nbTarget);
 #else
-            DebugTargets(frame, targets, nbTarget);
+            DebugTargets(ref frame, targets, nbTarget);
 #endif
 		}
 

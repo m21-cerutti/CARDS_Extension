@@ -6,7 +6,7 @@ using Plugin;
 public class SingleThread : MonoBehaviour
 {
 	[SerializeField]
-	private VideoParameters _parameters;
+	private VideoParameters _parameters; //Scenario that you can interchange (Virtual, Webcam)
 
 	private bool _use_webcam = false;
 	private VideoProvider _video;
@@ -46,6 +46,11 @@ public class SingleThread : MonoBehaviour
 
 	void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+
 		Frame fr;
 		if(!_video.GetFrame(out fr))
 		{
