@@ -19,8 +19,8 @@ MonoBehaviour:
   device_index: -1
   rect_detection:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  detect_frequency: 20
+    x: 0.25
+    y: 0.25
+    width: 0.5
+    height: 0.5
+  checktrack_frequency: 20

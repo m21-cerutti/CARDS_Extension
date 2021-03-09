@@ -87,13 +87,16 @@ public class SingleThread : MonoBehaviour
 		else if(_nb_frame > _parameters.starting_frame)
 		{
 			//DETECTION
-			//TODO convert rect_detection
-			unsafe
+			if(_parameters.use_detection)
 			{
-				fixed(Target* outTargets = _targets)
+				//TODO convert rect_detection
+				unsafe
 				{
-					//Debug.Log("Detect");
-					//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
+					fixed(Target* outTargets = _targets)
+					{
+						//Debug.Log("Detect");
+						//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
+					}
 				}
 			}
 
@@ -182,9 +185,18 @@ public class SingleThread : MonoBehaviour
 
 	private void OnGUI()
 	{
-		GUI.color = Color.red;
-		GUI.Box(_parameters.rect_detection, Texture2D.whiteTexture);
-		GUI.color = Color.white;
+		if(_parameters.use_detection)
+		{
+			GUI.color = Color.red;
+			GUI.Box(new Rect(
+				_parameters.rect_detection.x * Screen.width,
+				_parameters.rect_detection.y * Screen.height,
+				_parameters.rect_detection.width * Screen.width,
+				_parameters.rect_detection.height * Screen.height),
+				Texture2D.whiteTexture)
+				;
+			GUI.color = Color.white;
+		}
 	}
 
 
