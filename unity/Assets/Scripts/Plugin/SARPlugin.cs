@@ -84,11 +84,11 @@ namespace Plugin
 #if UNITY_EDITOR
 		[PluginFunctionAttr("Init")]
 		public static Init init = null;
-		public delegate void Init();
+		public unsafe delegate void Init(Target* targets, ref int nbTarget, int maxTarget);
 
 		[PluginFunctionAttr("Close")]
 		public static Close close = null;
-		public delegate void Close();
+		public unsafe delegate void Close(Target* targets, ref int nbTarget, int maxTarget);
 
 		[PluginFunctionAttr("Register")]
 		public static Register register = null;
@@ -150,19 +150,19 @@ namespace Plugin
 		// editor or standalone mode.
 		#region Wrapped methods
 
-		public static void InitWrapped()
+		public unsafe static void InitWrapped(Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.init();
+			SARPlugin.init(targets, ref nbTarget, maxTarget);
 #else
             Init();
 #endif
 		}
 
-		public static void CloseWrapped()
+		public unsafe static void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.close();
+			SARPlugin.close(targets, ref nbTarget, maxTarget);
 #else
             Close();
 #endif

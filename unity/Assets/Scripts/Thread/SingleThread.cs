@@ -40,7 +40,13 @@ public class SingleThread : MonoBehaviour
 			_video = new VirtualCameraTexture();
 		}
 		_video.Init(_parameters);
-		SARPlugin.InitWrapped();
+		unsafe
+		{
+			fixed(Target* outTargets = _targets)
+			{
+				SARPlugin.InitWrapped(outTargets, ref _nb_targets, _max_targets);
+			}
+		}
 		_nb_frame = -1;
 	}
 
@@ -48,6 +54,13 @@ public class SingleThread : MonoBehaviour
 	{
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
+			unsafe
+			{
+				fixed(Target* outTargets = _targets)
+				{
+					SARPlugin.CloseWrapped(outTargets, ref _nb_targets, _max_targets);
+				}
+			}
 			Application.Quit();
 		}
 
@@ -74,18 +87,21 @@ public class SingleThread : MonoBehaviour
 		else if(_nb_frame > _parameters.starting_frame)
 		{
 			//DETECTION
-			//TODO convert rect_detection
-			unsafe
+			if(_parameters.use_detection)
 			{
-				fixed(Target* outTargets = _targets)
+				//TODO convert rect_detection
+				unsafe
 				{
-					//Debug.Log("Detect");
-					//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
+					fixed(Target* outTargets = _targets)
+					{
+						//Debug.Log("Detect");
+						//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
+					}
 				}
 			}
 
 			//CHECK TRACK
-			if((_nb_frame % _parameters.detect_frequency) == 0)
+			if((_nb_frame % _parameters.checktrack_frequency) == 0)
 			{
 				/*
 				unsafe
@@ -166,14 +182,23 @@ public class SingleThread : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
-	/*
+
 	private void OnGUI()
 	{
-		GUI.color = Color.red;
-		GUI.Box(_parameters.rect_detection, Texture2D.whiteTexture);
-		GUI.color = Color.white;
+		if(_parameters.use_detection)
+		{
+			GUI.color = Color.red;
+			GUI.Box(new Rect(
+				_parameters.rect_detection.x * Screen.width,
+				_parameters.rect_detection.y * Screen.height,
+				_parameters.rect_detection.width * Screen.width,
+				_parameters.rect_detection.height * Screen.height),
+				Texture2D.whiteTexture)
+				;
+			GUI.color = Color.white;
+		}
 	}
-	*/
+
 
 	void OnDrawGizmos()
 	{
@@ -185,7 +210,7 @@ public class SingleThread : MonoBehaviour
 			Vector3 point = GetCenterScreenTarget(t);
 			Vector3 prevision = Camera.main.ScreenToWorldPoint(point);
 			prevision.y = real_position.y;
-			Gizmos.color = Color.red;
+			Gizmos.color = _targets[i].state == StateTracker.Live ? Color.green : Color.red;
 			Gizmos.DrawWireSphere(prevision, 0.1f);
 		}
 	}

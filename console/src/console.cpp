@@ -12,7 +12,6 @@ int main( int argc,char** argv )
 	//TestWorkflowWebcam();
 }
 
-
 static void TestWorkflow( VideoProvider& provider );
 
 void TestWebcam()
@@ -45,9 +44,13 @@ void TestWebcam()
 
 void TestDLL()
 {
+	int nbtargets = 0,maxTargets = 5;
+	Target targets[5];
+
 	//Test DLL
-	Init();
-	Close();
+	Init( targets,nbtargets,maxTargets );
+	Close( targets,nbtargets,maxTargets );
+
 	std::cout << "End test DLL." << endl;
 }
 
@@ -92,9 +95,9 @@ void TestWorkflow( VideoProvider& provider )
 			cvtColor( texture,texture,COLOR_RGBA2BGR );
 			cv::imshow( "Init",texture );
 
-			if(waitKey( 10 ) == 27)
+			if(waitKey( 25 ) == 27)
 			{
-				Init();
+				Init( targets,nbtargets,maxTargets );
 				isinitialised = true;
 			}
 		}
@@ -109,17 +112,16 @@ void TestWorkflow( VideoProvider& provider )
 			{
 				//std::cout << "Detect" << endl;
 				//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
-				DebugTargets( fr,targets,nbtargets );
 			}
 			else
 			{
 				Track( fr,targets,nbtargets );
-				DebugTargets( fr,targets,nbtargets );
 			}
+			DebugTargets( fr,targets,nbtargets );
 			i++;
 		}
 	}
 
 	cv::destroyAllWindows();
-	Close();
+	Close( targets,nbtargets,maxTargets );
 }
