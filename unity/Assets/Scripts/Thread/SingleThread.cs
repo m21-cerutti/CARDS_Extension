@@ -23,12 +23,10 @@ public class SingleThread : MonoBehaviour
 	{
 		_targets = new Target[5];
 		Application.targetFrameRate = _parameters.requested_camera_fps;
-		_nb_frame = -1;
-		_nb_targets = 0;
 		_use_webcam = _parameters.device_index >= 0;
 	}
 
-	private void Start()
+	private void OnEnable()
 	{
 		Debug.Log("Start tracking.");
 		if(_use_webcam)
@@ -40,6 +38,8 @@ public class SingleThread : MonoBehaviour
 			_video = new VirtualCameraTexture();
 		}
 		_video.Init(_parameters);
+
+		Debug.Log("Init");
 		unsafe
 		{
 			fixed(Target* outTargets = _targets)
@@ -50,18 +50,27 @@ public class SingleThread : MonoBehaviour
 		_nb_frame = -1;
 	}
 
+	private void OnDisable()
+	{
+		unsafe
+		{
+			fixed(Target* outTargets = _targets)
+			{
+				Debug.Log("Free");
+				SARPlugin.CloseWrapped(outTargets, ref _nb_targets, _max_targets);
+			}
+		}
+		_nb_frame = -1;
+		Application.Quit();
+	}
+
+
 	void Update()
 	{
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
-			unsafe
-			{
-				fixed(Target* outTargets = _targets)
-				{
-					SARPlugin.CloseWrapped(outTargets, ref _nb_targets, _max_targets);
-				}
-			}
-			Application.Quit();
+			gameObject.SetActive(false);
+			return;
 		}
 
 		Frame fr;

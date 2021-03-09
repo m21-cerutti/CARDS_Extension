@@ -119,10 +119,10 @@ namespace Plugin
 		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #else
         [DllImport("cards_rgbtrack")]
-		internal static extern void Init();
+		internal unsafe static extern void Init(Target* targets, ref int nbTarget, int maxTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal static extern void Close();
+		internal unsafe static extern void Close(Target* targets, ref int nbTarget, int maxTarget);
 		
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern bool Register(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget);
@@ -155,7 +155,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.init(targets, ref nbTarget, maxTarget);
 #else
-            Init();
+            Init(targets, ref nbTarget, maxTarget);
 #endif
 		}
 
@@ -164,7 +164,7 @@ namespace Plugin
 #if UNITY_EDITOR
 			SARPlugin.close(targets, ref nbTarget, maxTarget);
 #else
-            Close();
+            Close(targets, ref nbTarget, maxTarget);
 #endif
 		}
 		public unsafe static void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget)
