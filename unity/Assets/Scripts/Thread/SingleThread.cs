@@ -40,7 +40,13 @@ public class SingleThread : MonoBehaviour
 			_video = new VirtualCameraTexture();
 		}
 		_video.Init(_parameters);
-		SARPlugin.InitWrapped();
+		unsafe
+		{
+			fixed(Target* outTargets = _targets)
+			{
+				SARPlugin.InitWrapped(outTargets, ref _nb_targets, _max_targets);
+			}
+		}
 		_nb_frame = -1;
 	}
 
@@ -48,7 +54,13 @@ public class SingleThread : MonoBehaviour
 	{
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
-			SARPlugin.CloseWrapped();
+			unsafe
+			{
+				fixed(Target* outTargets = _targets)
+				{
+					SARPlugin.CloseWrapped(outTargets, ref _nb_targets, _max_targets);
+				}
+			}
 			Application.Quit();
 		}
 
@@ -86,7 +98,7 @@ public class SingleThread : MonoBehaviour
 			}
 
 			//CHECK TRACK
-			if((_nb_frame % _parameters.detect_frequency) == 0)
+			if((_nb_frame % _parameters.checktrack_frequency) == 0)
 			{
 				/*
 				unsafe
@@ -167,14 +179,14 @@ public class SingleThread : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
-	/*
+
 	private void OnGUI()
 	{
 		GUI.color = Color.red;
 		GUI.Box(_parameters.rect_detection, Texture2D.whiteTexture);
 		GUI.color = Color.white;
 	}
-	*/
+
 
 	void OnDrawGizmos()
 	{
@@ -186,7 +198,7 @@ public class SingleThread : MonoBehaviour
 			Vector3 point = GetCenterScreenTarget(t);
 			Vector3 prevision = Camera.main.ScreenToWorldPoint(point);
 			prevision.y = real_position.y;
-			Gizmos.color = Color.red;
+			Gizmos.color = _targets[i].state == StateTracker.Live ? Color.green : Color.red;
 			Gizmos.DrawWireSphere(prevision, 0.1f);
 		}
 	}

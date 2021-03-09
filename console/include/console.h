@@ -1,8 +1,8 @@
 #pragma once
 
 #include "opencv2/opencv.hpp"
-#include "tracker.h"
-#include "utilities.h"
+#include "tracker_api.h"
+#include "utilities_api.h"
 
 void TestWebcam();
 

@@ -56,13 +56,17 @@ public:
 	~MultiTrackerCARDS();
 
 	void add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<Tracker> tracker_algorithm );
+
 	void remove( const int id );
 
-	void update( const int id,InputArray image );
+	bool update( const int id,InputArray image );
+
 	void correct( const int id,InputArray image,Rect2d boundingBoxe );
 
 	Rect2d getBoundinBox( const int id );
+
 	Scalar getColor( const int id );
+
 private:
 	std::unordered_map <int,Ptr<Tracker> > trackers;
 	std::unordered_map <int,Rect2d> boundingBoxes;

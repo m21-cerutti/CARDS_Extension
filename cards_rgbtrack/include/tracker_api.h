@@ -6,13 +6,9 @@
 #define EXPORT_API // XCode does not need annotating exported functions, so define is empty
 #endif
 
-#include "opencv2/objdetect.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
-#include <opencv2/core/utility.hpp>
+#include <opencv2/core.hpp>
 
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 using namespace cv;

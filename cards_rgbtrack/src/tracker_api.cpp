@@ -1,5 +1,5 @@
-#include "tracker.h"
-#include "internal_utilities.h"
+#include "tracker_api.h"
+#include "utilities.h"
 #include "multitracker.h"
 
 /* Intern memory */
@@ -46,11 +46,12 @@ void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nb
 	}
 
 	int id = FindFirstFreeMemoryTracker();
-	targets[nbTarget].ID = id;
+	targets[id].ID = id;
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
-	targets[nbTarget].state = StateTracker::Live;
-	targets[nbTarget].rect = zone;
+	targets[id].state = StateTracker::Live;
+	targets[id].rect = zone;
 
+	free_place[id] = true;
 	nbTarget++;
 }
 
@@ -64,6 +65,8 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	targets[id].ID = -1;
 	targets[id].state = StateTracker::Undefined;
 	multitrackers.remove( id );
+
+	free_place[id] = false;
 	nbTarget--;
 	return;
 }
@@ -95,7 +98,11 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	{
 		if(targets[i].state == StateTracker::Live)
 		{
-			multitrackers.update( targets[i].ID,img );
+			if(!multitrackers.update( targets[i].ID,img ))
+			{
+				std::cerr << "Object with id " + to_string( targets[i].ID ) + " is lost." << endl;
+				targets[i].state = StateTracker::Lost;
+			}
 			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].ID ) );
 		}
 	}

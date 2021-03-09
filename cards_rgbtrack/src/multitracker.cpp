@@ -21,12 +21,12 @@ void MultiTrackerCARDS::add( const int id,InputArray image,const Rect2d& boundin
 
 	if(!tracker->init( image,boundingBox ))
 	{
-		throw runtime_error( "Error : tracker can't initialised." );
+		throw runtime_error( "Error : tracker can't be initialised." );
 	}
 
 	if(trackers.find( id ) != trackers.end())
 	{
-		throw runtime_error( "Error : id already used." );
+		throw runtime_error( "Error : id already used " + to_string( id ) );
 	}
 
 	pair<int,Ptr<Tracker>> tmp( id,tracker );
@@ -55,12 +55,9 @@ void MultiTrackerCARDS::remove( const int id )
 	trackers.erase( it );
 }
 
-void MultiTrackerCARDS::update( const int id,InputArray image )
+bool MultiTrackerCARDS::update( const int id,InputArray image )
 {
-	if(!trackers[id]->update( image,boundingBoxes[id] ))
-	{
-		throw runtime_error( "Error : can't update id " + to_string( id ) + "." );
-	}
+	return trackers[id]->update( image,boundingBoxes[id] );
 }
 
 void MultiTrackerCARDS::correct( const int id,InputArray image,Rect2d boundingBoxe )
@@ -69,15 +66,18 @@ void MultiTrackerCARDS::correct( const int id,InputArray image,Rect2d boundingBo
 	{
 		throw runtime_error( "Error : can't correct id " + to_string( id ) + "." );
 	}
-	update( id,image );
+	if(!update( id,image ))
+	{
+		std::cerr << "Correction id " + to_string( id ) + " failed." << endl;
+	}
 }
 
 Rect2d MultiTrackerCARDS::getBoundinBox( const int id )
 {
-	return Rect2d();
+	return boundingBoxes[id];
 }
 
 Scalar MultiTrackerCARDS::getColor( const int id )
 {
-	return Scalar();
+	return colors[id];
 }

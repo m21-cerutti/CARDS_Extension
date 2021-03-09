@@ -13,5 +13,5 @@ public class VideoParameters : ScriptableObject
 	//-1 for virtual, >0 index computer if multiple
 	public int device_index = -1;
 	public Rect rect_detection = new Rect(0, 0, 1, 1);
-	public int detect_frequency = 20;
+	public int checktrack_frequency = 20;
 }
