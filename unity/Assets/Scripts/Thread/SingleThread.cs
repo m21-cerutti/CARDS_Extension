@@ -48,6 +48,7 @@ public class SingleThread : MonoBehaviour
 	{
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
+			SARPlugin.CloseWrapped();
 			Application.Quit();
 		}
 

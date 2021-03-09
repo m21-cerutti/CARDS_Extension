@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTLITARIES_HPP
-#define UTLITARIES_HPP
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -20,7 +18,7 @@ extern struct Target;
 extern struct Color32;
 extern struct Frame;
 
-// Transforme texture frame in Mat OpenCV
+// Convert texture frame in Mat OpenCV
 Mat TextureToCVMat( const Frame& frame );
 
 //Convert Rect2d to Rect
@@ -39,5 +37,4 @@ void DebugCVTargets( const Mat& mat,const Target* targets,int number );
 // Create tracker by name
 Ptr<Tracker> createTrackerByName( const std::string& name );
 
-#endif // !UTLITARIES_HPP
 

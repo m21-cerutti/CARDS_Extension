@@ -10,7 +10,6 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include <opencv2/core/utility.hpp>
-#include <opencv2/tracking.hpp>
 
 #include <iostream>
 #include <stdio.h>
@@ -101,35 +100,24 @@ struct Frame
 
 extern "C"
 {
-#pragma region Debug Methods
+	// Init the tracking context
+	EXPORT_API void __stdcall Init( Target* targets,int& nbTarget,const int maxTarget );
 
-	EXPORT_API void __stdcall ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget );
+	// Close the tracking context
+	EXPORT_API void __stdcall Close( Target* targets,int& nbTarget,const int maxTarget );
 
-	EXPORT_API void __stdcall DebugTargets( const Frame& frame,Target* targets,const int nbTarget );
+	// Register an object for tracking
+	EXPORT_API void __stdcall Register( const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
 
-#pragma endregion
-
-#pragma region Plugin Methods
-
-	EXPORT_API int __stdcall Init();
-
-	EXPORT_API void __stdcall Close();
-
-	EXPORT_API bool __stdcall Register( const int id,const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
-
+	// Unregister object
 	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
+	// Detect on a zone if a new object was detected and register it.
 	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
 
+	// Check the tracking accuracy, occlusion with detection or heavy operations and correct it.
 	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int nbTarget );
 
+	// Update the taget object with light tracking
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
-
-#pragma endregion
-
-#pragma region Internal Methods
-	//TODO Register and UnRegister ?
-	//With internal data ?
-
-#pragma endregion
 }

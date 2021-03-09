@@ -19,12 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\internal_utilities.cpp" />
+    <ClCompile Include="src\multitracker.cpp" />
     <ClCompile Include="src\tracker.cpp" />
-    <ClCompile Include="src\utilitaries.cpp" />
+    <ClCompile Include="src\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\internal_utilities.h" />
+    <ClInclude Include="include\multitracker.h" />
     <ClInclude Include="include\tracker.h" />
-    <ClInclude Include="include\utilitaries.h" />
+    <ClInclude Include="include\utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\cpp.editorconfig" />

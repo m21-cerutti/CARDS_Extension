@@ -1,78 +1,70 @@
 #include "tracker.h"
-#include "utilitaries.h"
+#include "internal_utilities.h"
+#include "multitracker.h"
 
 /* Intern memory */
 String trackingAlg = "MOSSE";
-MultiTracker trackers;
-int ID_PROVIDER = 1;
+MultiTrackerCARDS multitrackers;
+std::vector<bool> free_place;
 
-void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget )
+inline static int FindFirstFreeMemoryTracker()
 {
-	Mat img = TextureToCVMat( frame );
+	auto it = std::find_if( free_place.begin(),free_place.end(),[&]( const auto& val )
+							{
+								return val == false;
+							} );
+	return it - free_place.begin();
+}
 
-	//TODO to fill with rect of new objects 
-	vector<Rect> ROIs;
-	//TODO to delete (using for test, after set it to size of objects automatically)
-	selectROIs( "tracker",img,ROIs );
-
-	//quit when the tracked object(s) is not provided
-	if(ROIs.size() < 1)
-		return;
-
-	int i = 0;
-	for(Rect rect : ROIs)
+void Init( Target* targets,int& nbTarget,const int maxTarget )
+{
+	if(targets == nullptr)
 	{
-		Register( i,frame,Rect2dToRectStruct( rect ),targets,nbTarget,maxTarget );
-		i++;
+		throw std::runtime_error( "Error: targets not initialised !" );
 	}
+	free_place.resize( maxTarget,false );
+	nbTarget = 0;
 }
 
-void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
+void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = TextureToCVMat( frame );
-	DebugCVTargets( img,targets,nbTarget );
-}
-
-int Init()
-{
-	return 0;
-}
-
-void Close()
-{
-	return;
-}
-
-bool Register( const int id,const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
-{
-	Mat img = TextureToCVMat( frame );
-
-	//quit when the tracked object(s) is not provided
-	if(nbTarget >= maxTarget)
+	int tmp = nbTarget;
+	for(int i = 0; i < tmp; i++)
 	{
-		throw std::runtime_error( "Error: Limit of tracking object reach !" );
+		UnRegister( targets[i].ID,targets,nbTarget );
 	}
+	free_place.clear();
+}
 
-	if(targets[id].state != StateTracker::Undefined)
+void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
+{
+	Mat img = TextureToCVMat( frame );
+
+	if(targets[nbTarget].state != StateTracker::Undefined)
 	{
 		throw std::runtime_error( "Error: Already existing ID or init to not Undefined !" );
 	}
 
-	//TODO internal structure to check free place instead of ID ?
-	targets[id].ID = id;
-	targets[id].state = StateTracker::Live;
-	targets[id].rect = zone;
-	trackers.add( createTrackerByName( trackingAlg ),img,Rect2dToRectStruct( zone ) );
+	int id = FindFirstFreeMemoryTracker();
+	targets[nbTarget].ID = id;
+	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
+	targets[nbTarget].state = StateTracker::Live;
+	targets[nbTarget].rect = zone;
 
 	nbTarget++;
-
-	//TODO Return ID ?
-	return true;
 }
 
 void UnRegister( const int id,Target* targets,int& nbTarget )
 {
-	//TODO
+	if(targets[id].state == StateTracker::Undefined)
+	{
+		throw std::runtime_error( "Error: Free an non valid tracker !" );
+	}
+
+	targets[id].ID = -1;
+	targets[id].state = StateTracker::Undefined;
+	multitrackers.remove( id );
+	nbTarget--;
 	return;
 }
 
@@ -98,13 +90,13 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	Mat img = TextureToCVMat( frame );
 	//TODO preprocess to gray ? Color treshold ? etc.
 
-	//TODO Update only some trackers ? Need to reimplement multitracker in this case.
-	trackers.update( img );
-	for(unsigned i = 0; i < trackers.getObjects().size(); i++)
+	//Update Live only
+	for(int i = 0; i < nbTarget; i++)
 	{
 		if(targets[i].state == StateTracker::Live)
 		{
-			targets[i].rect = Rect2dToRectStruct( trackers.getObjects()[i] );
+			multitrackers.update( targets[i].ID,img );
+			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].ID ) );
 		}
 	}
 }
