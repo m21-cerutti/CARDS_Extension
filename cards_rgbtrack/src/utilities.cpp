@@ -42,12 +42,12 @@ void DebugMat( const Mat& mat )
 	cv::waitKey( 25 );
 }
 
-void DebugCVTargets( const Mat& mat,const std::vector<Rect2d>& objects,int number )
+void DebugCVTargets( const Mat& mat,const std::vector<pair<Rect2d,Scalar>>& objects,int number )
 {
 	Mat img = mat.clone();
 	for(int i = 0; i < number; i++)
 	{
-		cv::rectangle( img,objects[i],Scalar( 255,0,0 ),2,cv::LINE_8 );
+		cv::rectangle( img,objects[i].first,objects[i].second,2,cv::LINE_8 );
 	}
 	DebugMat( img );
 }
@@ -57,10 +57,13 @@ void DebugCVTargets( const Mat& mat,const Target* targets,int number )
 	if(targets == nullptr)
 		throw new std::runtime_error( "Empty target list debug." );
 
-	std::vector<Rect2d> objects;
+	std::vector<pair<Rect2d,Scalar>> objects;
 	for(int i = 0; i < number; i++)
 	{
-		objects.push_back( Rect2dToRectStruct( targets[i].rect ) );
+		objects.push_back( pair<Rect2d,Scalar>(
+			Rect2dToRectStruct( targets[i].rect ),
+			targets[i].state == StateTracker::Live ? Scalar( 0,255,0 ) : Scalar( 0,0,255 ) )
+		);
 	}
 
 	DebugCVTargets( mat,objects,number );
