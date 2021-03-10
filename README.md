@@ -31,7 +31,7 @@ https://visualstudio.microsoft.com/fr/vs/
 
 6. Create a new folder $(OPENCV_DIR)/build next to $(OPENCV_DIR)/sources. Select it as build directory for CMake.
 
-7. With the two paths set up, go ahead and click “Configure” at the bottom. Choose  for generator Visual Studio 2019 with default native compilers. Once CMake is done, you will see a large number of red items appear in the center area of the application. These are all the build options and we let it to defaults, except OPENCV_EXTRA_MODULES_PATH that we set to the $(OPENCV_DIR)/sources/3.4.13-contrib/modules. I t will enable the contributions to the build.
+7. With the two paths set up, go ahead and click “Configure” at the bottom. Choose  for generator Visual Studio 2019 with default native compilers. Once CMake is done, you will see a large number of red items appear in the center area of the application. These are all the build options and we let it to defaults, except OPENCV_EXTRA_MODULES_PATH that we set to the $(OPENCV_DIR)/sources/3.4.13-contrib/modules. It will enable the contributions to the build.
 
 8. Click “Generate”, and let CMake work.
 
