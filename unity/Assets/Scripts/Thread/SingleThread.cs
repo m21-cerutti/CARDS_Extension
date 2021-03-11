@@ -19,8 +19,10 @@ public class SingleThread : Tracking
 			{
 				fixed(Target* outTargets = targets)
 				{
-					//Debug.Log("Detect");
+					//Debug.Log("Register manual");
+					Time.timeScale = 0;
 					SARPlugin.ManualRegisterWrapped(ref fr, outTargets, ref nb_targets, max_targets);
+					Time.timeScale = 1;
 				}
 			}
 		}
