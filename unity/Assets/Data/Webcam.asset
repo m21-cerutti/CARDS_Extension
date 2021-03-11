@@ -17,6 +17,8 @@ MonoBehaviour:
   requested_camera_fps: 60
   starting_frame: 120
   device_index: 0
+  is_flipped_x: 1
+  is_flipped_y: 1
   checktrack_frequency: 20
   use_detection: 0
   rect_detection:

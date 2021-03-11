@@ -32,8 +32,6 @@ public class WebcamTexture : VideoProvider
 			parameters.camera_height = _cam_texture.height;
 
 			base.Init(parameters);
-			frame.is_flipped_x = true;
-			frame.is_flipped_y = true;
 		}
 	}
 

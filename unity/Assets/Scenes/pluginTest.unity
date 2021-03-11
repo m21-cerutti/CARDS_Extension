@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_dontDestroyOnLoad: 0
+  _use_debug_log_datas: 0
   _log_directory: DataLogs
 --- !u!1 &75360977
 GameObject:

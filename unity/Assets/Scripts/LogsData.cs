@@ -13,6 +13,8 @@ public class LogsData : SingletonBehaviour<LogsData>
 	static public string prefix_log_errors = "Log_Error : ";
 
 	[SerializeField]
+	bool _use_debug_log_datas;
+	[SerializeField]
 	private string _log_directory = "LogsData";
 
 	private StreamWriter _log_errors;
@@ -27,16 +29,20 @@ public class LogsData : SingletonBehaviour<LogsData>
 		System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 	}
 
-	void OnEnable()
+	public void OnEnable()
 	{
+		if(!_use_debug_log_datas)
+			return;
 		CreateStreamLog();
 		Application.logMessageReceived += HandleLog;
 		if(_corout_endframe == null)
 			_corout_endframe = StartCoroutine(DebugFrameCoroutine());
 	}
 
-	void OnDisable()
+	public void OnDisable()
 	{
+		if(!_use_debug_log_datas)
+			return;
 		if(_corout_endframe != null)
 			StopCoroutine(_corout_endframe);
 		Application.logMessageReceived -= HandleLog;
@@ -45,6 +51,8 @@ public class LogsData : SingletonBehaviour<LogsData>
 
 	public void InitTargetErrorHeader(int maxTargets)
 	{
+		if(!_use_debug_log_datas)
+			return;
 		for(int i = 0; i < maxTargets; i++)
 			_buffer_errors.Append(i).Append(";");
 		_buffer_errors.Append("\n");
@@ -52,20 +60,29 @@ public class LogsData : SingletonBehaviour<LogsData>
 
 	public void DebugTargetsError(string message)
 	{
+		if(!_use_debug_log_datas)
+			return;
 		_buffer_errors.Append(message + ";\t");
 	}
 
 	public void DebugFramePerf(string message)
 	{
+		if(!_use_debug_log_datas)
+			return;
 		_buffer_perfs.Append(message);
 	}
 
 	public void DebugFramePerf(Action action)
 	{
-		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
-		action();
-		stopwatch.Stop();
-		DebugFramePerf(stopwatch.Elapsed.TotalMilliseconds.ToString());
+		if(!_use_debug_log_datas)
+			action();
+		else
+		{
+			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+			action();
+			stopwatch.Stop();
+			DebugFramePerf(stopwatch.Elapsed.TotalMilliseconds.ToString());
+		}
 	}
 
 	private IEnumerator DebugFrameCoroutine()
