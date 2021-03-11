@@ -107,3 +107,8 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 		}
 	}
 }
+
+EXPORT_API void __stdcall EstimatePose( const Frame& frame,Target* targets,const int nbTarget )
+{
+	//TODO
+}

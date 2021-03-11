@@ -3,105 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using Plugin;
 
-public class SingleThread : MonoBehaviour
+public class SingleThread : Tracking
 {
-	[SerializeField]
-	private VideoParameters _parameters; //Scenario that you can interchange (Virtual, Webcam)
-
-	private bool _use_webcam = false;
-	private VideoProvider _video;
-
-	private int _nb_targets = 0, _max_targets = 5;
-	private Target[] _targets;
-
-	private int _nb_frame = -1;
-
-	//Debug
-	private List<GameObject> _game_targets = new List<GameObject>();
-
-	private void Awake()
+	protected override void InternalTrackingLoop()
 	{
-		_targets = new Target[5];
-		Application.targetFrameRate = _parameters.requested_camera_fps;
-		_use_webcam = _parameters.device_index >= 0;
-	}
-
-	private void OnEnable()
-	{
-		Debug.Log("Start tracking.");
-		if(_use_webcam)
-		{
-			_video = new WebcamTexture();
-		}
-		else
-		{
-			_video = new VirtualCameraTexture();
-		}
-		_video.Init(_parameters);
-
-		Debug.Log("Init");
-		unsafe
-		{
-			fixed(Target* outTargets = _targets)
-			{
-				SARPlugin.InitWrapped(outTargets, ref _nb_targets, _max_targets);
-			}
-		}
-		_nb_frame = -1;
-	}
-
-	private void OnDisable()
-	{
-		unsafe
-		{
-			fixed(Target* outTargets = _targets)
-			{
-				Debug.Log("Free");
-				SARPlugin.CloseWrapped(outTargets, ref _nb_targets, _max_targets);
-			}
-		}
-		_nb_frame = -1;
-		Application.Quit();
-	}
-
-
-	void Update()
-	{
-		if(Input.GetKeyDown(KeyCode.Escape))
-		{
-			gameObject.SetActive(false);
-			return;
-		}
-
 		Frame fr;
-		if(!_video.GetFrame(out fr))
+		if(!video.GetFrame(out fr))
 		{
 			return;
 		}
 
-		if(_nb_frame == _parameters.starting_frame)
+		if(nb_frame == parameters.starting_frame)
 		{
 			unsafe
 			{
-				fixed(Target* outTargets = _targets)
+				fixed(Target* outTargets = targets)
 				{
 					//Debug.Log("Detect");
-					SARPlugin.ManualRegisterWrapped(ref fr, outTargets, ref _nb_targets, _max_targets);
+					SARPlugin.ManualRegisterWrapped(ref fr, outTargets, ref nb_targets, max_targets);
 				}
 			}
-			Debug.Log("Total Tracked : " + _nb_targets);
-			if(!_use_webcam)
-				RegisterGameObjectVirtual();
 		}
-		else if(_nb_frame > _parameters.starting_frame)
+		else if(nb_frame > parameters.starting_frame)
 		{
 			//DETECTION
-			if(_parameters.use_detection)
+			if(parameters.use_detection)
 			{
 				//TODO convert rect_detection
 				unsafe
 				{
-					fixed(Target* outTargets = _targets)
+					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("Detect");
 						//SARPlugin.DetectWrapped(ref fr, _parameters.rect_detection, outTargets, ref _nb_targets, _max_targets);
@@ -110,7 +41,7 @@ public class SingleThread : MonoBehaviour
 			}
 
 			//CHECK TRACK
-			if((_nb_frame % _parameters.checktrack_frequency) == 0)
+			if((nb_frame % parameters.checktrack_frequency) == 0)
 			{
 				/*
 				unsafe
@@ -132,96 +63,15 @@ public class SingleThread : MonoBehaviour
 			{
 				unsafe
 				{
-					fixed(Target* outTargets = _targets)
+					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("Track");
-						SARPlugin.TrackWrapped(ref fr, outTargets, _nb_targets);
-						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, _nb_targets);
+						SARPlugin.TrackWrapped(ref fr, outTargets, nb_targets);
+						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
 					}
 				}
-				if(!_use_webcam)
-					CompareGameObjectVirtual();
 			}
 		}
-		_nb_frame++;
+		nb_frame++;
 	}
-
-	private void RegisterGameObjectVirtual()
-	{
-		//Check object detected
-		for(int i = 0; i < _nb_targets; i++)
-		{
-			Target t = _targets[i];
-			Vector2 point = GetCenterScreenTarget(t);
-			Ray ray = Camera.main.ScreenPointToRay(point);
-			RaycastHit hit;
-			if(Physics.Raycast(ray, out hit, 5.0f))
-			{
-				_game_targets.Add(hit.collider.gameObject);
-			}
-		}
-	}
-
-	private void CompareGameObjectVirtual()
-	{
-		float global_error = 0;
-		for(int i = 0; i < _nb_targets; i++)
-		{
-			Target t = _targets[i];
-			Vector3 real_position = _game_targets[i].transform.position;
-
-			Vector3 point = GetCenterScreenTarget(t);
-			Vector3 prevision = Camera.main.ScreenToWorldPoint(point);
-
-			//TODO Use z but need pose
-			prevision.y = real_position.y;
-			//Debug.Log("Target " + i + " : " + point);
-
-			float error = Vector3.Distance(real_position, prevision);
-			//Debug.Log("Target " + i + " : " + error);
-			global_error += error;
-		}
-		global_error /= _nb_targets;
-		Debug.Log("Global error : " + global_error);
-	}
-
-	private Vector3 GetCenterScreenTarget(Target t)
-	{
-		return new Vector3(t.rect.x + ((float)(t.rect.width) / 2.0f), t.rect.y + ((float)(t.rect.height) / 2.0f), Camera.main.transform.position.magnitude);
-	}
-
-#if UNITY_EDITOR
-
-	private void OnGUI()
-	{
-		if(_parameters.use_detection)
-		{
-			GUI.color = Color.red;
-			GUI.Box(new Rect(
-				_parameters.rect_detection.x * Screen.width,
-				_parameters.rect_detection.y * Screen.height,
-				_parameters.rect_detection.width * Screen.width,
-				_parameters.rect_detection.height * Screen.height),
-				Texture2D.whiteTexture)
-				;
-			GUI.color = Color.white;
-		}
-	}
-
-
-	void OnDrawGizmos()
-	{
-
-		for(int i = 0; i < _nb_targets && !_use_webcam; i++)
-		{
-			Target t = _targets[i];
-			Vector3 real_position = _game_targets[i].transform.position;
-			Vector3 point = GetCenterScreenTarget(t);
-			Vector3 prevision = Camera.main.ScreenToWorldPoint(point);
-			prevision.y = real_position.y;
-			Gizmos.color = _targets[i].state == StateTracker.Live ? Color.green : Color.red;
-			Gizmos.DrawWireSphere(prevision, 0.1f);
-		}
-	}
-#endif
 }

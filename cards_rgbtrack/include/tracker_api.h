@@ -53,10 +53,11 @@ struct RectStruct
 /*Tacker definition*/
 enum class StateTracker
 {
+	Lost = -1,
 	Undefined = 0,
 	Live,
 	Occluded,
-	Lost
+	OutOfCamera
 };
 
 struct Target
@@ -109,11 +110,16 @@ extern "C"
 	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
 	// Detect on a zone if a new object was detected and register it.
+	// TODO
 	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
 
 	// Check the tracking accuracy, occlusion with detection or heavy operations and correct it.
+	//TODO
 	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int nbTarget );
 
 	// Update the taget object with light tracking
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
+
+	// TODO
+	EXPORT_API void __stdcall EstimatePose( const Frame& frame,Target* targets,const int nbTarget );
 }

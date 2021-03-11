@@ -15,4 +15,6 @@ public class VideoParameters : ScriptableObject
 	public int checktrack_frequency = 20;
 	public bool use_detection = false;
 	public Rect rect_detection = new Rect(0, 0, 1, 1);
+
+	public bool UseWebcam { get => device_index >= 0; }
 }

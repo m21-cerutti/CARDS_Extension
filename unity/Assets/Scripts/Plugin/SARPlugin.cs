@@ -49,10 +49,11 @@ namespace Plugin
 	/*Tacker definition*/
 	public enum StateTracker
 	{
+		Lost = -1,
 		Undefined = 0,
 		Live,
 		Occluded,
-		Lost
+		OutOfCamera
 	};
 
 	[System.Serializable]

@@ -1,13 +1,4 @@
-﻿//
-// SART Unity class implementation.
-// Author : Joan Odicio
-// Date : 02 February 2021
-// Email: joan.odicio-vilchez@inria.fr
-//
-// Property of the INRIA Team POTIOC, there is no license applied to this project.
-//
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

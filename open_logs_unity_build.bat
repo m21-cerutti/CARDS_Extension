@@ -1,0 +1,1 @@
+%SystemRoot%\explorer.exe %APPDATA%\..\LocalLow\PFE\CARDS_Extension
