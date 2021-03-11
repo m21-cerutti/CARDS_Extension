@@ -12,8 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f437b2b6b0800941b0e3abce7579d14, type: 3}
   m_Name: Webcam
   m_EditorClassIdentifier: 
-  camera_width: 480
-  camera_height: 270
+  camera_width: 256
+  camera_height: 256
   requested_camera_fps: 60
   starting_frame: 120
   device_index: 0
+  checktrack_frequency: 20
+  use_detection: 0
+  rect_detection:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1

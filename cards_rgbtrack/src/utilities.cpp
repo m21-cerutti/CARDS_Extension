@@ -9,9 +9,14 @@ Mat TextureToCVMat( const Frame& frame )
 	// TODO Need some checks (frame raw_data initialised etc)
 	Mat texture( frame.height,frame.width,CV_8UC4,frame.rawData );
 	cv::cvtColor( texture,texture,cv::COLOR_RGBA2BGR );
-	if(frame.is_flipped)
+	flip( texture,texture,0 );
+	if(frame.is_flipped_y)
 	{
-		flip( texture,texture,-1 );
+		flip( texture,texture,0 );
+	}
+	if(frame.is_flipped_x)
+	{
+		flip( texture,texture,1 );
 	}
 	return texture;
 }
@@ -38,8 +43,8 @@ Rect2d Rect2dToRectStruct( const RectStruct& rect )
 
 void DebugMat( const Mat& mat )
 {
-	cv::imshow( "DebugOpenCV",mat );
-	cv::waitKey( 25 );
+	imshow( "DebugOpenCV",mat );
+	waitKey( 25 );
 }
 
 void DebugCVTargets( const Mat& mat,const std::vector<pair<Rect2d,Scalar>>& objects,int number )

@@ -1,7 +1,7 @@
 ::Open as admin
 pushd %~dp0
 
-call python ./syncdll.py
+call python ./sync_dll.py
 
 popd
 pause

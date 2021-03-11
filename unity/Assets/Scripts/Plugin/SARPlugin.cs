@@ -60,7 +60,7 @@ namespace Plugin
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Target
 	{
-		public short ID;
+		public short id;
 		public RectStruct rect;
 		public StateTracker state;
 	};
@@ -75,7 +75,8 @@ namespace Plugin
 	{
 		public int width;
 		public int height;
-		public bool is_flipped;
+		public bool is_flipped_x;
+		public bool is_flipped_y;
 		public IntPtr raw_data;
 	};
 

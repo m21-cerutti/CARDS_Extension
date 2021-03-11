@@ -40,6 +40,8 @@ const Frame& VideoProvider::GetFrame()
 	}
 	cvtColor( mat,mat,CV_BGR2RGBA );
 	memcpy( _frame.rawData,mat.data,4 * mat.total() );
+	//Due to Unity space
+	_frame.is_flipped_y = true;
 	return _frame;
 }
 

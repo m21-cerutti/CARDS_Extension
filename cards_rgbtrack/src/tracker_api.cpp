@@ -31,7 +31,7 @@ void Close( Target* targets,int& nbTarget,const int maxTarget )
 	int tmp = nbTarget;
 	for(int i = 0; i < tmp; i++)
 	{
-		UnRegister( targets[i].ID,targets,nbTarget );
+		UnRegister( targets[i].id,targets,nbTarget );
 	}
 	free_place.clear();
 }
@@ -46,7 +46,7 @@ void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nb
 	}
 
 	int id = FindFirstFreeMemoryTracker();
-	targets[id].ID = id;
+	targets[id].id = id;
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
@@ -62,7 +62,7 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 		throw std::runtime_error( "Error: Free an non valid tracker !" );
 	}
 
-	targets[id].ID = -1;
+	targets[id].id = -1;
 	targets[id].state = StateTracker::Undefined;
 	multitrackers.remove( id );
 
@@ -98,12 +98,12 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	{
 		if(targets[i].state == StateTracker::Live)
 		{
-			if(!multitrackers.update( targets[i].ID,img ))
+			if(!multitrackers.update( targets[i].id,img ))
 			{
-				std::cerr << "Object with id " + to_string( targets[i].ID ) + " is lost." << endl;
+				std::cerr << "Object with id " + to_string( targets[i].id ) + " is lost." << endl;
 				targets[i].state = StateTracker::Lost;
 			}
-			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].ID ) );
+			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].id ) );
 		}
 	}
 }

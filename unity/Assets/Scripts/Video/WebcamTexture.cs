@@ -14,10 +14,12 @@ public class WebcamTexture : VideoProvider
 
 	override public void Init(VideoParameters parameters)
 	{
-		_cam_texture = new WebCamTexture();
-		_cam_texture.requestedFPS = parameters.requested_camera_fps;
-		_cam_texture.requestedWidth = parameters.camera_width;
-		_cam_texture.requestedHeight = parameters.camera_height;
+		_cam_texture = new WebCamTexture
+		{
+			requestedFPS = parameters.requested_camera_fps,
+			requestedWidth = parameters.camera_width,
+			requestedHeight = parameters.camera_height
+		};
 
 		WebCamDevice[] devices = WebCamTexture.devices;
 		if(devices.Length > 0)
@@ -30,7 +32,8 @@ public class WebcamTexture : VideoProvider
 			parameters.camera_height = _cam_texture.height;
 
 			base.Init(parameters);
-			frame.is_flipped = true;
+			frame.is_flipped_x = true;
+			frame.is_flipped_y = true;
 		}
 	}
 

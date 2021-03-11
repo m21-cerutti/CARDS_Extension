@@ -15,7 +15,7 @@ using namespace cv;
 
 /*Structure data*/
 
-struct Vector3f
+struct Vector3
 {
 	float x;
 	float y;
@@ -62,10 +62,10 @@ enum class StateTracker
 
 struct Target
 {
-	Target() : ID( -1 ),rect(),state( StateTracker::Undefined )
+	Target() : id( -1 ),rect(),state( StateTracker::Undefined )
 	{
 	}
-	short ID;
+	short id;
 	RectStruct rect;
 	//TODO angle or rotation matrix
 	StateTracker state;
@@ -85,12 +85,13 @@ struct Color32
 
 struct Frame
 {
-	Frame() : rawData(),width( 0 ),height( 0 ),is_flipped( false )
+	Frame() : rawData(),width( 0 ),height( 0 ),is_flipped_x( false ),is_flipped_y( false )
 	{
 	}
 	int width;
 	int height;
-	bool is_flipped;
+	bool is_flipped_x;
+	bool is_flipped_y;
 	Color32* rawData;
 };
 

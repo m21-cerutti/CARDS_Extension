@@ -17,6 +17,8 @@ public abstract class VideoProvider
 		frame.height = parameters.camera_height;
 		frame.raw_data = new IntPtr();
 		pixels = new Color32[parameters.camera_width * parameters.camera_height];
+		frame.is_flipped_x = false;
+		frame.is_flipped_y = false;
 	}
 
 	abstract public bool GetFrame(out Frame fr);

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 using Plugin;
 
@@ -15,13 +14,37 @@ public abstract class Tracking : MonoBehaviour
 	protected Target[] targets;
 	protected int nb_frame = -1;
 
-	#region Getters
-	public List<Target> Targets { get => targets/*.Where(t => t.state != StateTracker.Undefined)*/.ToList(); }
+	#region Getters properties
 	public bool IsInitialised { get => nb_frame > parameters.starting_frame; }
 	public int NbTargets { get => nb_targets; }
 	public int MaxTargets { get => max_targets; }
 	public VideoParameters Parameters { get => parameters; }
 	#endregion
+
+	public List<Target> GetTargets()
+	{
+		List<Target> final = new List<Target>();
+		for(int i = 0; i < MaxTargets; i++)
+		{
+			Target t = new Target
+			{
+				id = targets[i].id,
+				rect = ConvertRectToUnityScreen(targets[i].rect),
+				state = targets[i].state
+			};
+			final.Add(t);
+		}
+		return final;
+	}
+
+	// bottom left = 0,1, top right = 0,1 in OpenCV
+	// bottom left = 0,0, top right = 1,1 in Unity
+	protected RectStruct ConvertRectToUnityScreen(RectStruct rect)
+	{
+		rect.y = parameters.camera_height - rect.y;
+		rect.height = -rect.height;
+		return rect;
+	}
 
 	protected void Awake()
 	{
@@ -65,7 +88,7 @@ public abstract class Tracking : MonoBehaviour
 		nb_frame = -1;
 	}
 
-	protected void OnDisable()
+	protected void OnApplicationQuit()
 	{
 		if(nb_frame > parameters.starting_frame)
 		{
@@ -80,6 +103,22 @@ public abstract class Tracking : MonoBehaviour
 		}
 		nb_frame = -1;
 	}
+	protected void OnApplicationDisable()
+	{
+		if(nb_frame > parameters.starting_frame)
+		{
+			unsafe
+			{
+				fixed(Target* outTargets = targets)
+				{
+					Debug.Log("Free");
+					SARPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
+				}
+			}
+		}
+		nb_frame = -1;
+	}
+
 
 	protected void Update()
 	{
