@@ -16,7 +16,7 @@ static void TestWorkflow( VideoProvider& provider );
 
 void TestWebcam()
 {
-	std::cerr << "Opening camera...\r";
+	std::cerr << "Opening camera..." << endl;
 	//TODO Need to accelerate opening
 	VideoCapture cap;
 	if(!cap.open( 0,cv::CAP_ANY ))
@@ -56,7 +56,7 @@ void TestDLL()
 
 void TestWorkflowVideo()
 {
-	std::cerr << "Opening video test.mp4 ...\r";
+	std::cerr << "Opening video test.avi ..." << endl;
 
 	VideoProvider video( "test.avi" );
 	TestWorkflow( video );

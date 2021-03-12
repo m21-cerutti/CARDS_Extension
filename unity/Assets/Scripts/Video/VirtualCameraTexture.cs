@@ -22,6 +22,12 @@ public class VirtualCameraTexture : VideoProvider
 		_cam.targetTexture = _render_texture;
 	}
 
+	override public void Close()
+	{
+		base.Close();
+		//Nothing
+	}
+
 	public override bool GetFrame(out Frame fr)
 	{
 		Texture2D tex = new Texture2D(_render_texture.width, _render_texture.height, TextureFormat.RGB24, false);
@@ -36,7 +42,6 @@ public class VirtualCameraTexture : VideoProvider
 
 		RenderTexture.active = null;
 		fr = frame;
-
 		return true;
 	}
 }

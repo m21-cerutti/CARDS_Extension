@@ -21,7 +21,7 @@ public class SingleThread : Tracking
 				{
 					//Debug.Log("Register manual");
 					Time.timeScale = 0;
-					SARPlugin.ManualRegisterWrapped(ref fr, outTargets, ref nb_targets, max_targets);
+					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref fr, outTargets, ref nb_targets, max_targets);
 					Time.timeScale = 1;
 				}
 			}
@@ -68,8 +68,8 @@ public class SingleThread : Tracking
 					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("Track");
-						SARPlugin.TrackWrapped(ref fr, outTargets, nb_targets);
-						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
+						CARDSTrackingPlugin.TrackWrapped(ref fr, outTargets, nb_targets);
+						CARDSUtilitiesPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
 					}
 				}
 			}

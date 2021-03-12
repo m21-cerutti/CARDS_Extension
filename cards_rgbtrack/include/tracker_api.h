@@ -83,15 +83,22 @@ struct Color32
 	uchar alpha;
 };
 
+enum class FlipMode
+{
+	None = 0,
+	FlipBoth,
+	FlipY,
+	FlipX,
+};
+
 struct Frame
 {
-	Frame() : rawData(),width( 0 ),height( 0 ),is_flipped_x( false ),is_flipped_y( false )
+	Frame() : rawData(),width( 0 ),height( 0 ),flip_mode( FlipMode::None )
 	{
 	}
 	int width;
 	int height;
-	bool is_flipped_x;
-	bool is_flipped_y;
+	FlipMode flip_mode;
 	Color32* rawData;
 };
 

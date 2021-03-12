@@ -3,7 +3,7 @@
 
 void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 
 	//TODO to fill with rect of new objects 
 	vector<Rect> ROIs;
@@ -22,6 +22,6 @@ void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int 
 
 void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 	DebugCVTargets( img,targets,nbTarget );
 }

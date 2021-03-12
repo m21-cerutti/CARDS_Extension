@@ -4,21 +4,18 @@
 using namespace std;
 using namespace cv;
 
-Mat TextureToCVMat( const Frame& frame )
+Mat FrameToCVMat( const Frame& frame )
 {
 	// TODO Need some checks (frame raw_data initialised etc)
-	Mat texture( frame.height,frame.width,CV_8UC4,frame.rawData );
-	cv::cvtColor( texture,texture,cv::COLOR_RGBA2BGR );
-	flip( texture,texture,0 );
-	if(frame.is_flipped_y)
+	Mat mat( frame.height,frame.width,CV_8UC4,frame.rawData );
+	cvtColor( mat,mat,cv::COLOR_RGBA2BGR );
+	flip( mat,mat,0 );
+	int flip_code = (int)frame.flip_mode - 2;
+	if(flip_code >= -1)
 	{
-		flip( texture,texture,0 );
+		flip( mat,mat,flip_code );
 	}
-	if(frame.is_flipped_x)
-	{
-		flip( texture,texture,1 );
-	}
-	return texture;
+	return mat;
 }
 
 RectStruct Rect2dToRectStruct( const Rect2d& rect )
@@ -70,7 +67,6 @@ void DebugCVTargets( const Mat& mat,const Target* targets,int number )
 			targets[i].state == StateTracker::Live ? Scalar( 0,255,0 ) : Scalar( 0,0,255 ) )
 		);
 	}
-
 	DebugCVTargets( mat,objects,number );
 }
 

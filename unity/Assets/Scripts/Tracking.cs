@@ -21,6 +21,7 @@ public abstract class Tracking : MonoBehaviour
 	public VideoParameters Parameters { get => parameters; }
 	#endregion
 
+	//Convert from OpenCV space to Unity and give a cpy of targets
 	public List<Target> GetTargets()
 	{
 		List<Target> final = new List<Target>();
@@ -70,10 +71,15 @@ public abstract class Tracking : MonoBehaviour
 			video = new WebcamTexture();
 			gameObject.AddComponent<DebugTargetsWebcam>();
 		}
-		else
+		else if(parameters.device_index == -1)
 		{
 			video = new VirtualCameraTexture();
 			gameObject.AddComponent<DebugTargetsVirtual>();
+		}
+		else if(parameters.device_index == -2)
+		{
+			video = new VideoTexture();
+			gameObject.AddComponent<DebugTargetsVideo>();
 		}
 		video.Init(parameters);
 
@@ -82,7 +88,7 @@ public abstract class Tracking : MonoBehaviour
 		{
 			fixed(Target* outTargets = targets)
 			{
-				SARPlugin.InitWrapped(outTargets, ref nb_targets, max_targets);
+				CARDSTrackingPlugin.InitWrapped(outTargets, ref nb_targets, max_targets);
 			}
 		}
 		nb_frame = -1;
@@ -90,35 +96,31 @@ public abstract class Tracking : MonoBehaviour
 
 	protected void OnApplicationQuit()
 	{
-		if(nb_frame > parameters.starting_frame)
-		{
-			unsafe
-			{
-				fixed(Target* outTargets = targets)
-				{
-					Debug.Log("Free");
-					SARPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
-				}
-			}
-		}
-		nb_frame = -1;
-	}
-	protected void OnApplicationDisable()
-	{
-		if(nb_frame > parameters.starting_frame)
-		{
-			unsafe
-			{
-				fixed(Target* outTargets = targets)
-				{
-					Debug.Log("Free");
-					SARPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
-				}
-			}
-		}
+		FreeInternData();
 		nb_frame = -1;
 	}
 
+	protected void OnDisable()
+	{
+		FreeInternData();
+		nb_frame = -1;
+	}
+
+	private void FreeInternData()
+	{
+		video.Close();
+		if(nb_frame > parameters.starting_frame)
+		{
+			unsafe
+			{
+				fixed(Target* outTargets = targets)
+				{
+					Debug.Log("Free tagets");
+					CARDSTrackingPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
+				}
+			}
+		}
+	}
 
 	protected void Update()
 	{

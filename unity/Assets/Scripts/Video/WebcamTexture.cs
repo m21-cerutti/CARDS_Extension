@@ -35,6 +35,15 @@ public class WebcamTexture : VideoProvider
 		}
 	}
 
+	override public void Close()
+	{
+		base.Close();
+		if(_cam_texture.isPlaying)
+		{
+			_cam_texture.Stop();
+		}
+	}
+
 	public override bool GetFrame(out Frame fr)
 	{
 		if(_cam_texture.isPlaying)
@@ -54,11 +63,4 @@ public class WebcamTexture : VideoProvider
 		return false;
 	}
 
-	public void StopCamera()
-	{
-		if(_cam_texture.isPlaying)
-		{
-			_cam_texture.Stop();
-		}
-	}
 }

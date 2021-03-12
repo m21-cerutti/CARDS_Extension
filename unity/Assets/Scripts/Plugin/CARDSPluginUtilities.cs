@@ -1,0 +1,54 @@
+﻿using fts;
+
+using System;
+using System.Runtime.InteropServices;
+
+using UnityEngine;
+using Plugin;
+
+namespace Plugin
+{
+
+	[PluginAttr("cards_rgbtrack")]
+	public static class CARDSUtilitiesPlugin
+	{
+#if UNITY_EDITOR
+		[PluginFunctionAttr("ManualRegister")]
+		public static ManualRegister manual_register = null;
+		public unsafe delegate void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
+
+		[PluginFunctionAttr("DebugTargets")]
+		public static DebugTargets debug_targets = null;
+		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
+#else
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
+
+		[DllImport("cards_rgbtrack")]
+		internal unsafe static extern void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
+#endif
+
+		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
+		// editor or standalone mode.
+		#region Wrapped methods
+		public unsafe static void ManualRegisterWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget)
+		{
+#if UNITY_EDITOR
+			manual_register(ref frame, targets, ref nbTarget, maxTarget);
+#else
+            ManualRegister(ref frame, targets, ref nbTarget, maxTarget);
+#endif
+		}
+
+		public unsafe static void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
+#if UNITY_EDITOR
+			debug_targets(ref frame, targets, nbTarget);
+#else
+            DebugTargets(ref frame, targets, nbTarget);
+#endif
+		}
+
+		#endregion
+	}
+}

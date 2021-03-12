@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f437b2b6b0800941b0e3abce7579d14, type: 3}
-  m_Name: Webcam
+  m_Name: VideoTest
   m_EditorClassIdentifier: 
-  camera_width: 320
-  camera_height: 240
+  camera_width: 256
+  camera_height: 256
   requested_camera_fps: 60
-  starting_frame: 120
-  device_index: 0
-  flip_mode: 3
+  starting_frame: 300
+  device_index: -2
+  is_flipped_x: 0
+  is_flipped_y: 0
   checktrack_frequency: 20
   use_detection: 0
   rect_detection:
@@ -26,4 +27,4 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  file_path: 
+  file_path: ./test.avi

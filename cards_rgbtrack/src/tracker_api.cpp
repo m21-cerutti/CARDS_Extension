@@ -38,7 +38,7 @@ void Close( Target* targets,int& nbTarget,const int maxTarget )
 
 void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 
 	if(targets[nbTarget].state != StateTracker::Undefined)
 	{
@@ -73,14 +73,14 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 
 void Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 	//TODO
 	return;
 }
 
 void CheckTrack( const Frame& frame,Target* targets,const int nbTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 
 	//TODO Detect and verify already targets, correct errors, handle occlusion and also put tracker of occluded on the top object.
 
@@ -90,7 +90,7 @@ void CheckTrack( const Frame& frame,Target* targets,const int nbTarget )
 
 void Track( const Frame& frame,Target* targets,const int nbTarget )
 {
-	Mat img = TextureToCVMat( frame );
+	Mat img = FrameToCVMat( frame );
 	//TODO preprocess to gray ? Color treshold ? etc.
 
 	//Update Live only

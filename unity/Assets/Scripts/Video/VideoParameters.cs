@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using Plugin;
+
 [CreateAssetMenu(fileName = "Param", menuName = "VideoParameters/Parameters", order = 1)]
 public class VideoParameters : ScriptableObject
 {
@@ -16,11 +18,12 @@ public class VideoParameters : ScriptableObject
 	public int device_index = -1;
 	public bool UseWebcam { get => device_index >= 0; }
 
-	public bool is_flipped_x = false;
-	public bool is_flipped_y = false;
+	public FlipMode flip_mode = 0;
 
 	public int checktrack_frequency = 20;
 	public bool use_detection = false;
 	public Rect rect_detection = new Rect(0, 0, 1, 1);
 
+	[ShowWhen("device_index", "==-2")]
+	public string file_path;
 }

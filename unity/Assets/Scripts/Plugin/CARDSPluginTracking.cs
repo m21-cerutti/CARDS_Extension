@@ -68,6 +68,13 @@ namespace Plugin
 	//TODO Structure export ?
 
 	/*Use for frame pass from C# to C++*/
+	public enum FlipMode
+	{
+		None = 0,
+		FlipBoth,
+		FlipY,
+		FlipX,
+	};
 
 	[System.Serializable]
 	[StructLayout(LayoutKind.Sequential)]
@@ -75,13 +82,12 @@ namespace Plugin
 	{
 		public int width;
 		public int height;
-		public bool is_flipped_x;
-		public bool is_flipped_y;
+		public FlipMode flip_mode;
 		public IntPtr raw_data;
 	};
 
 	[PluginAttr("cards_rgbtrack")]
-	public static class SARPlugin
+	public static class CARDSTrackingPlugin
 	{
 #if UNITY_EDITOR
 		[PluginFunctionAttr("Init")]
@@ -111,14 +117,6 @@ namespace Plugin
 		[PluginFunctionAttr("Track")]
 		public static Track track = null;
 		public unsafe delegate void Track(ref Frame frame, Target* targets, int nbTarget);
-
-		[PluginFunctionAttr("ManualRegister")]
-		public static ManualRegister manual_register = null;
-		public unsafe delegate void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
-
-		[PluginFunctionAttr("DebugTargets")]
-		public static DebugTargets debug_targets = null;
-		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #else
         [DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Init(Target* targets, ref int nbTarget, int maxTarget);
@@ -140,12 +138,6 @@ namespace Plugin
 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
-		
-		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
-
-		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
 #endif
 
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
@@ -155,7 +147,7 @@ namespace Plugin
 		public unsafe static void InitWrapped(Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.init(targets, ref nbTarget, maxTarget);
+			CARDSTrackingPlugin.init(targets, ref nbTarget, maxTarget);
 #else
             Init(targets, ref nbTarget, maxTarget);
 #endif
@@ -164,7 +156,7 @@ namespace Plugin
 		public unsafe static void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.close(targets, ref nbTarget, maxTarget);
+			CARDSTrackingPlugin.close(targets, ref nbTarget, maxTarget);
 #else
             Close(targets, ref nbTarget, maxTarget);
 #endif
@@ -172,7 +164,7 @@ namespace Plugin
 		public unsafe static void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
+			CARDSTrackingPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #else
             Register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #endif
@@ -180,7 +172,7 @@ namespace Plugin
 		public unsafe static void UnRegisterWrapped(int id, Target* targets, ref int nbTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.un_register(id, targets, ref nbTarget);
+			CARDSTrackingPlugin.un_register(id, targets, ref nbTarget);
 #else
             UnRegister(id, targets, ref nbTarget);
 #endif
@@ -189,7 +181,7 @@ namespace Plugin
 		public unsafe static void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+			CARDSTrackingPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #else
             Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #endif
@@ -197,7 +189,7 @@ namespace Plugin
 		public unsafe static void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.check_track(ref frame, targets, nbTarget);
+			CARDSTrackingPlugin.check_track(ref frame, targets, nbTarget);
 #else
             CheckTrack(ref frame, targets, nbTarget);
 #endif
@@ -206,30 +198,11 @@ namespace Plugin
 		public unsafe static void TrackWrapped(ref Frame frame, Target* targets, int nbTarget)
 		{
 #if UNITY_EDITOR
-			SARPlugin.track(ref frame, targets, nbTarget);
+			CARDSTrackingPlugin.track(ref frame, targets, nbTarget);
 #else
             Track(ref frame, targets, nbTarget);
 #endif
 		}
-
-		public unsafe static void ManualRegisterWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget)
-		{
-#if UNITY_EDITOR
-			SARPlugin.manual_register(ref frame, targets, ref nbTarget, maxTarget);
-#else
-            ManualRegister(ref frame, targets, ref nbTarget, maxTarget);
-#endif
-		}
-
-		public unsafe static void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
-		{
-#if UNITY_EDITOR
-			SARPlugin.debug_targets(ref frame, targets, nbTarget);
-#else
-            DebugTargets(ref frame, targets, nbTarget);
-#endif
-		}
-
 		#endregion
 	}
 }

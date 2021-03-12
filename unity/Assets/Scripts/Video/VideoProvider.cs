@@ -16,10 +16,16 @@ public abstract class VideoProvider
 		frame.width = parameters.camera_width;
 		frame.height = parameters.camera_height;
 		frame.raw_data = new IntPtr();
+		frame.flip_mode = parameters.flip_mode;
+
 		pixels = new Color32[parameters.camera_width * parameters.camera_height];
-		frame.is_flipped_x = parameters.is_flipped_x;
-		frame.is_flipped_y = parameters.is_flipped_y;
+	}
+
+	virtual public void Close()
+	{
 	}
 
 	abstract public bool GetFrame(out Frame fr);
+
+
 }

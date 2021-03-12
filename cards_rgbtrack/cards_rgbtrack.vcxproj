@@ -23,12 +23,16 @@
     <ClCompile Include="src\multitracker.cpp" />
     <ClCompile Include="src\tracker_api.cpp" />
     <ClCompile Include="src\utilities_api.cpp" />
+    <ClCompile Include="src\videoprovider.cpp" />
+    <ClCompile Include="src\video_api.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utilities.h" />
     <ClInclude Include="include\multitracker.h" />
     <ClInclude Include="include\tracker_api.h" />
     <ClInclude Include="include\utilities_api.h" />
+    <ClInclude Include="include\videoprovider.h" />
+    <ClInclude Include="include\video_api.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\cpp.editorconfig" />

@@ -15,11 +15,10 @@ using namespace cv;
 
 extern struct RectStruct;
 extern struct Target;
-extern struct Color32;
 extern struct Frame;
 
-// Convert texture frame in Mat OpenCV
-Mat TextureToCVMat( const Frame& frame );
+// Convert texture in rawdata frame to Mat OpenCV
+Mat FrameToCVMat( const Frame& frame );
 
 //Convert Rect2d to Rect
 RectStruct Rect2dToRectStruct( const Rect2d& rect );
