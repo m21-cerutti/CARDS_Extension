@@ -37,18 +37,17 @@ const Frame& VideoProvider::GetFrame()
 		_frame.rawData = nullptr;
 		return _frame;
 	}
-	cvtColor( mat,mat,CV_BGR2RGBA );
-	memcpy( _frame.rawData,mat.data,4 * mat.total() );
+	CVMatToFrameRawData( mat,_frame );
 	return _frame;
 }
 
 void VideoProvider::InitCameraFrame( int width,int height )
 {
-	_cap.set( cv::CAP_PROP_BUFFERSIZE,3 );
+	_cap.set( CAP_PROP_BUFFERSIZE,3 );
 	_cap.set( CAP_PROP_FRAME_WIDTH,width );
 	_cap.set( CAP_PROP_FRAME_HEIGHT,height );
 
-	_frame.height = height;
-	_frame.width = width;
-	_frame.rawData = new Color32[(size_t)height * width];
+	_frame.height = _cap.get( CAP_PROP_FRAME_HEIGHT );
+	_frame.width = _cap.get( CAP_PROP_FRAME_WIDTH );
+	_frame.rawData = new Color32[(size_t)_frame.height * _frame.width];
 }

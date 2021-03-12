@@ -20,6 +20,9 @@ extern struct Frame;
 // Convert texture in rawdata frame to Mat OpenCV
 Mat FrameToCVMat( const Frame& frame );
 
+// Fill the rawdata field with mat texture
+void CVMatToFrameRawData( const Mat& src,Frame& dst );
+
 //Convert Rect2d to Rect
 RectStruct Rect2dToRectStruct( const Rect2d& rect );
 

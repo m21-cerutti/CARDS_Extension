@@ -15,14 +15,14 @@ using namespace cv;
 
 /*Structure data*/
 
-struct Vector3
+struct Vector3f
 {
 	float x;
 	float y;
 	float z;
 };
 
-struct Matrix4x4
+struct Matrix4x4f
 {
 	float c_00;
 	float c_01;

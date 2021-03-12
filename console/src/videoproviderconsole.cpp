@@ -1,6 +1,6 @@
-#include "videoprovider.h"
+#include "videoproviderconsole.h"
 
-VideoProvider::VideoProvider()
+VideoProviderConsole::VideoProviderConsole()
 {
 	_frame.rawData = nullptr;
 	if(!_cap.open( 0,cv::CAP_ANY ))
@@ -9,7 +9,7 @@ VideoProvider::VideoProvider()
 	}
 }
 
-VideoProvider::VideoProvider( string filename )
+VideoProviderConsole::VideoProviderConsole( string filename )
 {
 	delete _frame.rawData;
 	if(!_cap.open( filename ))
@@ -18,13 +18,13 @@ VideoProvider::VideoProvider( string filename )
 	}
 }
 
-VideoProvider::~VideoProvider()
+VideoProviderConsole::~VideoProviderConsole()
 {
 	free( _frame.rawData );
 	_cap.release();
 }
 
-const Frame& VideoProvider::GetFrame()
+const Frame& VideoProviderConsole::GetFrame()
 {
 	Mat mat;
 	_cap >> mat;
@@ -45,7 +45,7 @@ const Frame& VideoProvider::GetFrame()
 	return _frame;
 }
 
-void VideoProvider::InitCameraFrame( int width,int height )
+void VideoProviderConsole::InitCameraFrame( int width,int height )
 {
 	_frame.height = height;
 	_frame.width = width;

@@ -16,7 +16,7 @@ namespace Plugin
 	};
 
 	[System.Serializable]
-	public struct Matrix4x4
+	public struct Matrix4x4f
 	{
 		public float c_00;
 		public float c_01;

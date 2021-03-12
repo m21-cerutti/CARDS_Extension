@@ -22,6 +22,8 @@ public class VideoParameters : ScriptableObject
 
 	public int checktrack_frequency = 20;
 	public bool use_detection = false;
+
+	[ShowWhen("use_detection", true)]
 	public Rect rect_detection = new Rect(0, 0, 1, 1);
 
 	[ShowWhen("device_index", "==-2")]

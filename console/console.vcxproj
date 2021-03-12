@@ -20,11 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />
-    <ClCompile Include="src\videoprovider.cpp" />
+    <ClCompile Include="src\videoproviderconsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\console.h" />
-    <ClInclude Include="include\videoprovider.h" />
+    <ClInclude Include="include\videoproviderconsole.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\cpp.editorconfig" />

@@ -4,18 +4,31 @@
 using namespace std;
 using namespace cv;
 
-Mat FrameToCVMat( const Frame& frame )
+Mat FrameToCVMat( const Frame& src )
 {
 	// TODO Need some checks (frame raw_data initialised etc)
-	Mat mat( frame.height,frame.width,CV_8UC4,frame.rawData );
+	Mat mat( src.height,src.width,CV_8UC4,src.rawData );
 	cvtColor( mat,mat,cv::COLOR_RGBA2BGR );
 	flip( mat,mat,0 );
-	int flip_code = (int)frame.flip_mode - 2;
+	int flip_code = (int)src.flip_mode - 2;
 	if(flip_code >= -1)
 	{
 		flip( mat,mat,flip_code );
 	}
 	return mat;
+}
+
+void CVMatToFrameRawData( const Mat& src,Frame& dst )
+{
+	Mat img = src.clone();
+	cvtColor( img,img,CV_BGR2RGBA );
+	flip( img,img,0 );
+	int flip_code = (int)dst.flip_mode - 2;
+	if(flip_code >= -1)
+	{
+		flip( src,src,flip_code );
+	}
+	memcpy( dst.rawData,img.data,img.channels() * img.total() );
 }
 
 RectStruct Rect2dToRectStruct( const Rect2d& rect )

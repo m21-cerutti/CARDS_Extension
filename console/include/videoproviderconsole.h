@@ -9,16 +9,16 @@
 using namespace std;
 using namespace cv;
 
-class VideoProvider
+class VideoProviderConsole
 {
 public:
 	//Camera
-	VideoProvider();
+	VideoProviderConsole();
 
 	//VideoFile
-	VideoProvider( string filename );
+	VideoProviderConsole( string filename );
 
-	~VideoProvider();
+	~VideoProviderConsole();
 
 	virtual const Frame& GetFrame();
 

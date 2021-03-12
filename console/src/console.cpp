@@ -1,5 +1,5 @@
 #include "console.h"
-#include "videoprovider.h"
+#include "videoproviderconsole.h"
 
 using namespace std;
 using namespace cv;
@@ -8,11 +8,12 @@ int main( int argc,char** argv )
 {
 	TestDLL();
 	//TestWebcam();
-	TestWorkflowVideo();
+	//TestWorkflowVideo();
 	//TestWorkflowWebcam();
+	TestVideoProvider();
 }
 
-static void TestWorkflow( VideoProvider& provider );
+static void TestWorkflow( VideoProviderConsole& provider );
 
 void TestWebcam()
 {
@@ -58,7 +59,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening video test.avi ..." << endl;
 
-	VideoProvider video( "test.avi" );
+	VideoProviderConsole video( "test.avi" );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -67,13 +68,13 @@ void TestWorkflowVideo()
 void TestWorkflowWebcam()
 {
 	std::cerr << "Opening camera...\r";
-	VideoProvider webcam;
+	VideoProviderConsole webcam;
 	TestWorkflow( webcam );
 
 	std::cout << "End test WorkflowWebcam." << endl;
 }
 
-void TestWorkflow( VideoProvider& provider )
+void TestWorkflow( VideoProviderConsole& provider )
 {
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
@@ -124,4 +125,32 @@ void TestWorkflow( VideoProvider& provider )
 
 	cv::destroyAllWindows();
 	Close( targets,nbtargets,maxTargets );
+}
+
+void TestVideoProvider()
+{
+	std::cerr << "Opening video...\r";
+
+	VideoProvider* video = CreateVideoContext( "./test.avi",256,256 );
+
+
+	for(int i = 0;; i++)
+	{
+		Frame fr;
+		GetFrame( video,fr );
+		if(fr.rawData == nullptr)
+		{
+			break;
+		}
+
+		Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
+		cvtColor( texture,texture,COLOR_RGBA2BGR );
+
+		imshow( "Test webcam",texture );
+		if(waitKey( 25 ) == 27) break; // stop capturing by pressing ESC
+	}
+	cv::destroyAllWindows();
+	FreeVideoContext( video );
+
+	std::cout << "End test VideoProvider." << endl;
 }

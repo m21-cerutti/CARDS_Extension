@@ -115,7 +115,7 @@ public abstract class Tracking : MonoBehaviour
 			{
 				fixed(Target* outTargets = targets)
 				{
-					Debug.Log("Free tagets");
+					Debug.Log("Free targets");
 					CARDSTrackingPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
 				}
 			}
