@@ -26,7 +26,10 @@ public class LogsData : SingletonBehaviour<LogsData>
 	private StringBuilder _buffer_perfs = new StringBuilder();
 
 
-	private void Start() => System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+	private void Start()
+	{
+		System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+	}
 
 	public void OnEnable()
 	{
@@ -65,13 +68,19 @@ public class LogsData : SingletonBehaviour<LogsData>
 	/// Append error message to the actual frame.
 	/// </summary>
 	/// <param name="message">The message to append.</param>
-	public void DebugTargetsError(string message) => _buffer_errors.Append(message + ";\t");
+	public void DebugTargetsError(string message)
+	{
+		_buffer_errors.Append(message + ";\t");
+	}
 
 	/// <summary>
 	/// Append performance message to the actual frame.
 	/// </summary>
 	/// <param name="message">The message to append.</param>
-	public void DebugFramePerf(string message) => _buffer_perfs.Append(message);
+	public void DebugFramePerf(string message)
+	{
+		_buffer_perfs.Append(message);
+	}
 
 
 	/// <summary>

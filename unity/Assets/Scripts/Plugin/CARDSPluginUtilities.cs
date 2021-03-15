@@ -1,5 +1,7 @@
 ﻿using fts;
 
+using System.Runtime.InteropServices;
+
 namespace Plugin
 {
 	/// <summary>
@@ -27,20 +29,23 @@ namespace Plugin
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
 		// editor or standalone mode.
 		#region Wrapped methods
-		public static unsafe void ManualRegisterWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget) =>
+		public static unsafe void ManualRegisterWrapped(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget)
+		{
 #if UNITY_EDITOR
 			manual_register(ref frame, targets, ref nbTarget, maxTarget);
 #else
             ManualRegister(ref frame, targets, ref nbTarget, maxTarget);
 #endif
+		}
 
-
-		public static unsafe void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget) =>
+		public static unsafe void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
 #if UNITY_EDITOR
 			debug_targets(ref frame, targets, nbTarget);
 #else
             DebugTargets(ref frame, targets, nbTarget);
 #endif
+		}
 
 
 		#endregion

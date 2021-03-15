@@ -1,5 +1,7 @@
 ﻿using System;
 
+using System.Runtime.InteropServices;
+
 using fts;
 
 namespace Plugin
@@ -29,51 +31,55 @@ namespace Plugin
 		public delegate bool GetFrame(IntPtr video, ref Frame frame);
 #else
         [DllImport("cards_rgbtrack")]
-		internal static extern IntPtr CreateCameraContext();
+		internal static extern IntPtr CreateCameraContext(int width, int height);
 
-		 [DllImport("cards_rgbtrack")]
-		internal static extern IntPtr CreateVideoContext(string filename);
+		[DllImport("cards_rgbtrack")]
+		internal static extern IntPtr CreateVideoContext(string filename, int width, int height);
 
-		 [DllImport("cards_rgbtrack")]
+		[DllImport("cards_rgbtrack")]
 		internal static extern void FreeVideoContext(IntPtr video);
 
-		 [DllImport("cards_rgbtrack")]
+		[DllImport("cards_rgbtrack")]
 		internal static extern bool GetFrame(IntPtr video, ref Frame frame);
 #endif
 
 		#region Wrapped methods
 
-		public static IntPtr CreateCameraContextWrapped(int width, int height) =>
+		public static IntPtr CreateCameraContextWrapped(int width, int height)
+		{
 #if UNITY_EDITOR
-			create_camera_context(width, height);
+			return create_camera_context(width, height);
 #else
-           return CreateCameraContext(width, height);
+			return CreateCameraContext(width, height);
 #endif
+		}
 
-
-		public static IntPtr CreateVideoContextWrapped(string filename, int width, int height) =>
+		public static IntPtr CreateVideoContextWrapped(string filename, int width, int height)
+		{
 #if UNITY_EDITOR
-			create_video_context(filename, width, height);
+			return create_video_context(filename, width, height);
 #else
             return CreateVideoContext(filename, width, height);
 #endif
+		}
 
-
-		public static void FreeVideoContextWrapped(IntPtr video) =>
+		public static void FreeVideoContextWrapped(IntPtr video)
+		{
 #if UNITY_EDITOR
 			free_video_context(video);
 #else
             FreeVideoContext(video);
 #endif
+		}
 
-
-		public static bool GetFrameWrapped(IntPtr video, ref Frame frame) =>
+		public static bool GetFrameWrapped(IntPtr video, ref Frame frame)
+		{
 #if UNITY_EDITOR
-			get_frame(video, ref frame);
+			return get_frame(video, ref frame);
 #else
             return GetFrame(video, ref frame);
 #endif
-
+		}
 
 		#endregion
 	}

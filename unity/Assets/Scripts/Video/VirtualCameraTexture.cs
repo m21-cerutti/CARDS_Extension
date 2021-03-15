@@ -26,7 +26,10 @@ public class VirtualCameraTexture : FrameProvider
 		_cam.targetTexture = _render_texture;
 	}
 
-	public override void Close() => base.Close();
+	public override void Close()
+	{
+		base.Close();
+	}
 
 	public override bool GetFrame(out Frame fr)
 	{

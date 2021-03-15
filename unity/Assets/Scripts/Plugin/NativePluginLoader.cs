@@ -227,7 +227,10 @@ namespace fts
 		public string pluginName { get; private set; }
 
 		// Methods
-		public PluginAttr(string pluginName) => this.pluginName = pluginName;
+		public PluginAttr(string pluginName)
+		{
+			this.pluginName = pluginName;
+		}
 	}
 
 
@@ -241,7 +244,10 @@ namespace fts
 		public string functionName { get; private set; }
 
 		// Methods
-		public PluginFunctionAttr(string functionName) => this.functionName = functionName;
+		public PluginFunctionAttr(string functionName)
+		{
+			this.functionName = functionName;
+		}
 	}
 
 } // namespace fts

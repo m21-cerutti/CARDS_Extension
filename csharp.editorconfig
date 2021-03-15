@@ -76,12 +76,12 @@ csharp_style_var_when_type_is_apparent = false:suggestion
 
 # Membres expression-bodied
 csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_constructors = true:silent
+csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
-csharp_style_expression_bodied_methods = true:silent
-csharp_style_expression_bodied_operators = true:silent
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_operators = false:silent
 csharp_style_expression_bodied_properties = true:silent
 
 # Préférences correspondants au modèle
@@ -106,7 +106,7 @@ csharp_prefer_simple_using_statement = true:suggestion
 csharp_prefer_simple_default_expression = true:suggestion
 csharp_style_deconstructed_variable_declaration = true:suggestion
 csharp_style_inlined_variable_declaration = true:suggestion
-csharp_style_pattern_local_over_anonymous_function = true:suggestion
+csharp_style_pattern_local_over_anonymous_function = true:silent
 csharp_style_prefer_index_operator = false:suggestion
 csharp_style_prefer_range_operator = false:suggestion
 csharp_style_throw_expression = true:suggestion
@@ -167,27 +167,27 @@ csharp_preserve_single_line_statements = false
 
 # Règles de nommage
 
-dotnet_naming_rule.interface_should_be_commence_par_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_commence_par_i.severity = warning
 dotnet_naming_rule.interface_should_be_commence_par_i.symbols = interface
 dotnet_naming_rule.interface_should_be_commence_par_i.style = commence_par_i
 
-dotnet_naming_rule.types_should_be_casse_pascal.severity = suggestion
+dotnet_naming_rule.types_should_be_casse_pascal.severity = warning
 dotnet_naming_rule.types_should_be_casse_pascal.symbols = types
 dotnet_naming_rule.types_should_be_casse_pascal.style = casse_pascal
 
-dotnet_naming_rule.méthode_should_be_méthode.severity = suggestion
+dotnet_naming_rule.méthode_should_be_méthode.severity = warning
 dotnet_naming_rule.méthode_should_be_méthode.symbols = méthode
 dotnet_naming_rule.méthode_should_be_méthode.style = méthode
 
-dotnet_naming_rule.champ_privé_ou_interne_should_be_variable_private.severity = suggestion
+dotnet_naming_rule.champ_privé_ou_interne_should_be_variable_private.severity = warning
 dotnet_naming_rule.champ_privé_ou_interne_should_be_variable_private.symbols = champ_privé_ou_interne
 dotnet_naming_rule.champ_privé_ou_interne_should_be_variable_private.style = variable_private
 
-dotnet_naming_rule.champ_public_ou_protégé_should_be_variable_public_protected.severity = suggestion
+dotnet_naming_rule.champ_public_ou_protégé_should_be_variable_public_protected.severity = warning
 dotnet_naming_rule.champ_public_ou_protégé_should_be_variable_public_protected.symbols = champ_public_ou_protégé
 dotnet_naming_rule.champ_public_ou_protégé_should_be_variable_public_protected.style = variable_public_protected
 
-dotnet_naming_rule.membres_autres_que_des_champs_should_be_casse_pascal.severity = suggestion
+dotnet_naming_rule.membres_autres_que_des_champs_should_be_casse_pascal.severity = warning
 dotnet_naming_rule.membres_autres_que_des_champs_should_be_casse_pascal.symbols = membres_autres_que_des_champs
 dotnet_naming_rule.membres_autres_que_des_champs_should_be_casse_pascal.style = casse_pascal
 

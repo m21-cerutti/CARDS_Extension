@@ -227,12 +227,18 @@ public class ShowWhenDrawer : PropertyDrawer
 	/// <summary>
 	/// Return if the object is enum and not null
 	/// </summary>
-	private static bool IsEnum(object obj) => obj != null && obj.GetType().IsEnum;
+	private static bool IsEnum(object obj)
+	{
+		return obj != null && obj.GetType().IsEnum;
+	}
 
 	/// <summary>
 	/// Return if all the objects are enums and not null
 	/// </summary>
-	private static bool IsEnum(object[] obj) => obj != null && obj.All(o => o.GetType().IsEnum);
+	private static bool IsEnum(object[] obj)
+	{
+		return obj != null && obj.All(o => o.GetType().IsEnum);
+	}
 
 	/// <summary>
 	/// Check if the field with name "fieldName" has the same class as the "checkTypes" classes through reflection
