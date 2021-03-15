@@ -10,6 +10,7 @@ public class SingleThread : Tracking
 		Frame fr;
 		if(!video.GetFrame(out fr))
 		{
+			Debug.LogWarning("Empty frames.");
 			return;
 		}
 

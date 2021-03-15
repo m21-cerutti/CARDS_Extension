@@ -27,5 +27,5 @@ public class VideoParameters : ScriptableObject
 	public Rect rect_detection = new Rect(0, 0, 1, 1);
 
 	[ShowWhen("device_index", "==-2")]
-	public string file_path;
+	public string file_path_video;
 }

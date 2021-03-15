@@ -26,4 +26,4 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  file_path: ./test.avi
+  file_path_video: ./test.avi

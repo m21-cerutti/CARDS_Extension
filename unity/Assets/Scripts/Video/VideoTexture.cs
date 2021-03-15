@@ -13,13 +13,13 @@ public class VideoTexture : VideoProvider
 
 	override public void Init(VideoParameters parameters)
 	{
-		if(File.Exists(parameters.file_path))
+		if(File.Exists(parameters.file_path_video))
 		{
-			_video = CARDSVideoPlugin.CreateVideoContextWrapped(parameters.file_path, parameters.camera_width, parameters.camera_height);
-			Debug.Log("Open video " + parameters.file_path);
+			_video = CARDSVideoPlugin.CreateVideoContextWrapped(parameters.file_path_video, parameters.camera_width, parameters.camera_height);
+			Debug.Log("Open video " + parameters.file_path_video);
 		}
 		else
-			throw new Exception("File not exists " + Path.GetFullPath(parameters.file_path));
+			throw new Exception("File not exists " + Path.GetFullPath(parameters.file_path_video));
 		base.Init(parameters);
 	}
 

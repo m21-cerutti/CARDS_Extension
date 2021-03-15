@@ -3,6 +3,7 @@ import sys
 import xml.etree.cElementTree as ET
 
 FREQ_RECORD = 20
+IDS_TO_USE = [0]
 
 video = cv.VideoCapture('./test.avi')
 if not video.isOpened():
@@ -15,7 +16,7 @@ if not ret:
         sys.exit()
 num_frame = 0
 
-root = ET.Element("root")
+root = ET.Element("Video_annotations")
 
 while(True):
     ret, frame = video.read()
@@ -24,10 +25,25 @@ while(True):
 
         # Defining boundingbox and writing anotation every FREQ_RECORD frames
         if num_frame % FREQ_RECORD == 0:
-            bbox = cv.selectROI(frame, False)
-            frame = ET.SubElement(root, "frame_number", value=str(num_frame))
-            top_left = ET.SubElement(frame, "top_left_coord", value=str(bbox[0]) + ", " + str(bbox[1]))
-            bottom_right = ET.SubElement(frame, "bottom_right_coord", value=str(bbox[2]) + ", " + str(bbox[3]))
+            select = True
+            xmlframe = ET.SubElement(root, "frame", 
+                number=str(num_frame))
+
+            for id in IDS_TO_USE:
+                print("Id" + str(id))
+                x, y, width, height = cv.selectROI(frame, True)
+                if width==0 and height ==0:
+                    ET.SubElement(xmlframe, "Object",
+                        id=str(id), 
+                        state="Lost") 
+                else:
+                    ET.SubElement(xmlframe, "Object",
+                        id=str(id), 
+                        state="Live", 
+                        x=str(x), 
+                        y=str(y), 
+                        width=str(width), 
+                        height=str(height))
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
     else:

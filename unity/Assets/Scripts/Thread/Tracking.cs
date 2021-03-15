@@ -19,6 +19,7 @@ public abstract class Tracking : MonoBehaviour
 	public int NbTargets { get => nb_targets; }
 	public int MaxTargets { get => max_targets; }
 	public VideoParameters Parameters { get => parameters; }
+	public int NbFrame { get => nb_frame; }
 	#endregion
 
 	//Convert from OpenCV space to Unity and give a cpy of targets
