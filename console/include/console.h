@@ -16,3 +16,5 @@ void TestWorkflowWebcam();
 void TestVideoProvider();
 
 void TestVideoComparison();
+
+void TestWriteXML();
