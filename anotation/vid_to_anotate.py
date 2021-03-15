@@ -1,9 +1,12 @@
+#
+#
+
 import cv2 as cv
 import sys
 import xml.etree.cElementTree as ET
 
 FREQ_RECORD = 20
-IDS_TO_USE = [0]
+IDS_TO_USE = range(0, 5)
 
 video = cv.VideoCapture('./test.avi')
 if not video.isOpened():

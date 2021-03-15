@@ -13,4 +13,4 @@ void TestWorkflowVideo();
 
 void TestWorkflowWebcam();
 
-void TestVideoProvider();
+void TestVideoContext();

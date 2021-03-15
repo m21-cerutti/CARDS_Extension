@@ -10,7 +10,7 @@ int main( int argc,char** argv )
 	//TestWebcam();
 	//TestWorkflowVideo();
 	//TestWorkflowWebcam();
-	TestVideoProvider();
+	TestVideoContext();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
@@ -104,15 +104,16 @@ void TestWorkflow( VideoProviderConsole& provider )
 		}
 		else if(isinitialised)
 		{
+			//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
+
 			if(i == 0)
 			{
 				ManualRegister( fr,targets,nbtargets,maxTargets );
-				//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
 			}
 			else if(i % detect_freq == 0)
 			{
-				//std::cout << "Detect" << endl;
-				//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
+				//std::cout << "CheckTrack" << endl;
+				//CheckTrack( fr,zoneDetection,targets,nbTarget,maxTarget );
 			}
 			else
 			{
@@ -127,7 +128,7 @@ void TestWorkflow( VideoProviderConsole& provider )
 	Close( targets,nbtargets,maxTargets );
 }
 
-void TestVideoProvider()
+void TestVideoContext()
 {
 	std::cerr << "Opening video...\r";
 
