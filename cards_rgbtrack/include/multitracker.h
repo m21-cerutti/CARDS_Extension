@@ -44,6 +44,8 @@
 #include  <unordered_map>
 #include "opencv2/tracking/tracker.hpp"
 
+#include "interfaceTracker.h"
+
 using namespace std;
 using namespace cv;
 
@@ -55,7 +57,7 @@ public:
 
 	~MultiTrackerCARDS();
 
-	void add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<Tracker> tracker_algorithm );
+	void add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<ITracker> tracker_algorithm );
 
 	void remove( const int id );
 
@@ -68,7 +70,7 @@ public:
 	Scalar getColor( const int id );
 
 private:
-	std::unordered_map <int,Ptr<Tracker> > trackers;
+	std::unordered_map <int,Ptr<ITracker> > trackers;
 	std::unordered_map <int,Rect2d> boundingBoxes;
 	std::unordered_map<int,Scalar> colors;
 };

@@ -10,6 +10,8 @@
 #include <iostream>
 #include <stdio.h>
 
+#include "interfaceTracker.h"
+
 using namespace std;
 using namespace cv;
 
@@ -37,6 +39,6 @@ void DebugCVTargets( const Mat& mat,const std::vector<Rect2d>& objects,int numbe
 void DebugCVTargets( const Mat& mat,const Target* targets,int number );
 
 // Create tracker by name
-Ptr<Tracker> createTrackerByName( const std::string& name );
+Ptr<ITracker> createTrackerByName( const std::string& name );
 
 

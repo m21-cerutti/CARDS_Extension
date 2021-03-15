@@ -11,9 +11,9 @@ MultiTrackerCARDS::~MultiTrackerCARDS()
 	colors.clear();
 }
 
-void MultiTrackerCARDS::add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<Tracker> tracker_algorithm )
+void MultiTrackerCARDS::add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<ITracker> tracker_algorithm )
 {
-	Ptr<Tracker> tracker = tracker_algorithm;
+	Ptr<ITracker> tracker = tracker_algorithm;
 	if(tracker == NULL)
 	{
 		throw runtime_error( "Error : tacker null." );
@@ -29,7 +29,7 @@ void MultiTrackerCARDS::add( const int id,InputArray image,const Rect2d& boundin
 		throw runtime_error( "Error : id already used " + to_string( id ) );
 	}
 
-	pair<int,Ptr<Tracker>> tmp( id,tracker );
+	pair<int,Ptr<ITracker>> tmp( id,tracker );
 	trackers.insert( tmp );
 
 	pair<int,Rect2d> bb( id,boundingBox );
