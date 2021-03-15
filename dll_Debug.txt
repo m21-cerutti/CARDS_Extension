@@ -1,0 +1,23 @@
+# Watchout windows path
+
+# First dependencies
+%OPENCV_DIR%\bin\Debug\opencv_core3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_highgui3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_imgcodecs3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_objdetect3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_videoio3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_imgproc3413d.dll
+
+# Subdependencies
+%OPENCV_DIR%\bin\Debug\opencv_video3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_calib3d3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_features2d3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_flann3413d.dll
+
+%OPENCV_DIR%\bin\Release\opencv_ffmpeg3413_64.dll
+
+# Contrib
+%OPENCV_DIR%\bin\Debug\opencv_tracking3413d.dll
+%OPENCV_DIR%\bin\Debug\opencv_dnn3413d.dll
+
+.\cards_rgbtrack\x64\Debug\cards_rgbtrackd.dll
