@@ -1,28 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 using Plugin;
 
+using UnityEngine;
+
+/// <summary>
+/// The parent component for main tracking objects loop. 
+/// Open FrameProvider, handle memory and getters, logs activation, and assure the compatibility of space between OpenCV and Unity. 
+/// </summary>
 public abstract class Tracking : MonoBehaviour
 {
 	[SerializeField]
 	protected VideoParameters parameters; //Scenario that you can interchange (Virtual, Webcam)
 
-	protected VideoProvider video;
+	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;
 	protected int nb_frame = -1;
 
 	#region Getters properties
-	public bool IsInitialised { get => nb_frame > parameters.starting_frame; }
-	public int NbTargets { get => nb_targets; }
-	public int MaxTargets { get => max_targets; }
-	public VideoParameters Parameters { get => parameters; }
-	public int NbFrame { get => nb_frame; }
+	public bool IsInitialised => nb_frame > parameters.starting_frame;
+	public VideoParameters Parameters => parameters;
+	public int NbTargets => nb_targets;
+	public int MaxTargets => max_targets;
+	public int NbFrame => nb_frame;
 	#endregion
 
-	//Convert from OpenCV space to Unity and give a cpy of targets
+	/// <summary>
+	/// Convert from OpenCV space to Unity and give a copy of targets
+	/// </summary>
+	/// <returns>The list of targets.</returns>
 	public List<Target> GetTargets()
 	{
 		List<Target> final = new List<Target>();
@@ -39,8 +46,13 @@ public abstract class Tracking : MonoBehaviour
 		return final;
 	}
 
-	// bottom left = 0,1, top right = 0,1 in OpenCV
-	// bottom left = 0,0, top right = 1,1 in Unity
+	/// <summary>
+	/// Convert RectStruct from opencv to Unity space.
+	/// bottom left = 0,1, top right = 0,1 in OpenCV
+	/// bottom left = 0,0, top right = 1,1 in Unity
+	/// </summary>
+	/// <param name="rect">The rect to convert space.</param>
+	/// <returns>The new rect.</returns>
 	protected RectStruct ConvertRectToUnityScreen(RectStruct rect)
 	{
 		rect.y = parameters.camera_height - rect.y;
@@ -52,8 +64,12 @@ public abstract class Tracking : MonoBehaviour
 	{
 		targets = new Target[5];
 		Application.targetFrameRate = parameters.requested_camera_fps;
+		LogsData.Instance.enabled = parameters.log_datas;
 	}
 
+	/// <summary>
+	/// Start point.
+	/// </summary>
 	protected void OnEnable()
 	{
 		DebugTargets[] debugs = gameObject.GetComponents<DebugTargets>();
@@ -79,7 +95,7 @@ public abstract class Tracking : MonoBehaviour
 		}
 		else if(parameters.device_index == -2)
 		{
-			video = new VideoTexture();
+			video = new VideoFileTexture();
 			gameObject.AddComponent<DebugTargetsVideo>();
 		}
 		video.Init(parameters);
@@ -95,12 +111,19 @@ public abstract class Tracking : MonoBehaviour
 		nb_frame = -1;
 	}
 
+	/// <summary>
+	/// End point.
+	/// </summary>
 	protected void OnApplicationQuit()
 	{
 		FreeInternData();
 		nb_frame = -1;
 	}
 
+	/// <summary>
+	/// End point, done after OnApplicationQuit.
+	/// Not done in Build when quitting application.
+	/// </summary>
 	protected void OnDisable()
 	{
 		FreeInternData();
@@ -125,6 +148,7 @@ public abstract class Tracking : MonoBehaviour
 
 	protected void Update()
 	{
+		//Escape to quit.
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
 			gameObject.SetActive(false);
@@ -138,8 +162,17 @@ public abstract class Tracking : MonoBehaviour
 #endif
 			return;
 		}
-		LogsData.Instance.DebugFramePerf(InternalTrackingLoop);
+
+		//Main loop
+		if(parameters.log_datas)
+		{
+			LogsData.Instance.DebugFramePerf(InternalTrackingLoop);
+		}
+		else
+		{
+			InternalTrackingLoop();
+		}
 	}
 
-	abstract protected void InternalTrackingLoop();
+	protected abstract void InternalTrackingLoop();
 }

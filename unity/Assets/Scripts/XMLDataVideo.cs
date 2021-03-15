@@ -1,8 +1,15 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿/// Generated with http://xmltocsharp.azurewebsites.net/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 
+/// <summary>
+/// Permit to read XML video annotations and get data structure.
+/// Watchout, all value are string and need to be converted.
+/// Use with XMLVideoAnotations.Load(path);
+/// </summary>
 namespace Xml2CSharp
 {
 	[XmlRoot(ElementName = "Object")]

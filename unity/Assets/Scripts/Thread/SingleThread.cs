@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Plugin;
+
 using UnityEngine;
-using Plugin;
 
 public class SingleThread : Tracking
 {
+	/// <summary>
+	/// Implementation in one thread.
+	/// </summary>
 	protected override void InternalTrackingLoop()
 	{
 		Frame fr;
@@ -70,7 +72,10 @@ public class SingleThread : Tracking
 					{
 						//Debug.Log("Track");
 						CARDSTrackingPlugin.TrackWrapped(ref fr, outTargets, nb_targets);
-						CARDSUtilitiesPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
+						if(parameters.debug_cv)
+						{
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
+						}
 					}
 				}
 			}

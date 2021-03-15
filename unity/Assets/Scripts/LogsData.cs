@@ -1,116 +1,110 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-using System;
+﻿using System;
+using System.Collections;
 using System.IO;
-using Utility.Singleton;
 using System.Text;
 
+using UnityEngine;
+
+using Utility.Singleton;
+
+/// <summary>
+/// Singleton class that permit to log personalized data like erors and performances.
+/// Folder of destination depend on build, see Unity log documentation (https://docs.unity3d.com/Manual/LogFiles.html)
+/// </summary>
 public class LogsData : SingletonBehaviour<LogsData>
 {
-	static public string prefix_log_performance = "Log_Perf : ";
-	static public string prefix_log_errors = "Log_Error : ";
-
-	[SerializeField]
-	bool _use_debug_log_datas;
+	/// <summary>
+	/// Folder in Logs that contained datas.
+	/// </summary>
 	[SerializeField]
 	private string _log_directory = "LogsData";
 
 	private StreamWriter _log_errors;
 	private StreamWriter _log_perfs;
-
 	private Coroutine _corout_endframe;
 	private StringBuilder _buffer_errors = new StringBuilder();
 	private StringBuilder _buffer_perfs = new StringBuilder();
 
-	private void Start()
-	{
-		System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-	}
+
+	private void Start() => System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
 	public void OnEnable()
 	{
-		if(!_use_debug_log_datas)
-			return;
 		CreateStreamLog();
-		Application.logMessageReceived += HandleLog;
 		if(_corout_endframe == null)
+		{
 			_corout_endframe = StartCoroutine(DebugFrameCoroutine());
+		}
 	}
 
 	public void OnDisable()
 	{
-		if(!_use_debug_log_datas)
-			return;
 		if(_corout_endframe != null)
+		{
 			StopCoroutine(_corout_endframe);
-		Application.logMessageReceived -= HandleLog;
+		}
+
 		CloseStreamLog();
 	}
 
+	/// <summary>
+	/// Init errors file with header.
+	/// </summary>
+	/// <param name="maxTargets"> Number of columns for header.</param>
 	public void InitTargetErrorHeader(int maxTargets)
 	{
-		if(!_use_debug_log_datas)
-			return;
 		for(int i = 0; i < maxTargets; i++)
+		{
 			_buffer_errors.Append(i).Append(";");
+		}
+
 		_buffer_errors.Append("\n");
 	}
 
-	public void DebugTargetsError(string message)
-	{
-		if(!_use_debug_log_datas)
-			return;
-		_buffer_errors.Append(message + ";\t");
-	}
+	/// <summary>
+	/// Append error message to the actual frame.
+	/// </summary>
+	/// <param name="message">The message to append.</param>
+	public void DebugTargetsError(string message) => _buffer_errors.Append(message + ";\t");
 
-	public void DebugFramePerf(string message)
-	{
-		if(!_use_debug_log_datas)
-			return;
-		_buffer_perfs.Append(message);
-	}
+	/// <summary>
+	/// Append performance message to the actual frame.
+	/// </summary>
+	/// <param name="message">The message to append.</param>
+	public void DebugFramePerf(string message) => _buffer_perfs.Append(message);
 
+
+	/// <summary>
+	/// Run action and append time performance to the actual frame.
+	/// </summary>
+	/// <param name="action">The action to run.</param>
 	public void DebugFramePerf(Action action)
 	{
-		if(!_use_debug_log_datas)
-			action();
-		else
-		{
-			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
-			action();
-			stopwatch.Stop();
-			DebugFramePerf(stopwatch.Elapsed.TotalMilliseconds.ToString());
-		}
+		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+		action();
+		stopwatch.Stop();
+		DebugFramePerf(stopwatch.Elapsed.TotalMilliseconds.ToString());
 	}
 
+	/// <summary>
+	/// Write to file's logs at end of frame.
+	/// </summary>
+	/// <returns>IEnumerator</returns>
 	private IEnumerator DebugFrameCoroutine()
 	{
 		while(isActiveAndEnabled)
 		{
 			yield return new WaitForEndOfFrame();
-			Debug.Log(prefix_log_errors + _buffer_errors.ToString());
-			Debug.Log(prefix_log_performance + _buffer_perfs.ToString());
+			_log_errors.WriteLine(_buffer_errors.ToString());
+			_log_perfs.WriteLine(_buffer_perfs.ToString());
 			_buffer_perfs.Clear();
 			_buffer_errors.Clear();
 		}
 	}
 
-	private void HandleLog(string logString, string stackTrace, LogType type)
-	{
-		logString = logString.Remove(logString.Length - "\r\n".Length, "\r\n".Length);
-		if(logString.StartsWith(prefix_log_performance))
-		{
-			_log_perfs.WriteLine(logString.Remove(0, prefix_log_performance.Length));
-		}
-
-		if(logString.StartsWith(prefix_log_errors))
-		{
-			_log_errors.WriteLine(logString.Remove(0, prefix_log_errors.Length));
-		}
-	}
-
+	/// <summary>
+	/// Create the log's streams.
+	/// </summary>
 	private void CreateStreamLog()
 	{
 		_log_directory = Path.Combine(Path.GetDirectoryName(Application.consoleLogPath), _log_directory);
@@ -140,6 +134,9 @@ public class LogsData : SingletonBehaviour<LogsData>
 		}
 	}
 
+	/// <summary>
+	/// Close the log's streams.
+	/// </summary>
 	private void CloseStreamLog()
 	{
 		_log_perfs.Close();

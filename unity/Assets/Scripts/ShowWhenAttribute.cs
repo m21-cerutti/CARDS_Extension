@@ -21,10 +21,7 @@ public class ShowWhenAttribute : PropertyAttribute
 	/// Attribute used to show or hide the Field depending on certain conditions
 	/// </summary>
 	/// <param name="conditionFieldName">Name of the bool condition Field</param>
-	public ShowWhenAttribute(string conditionFieldName)
-	{
-		this.condition_field_name = conditionFieldName;
-	}
+	public ShowWhenAttribute(string conditionFieldName) => condition_field_name = conditionFieldName;
 
 	/// <summary>
 	/// Attribute used to show or hide the Field depending on certain conditions
@@ -33,8 +30,8 @@ public class ShowWhenAttribute : PropertyAttribute
 	/// <param name="comparationValue">Value to compare</param>
 	public ShowWhenAttribute(string conditionFieldName, object comparationValue = null)
 	{
-		this.condition_field_name = conditionFieldName;
-		this.comparation_value = comparationValue;
+		condition_field_name = conditionFieldName;
+		comparation_value = comparationValue;
 	}
 
 	/// <summary>
@@ -44,7 +41,7 @@ public class ShowWhenAttribute : PropertyAttribute
 	/// <param name="comparationValueArray">Array of values to compare (only for enums)</param>
 	public ShowWhenAttribute(string conditionFieldName, object[] comparationValueArray = null)
 	{
-		this.condition_field_name = conditionFieldName;
-		this.comparation_value_array = comparationValueArray;
+		condition_field_name = conditionFieldName;
+		comparation_value_array = comparationValueArray;
 	}
 }

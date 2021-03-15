@@ -16,6 +16,8 @@ MonoBehaviour:
   camera_height: 256
   requested_camera_fps: 60
   starting_frame: 300
+  debug_cv: 1
+  log_datas: 0
   device_index: -2
   flip_mode: 0
   checktrack_frequency: 20

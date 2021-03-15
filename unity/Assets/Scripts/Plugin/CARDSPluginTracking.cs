@@ -1,12 +1,17 @@
-﻿using fts;
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using UnityEngine;
+using fts;
 
 namespace Plugin
 {
+
+	/// <summary>
+	/// Plugin wrapper functions for tracking, contains also data struct that transit between Unity and DLL Plugin.
+	/// </summary>
+
+	#region Basic structures
+
 	[System.Serializable]
 	public struct Vector3f
 	{
@@ -45,8 +50,10 @@ namespace Plugin
 		public float width;
 		public float height;
 	};
+	#endregion
 
-	/*Tacker definition*/
+	#region Tracker structures 
+
 	public enum StateTracker
 	{
 		Lost = -1,
@@ -65,9 +72,10 @@ namespace Plugin
 		public StateTracker state;
 	};
 
-	//TODO Structure export ?
+	#endregion
 
-	/*Use for frame pass from C# to C++*/
+	#region Frame structures
+
 	public enum FlipMode
 	{
 		None = 0,
@@ -85,6 +93,10 @@ namespace Plugin
 		public FlipMode flip_mode;
 		public IntPtr raw_data;
 	};
+
+	#endregion
+
+	/* Wrapper */
 
 	[PluginAttr("cards_rgbtrack")]
 	public static class CARDSTrackingPlugin
@@ -144,65 +156,58 @@ namespace Plugin
 		// editor or standalone mode.
 		#region Wrapped methods
 
-		public unsafe static void InitWrapped(Target* targets, ref int nbTarget, int maxTarget)
-		{
+		public static unsafe void InitWrapped(Target* targets, ref int nbTarget, int maxTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.init(targets, ref nbTarget, maxTarget);
 #else
             Init(targets, ref nbTarget, maxTarget);
 #endif
-		}
 
-		public unsafe static void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget)
-		{
+
+		public static unsafe void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.close(targets, ref nbTarget, maxTarget);
 #else
             Close(targets, ref nbTarget, maxTarget);
 #endif
-		}
-		public unsafe static void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget)
-		{
+
+		public static unsafe void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #else
             Register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
 #endif
-		}
-		public unsafe static void UnRegisterWrapped(int id, Target* targets, ref int nbTarget)
-		{
+
+		public static unsafe void UnRegisterWrapped(int id, Target* targets, ref int nbTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.un_register(id, targets, ref nbTarget);
 #else
             UnRegister(id, targets, ref nbTarget);
 #endif
-		}
 
-		public unsafe static void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
-		{
+
+		public static unsafe void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #else
             Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #endif
-		}
-		public unsafe static void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget)
-		{
+
+		public static unsafe void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.check_track(ref frame, targets, nbTarget);
 #else
             CheckTrack(ref frame, targets, nbTarget);
 #endif
-		}
 
-		public unsafe static void TrackWrapped(ref Frame frame, Target* targets, int nbTarget)
-		{
+
+		public static unsafe void TrackWrapped(ref Frame frame, Target* targets, int nbTarget) =>
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.track(ref frame, targets, nbTarget);
 #else
             Track(ref frame, targets, nbTarget);
 #endif
-		}
+
 		#endregion
 	}
 }

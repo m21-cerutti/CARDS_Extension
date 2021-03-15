@@ -1,17 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+using System;
+using System.IO;
+
+using Plugin;
 
 using UnityEngine;
-using System.Runtime.InteropServices;
-using System.IO;
-using Plugin;
-using System;
 
-public class VideoTexture : VideoProvider
+/// <summary>
+/// Video file frame provider. See FrameProvider.
+/// Use video from opencv to get frames.
+/// </summary>
+public class VideoFileTexture : FrameProvider
 {
-	IntPtr _video = IntPtr.Zero;
+	private IntPtr _video = IntPtr.Zero;
 
-	override public void Init(VideoParameters parameters)
+	public override void Init(VideoParameters parameters)
 	{
 		if(File.Exists(parameters.file_path_video))
 		{
@@ -19,11 +22,14 @@ public class VideoTexture : VideoProvider
 			Debug.Log("Open video " + parameters.file_path_video);
 		}
 		else
+		{
 			throw new Exception("File not exists " + Path.GetFullPath(parameters.file_path_video));
+		}
+
 		base.Init(parameters);
 	}
 
-	override public void Close()
+	public override void Close()
 	{
 		if(_video != IntPtr.Zero)
 		{
@@ -34,7 +40,7 @@ public class VideoTexture : VideoProvider
 		base.Close();
 	}
 
-	override public bool GetFrame(out Frame fr)
+	public override bool GetFrame(out Frame fr)
 	{
 		bool valid = false;
 		if(_video != IntPtr.Zero)

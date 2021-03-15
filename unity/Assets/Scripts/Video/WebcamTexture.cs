@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 using Plugin;
 
 using UnityEngine;
-using UnityEngine.UI;
 
-public class WebcamTexture : VideoProvider
+/// <summary>
+/// Webcam frame provider. See FrameProvider.
+/// </summary>
+public class WebcamTexture : FrameProvider
 {
 	private WebCamTexture _cam_texture;
 
-	override public void Init(VideoParameters parameters)
+	public override void Init(VideoParameters parameters)
 	{
 		_cam_texture = new WebCamTexture
 		{
@@ -35,7 +34,7 @@ public class WebcamTexture : VideoProvider
 		}
 	}
 
-	override public void Close()
+	public override void Close()
 	{
 		base.Close();
 		if(_cam_texture.isPlaying)

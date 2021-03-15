@@ -27,23 +27,23 @@ namespace Utility.Singleton
 		protected virtual void Awake()
 		{
 			// Set the static instance to this component.
-			if (m_Instance == null)
+			if(m_Instance == null)
 			{
 				m_Instance = this as T;
 
-				if (m_dontDestroyOnLoad)
+				if(m_dontDestroyOnLoad)
 				{
 					DontDestroyOnLoad(transform.root.gameObject);
 				}
 
-				if (!gameObject.name.Contains(" (Singleton)"))
+				if(!gameObject.name.Contains(" (Singleton)"))
 				{
 					gameObject.name += " (Singleton)";
 				}
 			}
 
 			// If an instance of this singleton already exists, destroy this one before it causes ambiguity.
-			else if (m_Instance != this)
+			else if(m_Instance != this)
 			{
 				Debug.LogWarning(GetType().Name + " already exist in scene.");
 				Destroy(transform.root.gameObject);
@@ -53,7 +53,7 @@ namespace Utility.Singleton
 		protected virtual void OnDestroy()
 		{
 			// If the object is destroyed, detach it from the static instance.
-			if (m_Instance == this)
+			if(m_Instance == this)
 			{
 				m_Instance = null;
 			}

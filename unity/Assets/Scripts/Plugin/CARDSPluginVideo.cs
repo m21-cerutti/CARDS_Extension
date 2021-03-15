@@ -1,12 +1,12 @@
-﻿using fts;
+﻿using System;
 
-using System;
-using System.Runtime.InteropServices;
-
-using UnityEngine;
+using fts;
 
 namespace Plugin
 {
+	/// <summary>
+	/// Plugin wrapper functions for video.
+	/// </summary>
 	[PluginAttr("cards_rgbtrack")]
 	public static class CARDSVideoPlugin
 	{
@@ -43,41 +43,37 @@ namespace Plugin
 
 		#region Wrapped methods
 
-		public static IntPtr CreateCameraContextWrapped(int width, int height)
-		{
+		public static IntPtr CreateCameraContextWrapped(int width, int height) =>
 #if UNITY_EDITOR
-			return create_camera_context(width, height);
+			create_camera_context(width, height);
 #else
            return CreateCameraContext(width, height);
 #endif
-		}
 
-		public static IntPtr CreateVideoContextWrapped(string filename, int width, int height)
-		{
+
+		public static IntPtr CreateVideoContextWrapped(string filename, int width, int height) =>
 #if UNITY_EDITOR
-			return create_video_context(filename, width, height);
+			create_video_context(filename, width, height);
 #else
             return CreateVideoContext(filename, width, height);
 #endif
-		}
 
-		public static void FreeVideoContextWrapped(IntPtr video)
-		{
+
+		public static void FreeVideoContextWrapped(IntPtr video) =>
 #if UNITY_EDITOR
 			free_video_context(video);
 #else
             FreeVideoContext(video);
 #endif
-		}
 
-		public static bool GetFrameWrapped(IntPtr video, ref Frame frame)
-		{
+
+		public static bool GetFrameWrapped(IntPtr video, ref Frame frame) =>
 #if UNITY_EDITOR
-			return get_frame(video, ref frame);
+			get_frame(video, ref frame);
 #else
             return GetFrame(video, ref frame);
 #endif
-		}
+
 
 		#endregion
 	}

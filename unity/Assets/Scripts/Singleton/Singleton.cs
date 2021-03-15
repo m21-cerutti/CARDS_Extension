@@ -12,7 +12,7 @@ namespace Utility.Singleton
 		{
 			get
 			{
-				if (_instance == null)
+				if(_instance == null)
 				{
 					_instance = new T();
 				}

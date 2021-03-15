@@ -1,20 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿
 using System.Runtime.InteropServices;
-using System;
+
 using Plugin;
 
-public class VirtualCameraTexture : VideoProvider
+using UnityEngine;
+
+/// <summary>
+/// Virtual camera frame provider. See FrameProvider.
+/// </summary>
+public class VirtualCameraTexture : FrameProvider
 {
 	private Camera _cam = null;
 	private RenderTexture _render_texture = null;
 
-	override public void Init(VideoParameters parameters)
+	public override void Init(VideoParameters parameters)
 	{
+		//Need special objects, watchout for rename.
 		_cam = GameObject.Find("CamTable").GetComponent<Camera>();
 		_render_texture = Resources.Load("CameraTarget", typeof(RenderTexture)) as RenderTexture;
+
 		Debug.Assert(_render_texture != null);
 		Debug.Assert(_cam != null);
 
@@ -22,11 +26,7 @@ public class VirtualCameraTexture : VideoProvider
 		_cam.targetTexture = _render_texture;
 	}
 
-	override public void Close()
-	{
-		base.Close();
-		//Nothing
-	}
+	public override void Close() => base.Close();
 
 	public override bool GetFrame(out Frame fr)
 	{

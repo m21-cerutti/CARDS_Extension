@@ -6,13 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
+
 using UnityEditor;
+
+using UnityEngine;
 
 [CustomPropertyDrawer(typeof(ShowWhenAttribute))]
 public class ShowWhenDrawer : PropertyDrawer
 {
-	private bool showField = true;
+	private bool _show_field = true;
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 	{
@@ -32,7 +34,7 @@ public class ShowWhenDrawer : PropertyDrawer
 				try
 				{
 					bool comparationValue = attribute.comparation_value == null || (bool)attribute.comparation_value;
-					showField = conditionField.boolValue == comparationValue;
+					_show_field = conditionField.boolValue == comparationValue;
 				}
 				catch
 				{
@@ -60,9 +62,13 @@ public class ShowWhenDrawer : PropertyDrawer
 					{
 						string enumValue = Enum.GetValues(paramEnum.GetType()).GetValue(conditionField.enumValueIndex).ToString();
 						if(paramEnum.ToString() != enumValue)
-							showField = false;
+						{
+							_show_field = false;
+						}
 						else
-							showField = true;
+						{
+							_show_field = true;
+						}
 					}
 				}
 				else if(IsEnum(paramEnumArray))
@@ -76,9 +82,13 @@ public class ShowWhenDrawer : PropertyDrawer
 					{
 						string enumValue = Enum.GetValues(paramEnumArray[0].GetType()).GetValue(conditionField.enumValueIndex).ToString();
 						if(paramEnumArray.All(x => x.ToString() != enumValue))
-							showField = false;
+						{
+							_show_field = false;
+						}
 						else
-							showField = true;
+						{
+							_show_field = true;
+						}
 					}
 				}
 				else
@@ -94,9 +104,13 @@ public class ShowWhenDrawer : PropertyDrawer
 
 				float conditionValue = 0;
 				if(conditionField.propertyType == SerializedPropertyType.Integer)
+				{
 					conditionValue = conditionField.intValue;
+				}
 				else if(conditionField.propertyType == SerializedPropertyType.Float)
+				{
 					conditionValue = conditionField.floatValue;
+				}
 
 				try
 				{
@@ -112,49 +126,73 @@ public class ShowWhenDrawer : PropertyDrawer
 				{
 					float? value = GetValue(stringValue, "==");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue == value;
+					{
+						_show_field = conditionValue == value;
+					}
 				}
 				else if(stringValue.StartsWith("!="))
 				{
 					float? value = GetValue(stringValue, "!=");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue != value;
+					{
+						_show_field = conditionValue != value;
+					}
 				}
 				else if(stringValue.StartsWith("<="))
 				{
 					float? value = GetValue(stringValue, "<=");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue <= value;
+					{
+						_show_field = conditionValue <= value;
+					}
 				}
 				else if(stringValue.StartsWith(">="))
 				{
 					float? value = GetValue(stringValue, ">=");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue >= value;
+					{
+						_show_field = conditionValue >= value;
+					}
 				}
 				else if(stringValue.StartsWith("<"))
 				{
 					float? value = GetValue(stringValue, "<");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue < value;
+					{
+						_show_field = conditionValue < value;
+					}
 				}
 				else if(stringValue.StartsWith(">"))
 				{
 					float? value = GetValue(stringValue, ">");
 					if(value == null)
+					{
 						error = true;
+					}
 					else
-						showField = conditionValue > value;
+					{
+						_show_field = conditionValue > value;
+					}
 				}
 
 				if(error)
@@ -168,33 +206,33 @@ public class ShowWhenDrawer : PropertyDrawer
 				return;
 		}
 
-		if(showField)
+		if(_show_field)
+		{
 			EditorGUI.PropertyField(position, property, true);
+		}
 	}
 
 	public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 	{
-		if(showField)
+		if(_show_field)
+		{
 			return EditorGUI.GetPropertyHeight(property);
+		}
 		else
+		{
 			return -EditorGUIUtility.standardVerticalSpacing;
+		}
 	}
 
 	/// <summary>
 	/// Return if the object is enum and not null
 	/// </summary>
-	private static bool IsEnum(object obj)
-	{
-		return obj != null && obj.GetType().IsEnum;
-	}
+	private static bool IsEnum(object obj) => obj != null && obj.GetType().IsEnum;
 
 	/// <summary>
 	/// Return if all the objects are enums and not null
 	/// </summary>
-	private static bool IsEnum(object[] obj)
-	{
-		return obj != null && obj.All(o => o.GetType().IsEnum);
-	}
+	private static bool IsEnum(object[] obj) => obj != null && obj.All(o => o.GetType().IsEnum);
 
 	/// <summary>
 	/// Check if the field with name "fieldName" has the same class as the "checkTypes" classes through reflection
@@ -212,10 +250,14 @@ public class ShowWhenDrawer : PropertyDrawer
 			}
 		}
 		else
+		{
 			memberInfo = classType.GetField(fieldName);
+		}
 
 		if(memberInfo != null)
+		{
 			return checkTypes.All(x => x == memberInfo.FieldType);
+		}
 
 		return false;
 	}
@@ -223,7 +265,7 @@ public class ShowWhenDrawer : PropertyDrawer
 	private void ShowError(Rect position, GUIContent label, string errorText)
 	{
 		EditorGUI.LabelField(position, label, new GUIContent(errorText));
-		showField = true;
+		_show_field = true;
 	}
 
 	/// <summary>
