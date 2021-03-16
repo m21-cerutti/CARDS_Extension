@@ -13,6 +13,11 @@
 using namespace std;
 using namespace cv;
 
+/*
+* CONVENTIONS :
+*
+*/
+
 /*Structure data*/
 
 struct Vector3f
@@ -50,7 +55,8 @@ struct RectStruct
 	float height; //in px
 };
 
-/*Tacker definition*/
+/* Tracker definition */
+
 enum class StateTracker
 {
 	Lost = -1,
