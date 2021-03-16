@@ -93,20 +93,20 @@ Ptr<ITracker> createTrackerByName( const std::string& name )
 
 	if(name == "KCF")
 		tracker = CardsKCF::create();
-	/*else if(name == "TLD")
-		tracker = TrackerTLD::create();
+	else if(name == "TLD")
+		tracker = CardsTLD::create();
 	else if(name == "BOOSTING")
-		tracker = TrackerBoosting::create();
+		tracker = CardsBoosting::create();
 	else if(name == "MEDIAN_FLOW")
-		tracker = TrackerMedianFlow::create();
+		tracker = CardsMedianFlow::create();
 	else if(name == "MIL")
-		tracker = TrackerMIL::create();
+		tracker = CardsMIL::create();
 	else if(name == "GOTURN")
-		tracker = TrackerGOTURN::create();
+		tracker = CardsGOTURN::create();
 	else if(name == "MOSSE")
-		tracker = TrackerMOSSE::create();
+		tracker = CardsMOSSE::create();
 	else if(name == "CSRT")
-		tracker = TrackerCSRT::create();*/
+		tracker = CardsCSRT::create();
 	else if (name == "COLOR")
 		tracker = TrackerCOLOR::create();
 	else

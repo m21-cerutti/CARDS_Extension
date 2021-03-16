@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdio.h>
 
+
 using namespace std;
 using namespace cv;
 
@@ -32,9 +33,159 @@ public:
 	bool init(InputArray image, const Rect2d& boundingBox) override {
 		return tracker->init(image, boundingBox);
 	}
-	bool update(InputArray image, Rect2d& boundingBox) override;
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
 
 	static Ptr<ITracker> create() {
 		return Ptr<ITracker>(new CardsKCF());
 	}
 };
+
+class CardsTLD : public ITracker
+{
+private:
+	Ptr<TrackerTLD> tracker;
+public:
+	CardsTLD() {
+		tracker = TrackerTLD::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsTLD());
+	}
+};
+
+class CardsBoosting : public ITracker
+{
+private:
+	Ptr<TrackerBoosting> tracker;
+public:
+	CardsBoosting() {
+		tracker = TrackerBoosting::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsBoosting());
+	}
+};
+
+class CardsMedianFlow : public ITracker
+{
+private:
+	Ptr<TrackerMedianFlow> tracker;
+public:
+	CardsMedianFlow() {
+		tracker = TrackerMedianFlow::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsMedianFlow());
+	}
+};
+
+class CardsMIL : public ITracker
+{
+private:
+	Ptr<TrackerMIL> tracker;
+public:
+	CardsMIL() {
+		tracker = TrackerMIL::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsMIL());
+	}
+};
+
+class CardsGOTURN : public ITracker
+{
+private:
+	Ptr<TrackerGOTURN> tracker;
+public:
+	CardsGOTURN() {
+		tracker = TrackerGOTURN::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsGOTURN());
+	}
+};
+
+class CardsMOSSE : public ITracker
+{
+private:
+	Ptr<TrackerMOSSE> tracker;
+public:
+	CardsMOSSE() {
+		tracker = TrackerMOSSE::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsMOSSE());
+	}
+};
+
+class CardsCSRT : public ITracker
+{
+private:
+	Ptr<TrackerCSRT> tracker;
+public:
+	CardsCSRT() {
+		tracker = TrackerCSRT::create();
+	}
+
+	bool init(InputArray image, const Rect2d& boundingBox) override {
+		return tracker->init(image, boundingBox);
+	}
+	bool update(InputArray image, Rect2d& boundingBox) override {
+		return tracker->update(image, boundingBox);
+	}
+
+	static Ptr<ITracker> create() {
+		return Ptr<ITracker>(new CardsCSRT());
+	}
+};
+
