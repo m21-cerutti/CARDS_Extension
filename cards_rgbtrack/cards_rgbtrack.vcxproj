@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\interfaceTracker.cpp" />
+    <ClCompile Include="include\trackerColor.cpp" />
     <ClCompile Include="src\utilities.cpp" />
     <ClCompile Include="src\multitracker.cpp" />
     <ClCompile Include="src\tracker_api.cpp" />
@@ -27,6 +29,8 @@
     <ClCompile Include="src\video_api.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\interfaceTracker.h" />
+    <ClInclude Include="include\trackerColor.h" />
     <ClInclude Include="include\utilities.h" />
     <ClInclude Include="include\multitracker.h" />
     <ClInclude Include="include\tracker_api.h" />
@@ -155,8 +159,8 @@
       <AdditionalDependencies>opencv_core3413d.lib;opencv_highgui3413d.lib;opencv_imgcodecs3413d.lib;opencv_objdetect3413d.lib;opencv_videoio3413d.lib;opencv_imgproc3413d.lib;opencv_tracking3413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\unity\Assets\Plugins\$(TargetName).dll"
-copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\console\$(IntDir)$(TargetName).dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

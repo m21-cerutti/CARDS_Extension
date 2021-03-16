@@ -1,6 +1,8 @@
 #include "utilities.h"
 #include "tracker_api.h"
 
+#include "trackerColor.h"
+
 using namespace std;
 using namespace cv;
 
@@ -83,28 +85,30 @@ void DebugCVTargets( const Mat& mat,const Target* targets,int number )
 	DebugCVTargets( mat,objects,number );
 }
 
-Ptr<Tracker> createTrackerByName( const std::string& name )
+Ptr<ITracker> createTrackerByName( const std::string& name )
 {
 	using namespace cv;
 
-	cv::Ptr<cv::Tracker> tracker;
+	cv::Ptr<ITracker> tracker;
 
 	if(name == "KCF")
-		tracker = TrackerKCF::create();
+		tracker = CardsKCF::create();
 	else if(name == "TLD")
-		tracker = TrackerTLD::create();
+		tracker = CardsTLD::create();
 	else if(name == "BOOSTING")
-		tracker = TrackerBoosting::create();
+		tracker = CardsBoosting::create();
 	else if(name == "MEDIAN_FLOW")
-		tracker = TrackerMedianFlow::create();
+		tracker = CardsMedianFlow::create();
 	else if(name == "MIL")
-		tracker = TrackerMIL::create();
+		tracker = CardsMIL::create();
 	else if(name == "GOTURN")
-		tracker = TrackerGOTURN::create();
+		tracker = CardsGOTURN::create();
 	else if(name == "MOSSE")
-		tracker = TrackerMOSSE::create();
+		tracker = CardsMOSSE::create();
 	else if(name == "CSRT")
-		tracker = TrackerCSRT::create();
+		tracker = CardsCSRT::create();
+	else if (name == "COLOR")
+		tracker = TrackerCOLOR::create();
 	else
 		CV_Error( cv::Error::StsBadArg,"Invalid tracking algorithm name\n" );
 
