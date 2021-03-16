@@ -11,8 +11,8 @@ int main( int argc,char** argv )
 	//TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoProvider();
-	TestVideoComparison();
 	//TestWriteXML();
+	TestVideoComparison();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
@@ -177,11 +177,11 @@ void TestWriteXML()
 	std::cerr << "Opening video test.avi ...\r";
 
 	VideoProviderConsole video("test.avi");
-	FileStorage fs("testered.xml", FileStorage::WRITE);
+	FileStorage fs("test.xml", FileStorage::WRITE);
 
 	int freq_record = 20;
-	int maxTargets = 3;
-	int ids_to_use[3] = {0, 1, 2};
+	int maxTargets = 1;
+	int ids_to_use[1] = {0};
 	bool isinitialised = false;
 
 	fs << "frame" << "[";
@@ -255,6 +255,10 @@ void TestComparison(VideoProviderConsole& provider, FileStorage& file_storage)
 	double difference_mean = 0;
 	int num_frame = 0;
 
+	std::ofstream csv;
+	csv.open("test.csv");
+	csv << "Frame number,ID,Target state,Anotation state,Euclidian norm\n";
+
 	for (int i = 0;;)
 	{
 		const Frame& fr = provider.GetFrame();
@@ -295,6 +299,7 @@ void TestComparison(VideoProviderConsole& provider, FileStorage& file_storage)
 				int frame_number = (int)(*it)["number"];
 				while (frame_number < num_frame)
 				{
+					csv << frame_number << ",Skipped,Skipped,Skipped,Skipped\n";
 					++it;
 					frame_number = (int)(*it)["number"];
 				}
@@ -312,54 +317,73 @@ void TestComparison(VideoProviderConsole& provider, FileStorage& file_storage)
 						String state;
 						(*it_frame)["state"] >> state;
 						bool match = false;
+						bool duplicate = false;
 
 						for (int j = 0; j < maxTargets; j++)
 						{
-							if (targets[j].id == id)
+							if ((targets[j].id == id) && (targets[j].state != StateTracker::Undefined))
 							{
+								csv << frame_number << "," << id << ",";
+
 								if (!match)
 								{
 									match = true;
 								}
 								else
 								{
+									duplicate = true;
 									std::cerr << "Id " << id << " found multiple times in target table!" << endl;
-									//TODO
+									csv << "Duplicate" << "," << state << ",";
+								}
+
+								if ((targets[j].state != StateTracker::Lost) && (targets[j].state != StateTracker::Live))
+								{
+									csv << "Unknown" << "," << state << "," << "NaN\n";
 								}
 
 								if (!state.compare("Lost"))
 								{
-									if (targets[j].state == StateTracker::Undefined)
+									if (targets[j].state == StateTracker::Lost)
 									{
-										//TODO
+										csv << "Lost" << "," << state << "," << "0\n";
+									}
+									else if (targets[j].state == StateTracker::Live)
+									{
+										csv << "Live" << "," << state << "," << "Infinity\n";
 									}
 									else
 									{
-										//TODO
+										csv << "Unknown" << "," << state << "," << "NaN\n";
 									}
 								}
 								else if (!state.compare("Live"))
 								{
-									if (targets[j].state == StateTracker::Undefined)
+									if (!duplicate)
 									{
-										//TODO
+										if (targets[j].state == StateTracker::Lost)
+										{
+											csv << "Lost" << "," << state << ",";
+										}
+										else if (targets[j].state == StateTracker::Live)
+										{
+											csv << "Live" << "," << state << ",";
+										}
 									}
-									else
-									{
-										double x = (double)(*it_frame)["x"], y = (double)(*it_frame)["y"];
-										double width = (double)(*it_frame)["width"], height = (double)(*it_frame)["height"];
-										double center_x = x + (width / 2.), center_y = y + (height / 2.);
+									
+									double x = (double)(*it_frame)["x"], y = (double)(*it_frame)["y"];
+									double width = (double)(*it_frame)["width"], height = (double)(*it_frame)["height"];
+									double center_x = x + (width / 2.), center_y = y + (height / 2.);
 
-										double target_center_x = (double)targets[j].rect.x + ((double)targets[j].rect.width / 2.);
-										double target_center_y = (double)targets[j].rect.y + ((double)targets[j].rect.height / 2.);
+									double target_center_x = (double)targets[j].rect.x + ((double)targets[j].rect.width / 2.);
+									double target_center_y = (double)targets[j].rect.y + ((double)targets[j].rect.height / 2.);
 
-										double norm = sqrt((target_center_x - center_x) * (target_center_x - center_x) +
-											(target_center_y - center_y) * (target_center_y - center_y));
-										difference_mean += norm;
+									double norm = sqrt((target_center_x - center_x) * (target_center_x - center_x) +
+										(target_center_y - center_y) * (target_center_y - center_y));
+									difference_mean += norm;
 
-										std::cout << "Target #" << (idx + 1) << ": euclidian distance = " << norm << endl;
-										idx++;
-									}
+									std::cout << "Target #" << (idx + 1) << ": euclidian distance = " << norm << endl;
+									csv << norm << "\n";
+									idx++;
 								}
 							}
 						}
@@ -367,7 +391,7 @@ void TestComparison(VideoProviderConsole& provider, FileStorage& file_storage)
 						if (!match)
 						{
 							std::cerr << "Couldn't find matching id" << endl;
-							//TODO
+							csv << frame_number << "," << id << "," << "Not found" << "," << state << "," << "NaN\n";
 						}
 
 					}
@@ -381,4 +405,6 @@ void TestComparison(VideoProviderConsole& provider, FileStorage& file_storage)
 
 	cv::destroyAllWindows();
 	Close(targets, nbtargets, maxTargets);
+
+	csv.close();
 }
