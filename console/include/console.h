@@ -14,3 +14,7 @@ void TestWorkflowVideo();
 void TestWorkflowWebcam();
 
 void TestVideoContext();
+
+void TestWriteXML();
+
+void TestVideoComparison();
