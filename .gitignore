@@ -463,3 +463,5 @@ FodyWeavers.xsd
 ## Video
 
 *.avi
+
+videos_tests/
