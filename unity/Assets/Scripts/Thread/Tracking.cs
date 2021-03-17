@@ -19,11 +19,45 @@ public abstract class Tracking : MonoBehaviour
 	protected int nb_frame = -1;
 
 	#region Getters properties
-	public bool IsInitialised => nb_frame > parameters.starting_frame;
-	public VideoParameters Parameters => parameters;
-	public int NbTargets => nb_targets;
-	public int MaxTargets => max_targets;
-	public int NbFrame => nb_frame;
+	public bool IsInitialised
+	{
+		get
+		{
+			return nb_frame > parameters.starting_frame;
+		}
+	}
+
+	public VideoParameters Parameters
+	{
+		get
+		{
+			return parameters;
+		}
+	}
+
+	public int NbTargets
+	{
+		get
+		{
+			return nb_targets;
+		}
+	}
+
+	public int MaxTargets
+	{
+		get
+		{
+			return max_targets;
+		}
+	}
+
+	public int NbFrame
+	{
+		get
+		{
+			return nb_frame;
+		}
+	}
 	#endregion
 
 	/// <summary>

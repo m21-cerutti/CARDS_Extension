@@ -10,7 +10,7 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "interfaceTracker.h"
+#include "interface_tracker.h"
 
 using namespace std;
 using namespace cv;

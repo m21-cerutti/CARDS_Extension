@@ -113,7 +113,7 @@ namespace Plugin
 
 		[PluginFunctionAttr("Register")]
 		public static Register register = null;
-		public unsafe delegate bool Register(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget);
+		public unsafe delegate int Register(ref Frame frame, ref RectStruct zone, Target* targets, ref int nbTarget, int maxTarget);
 
 		[PluginFunctionAttr("UnRegister")]
 		public static UnRegister un_register = null;
@@ -138,7 +138,7 @@ namespace Plugin
 		internal unsafe static extern void Close(Target* targets, ref int nbTarget, int maxTarget);
 		
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern bool Register(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget);
+		internal unsafe static extern int Register(ref Frame frame, ref RectStruct zone, Target* targets, ref int nbTarget, int maxTarget);
 		 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void UnRegister(int id, Target* targets, ref int nbTarget);
@@ -157,58 +157,69 @@ namespace Plugin
 		// editor or standalone mode.
 		#region Wrapped methods
 
-		public static unsafe void InitWrapped(Target* targets, ref int nbTarget, int maxTarget) =>
+		public static unsafe void InitWrapped(Target* targets, ref int nbTarget, int maxTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.init(targets, ref nbTarget, maxTarget);
 #else
             Init(targets, ref nbTarget, maxTarget);
 #endif
+		}
 
 
-		public static unsafe void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget) =>
+		public static unsafe void CloseWrapped(Target* targets, ref int nbTarget, int maxTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.close(targets, ref nbTarget, maxTarget);
 #else
             Close(targets, ref nbTarget, maxTarget);
 #endif
+		}
 
-		public static unsafe void RegisterWrapped(int id, ref Frame frame, ref RectStruct zoneObject, Target* targets, ref int nbTarget, int maxTarget) =>
+		public static unsafe void RegisterWrapped(ref Frame frame, ref RectStruct zone, Target* targets, ref int nbTarget, int maxTarget)
+		{
 #if UNITY_EDITOR
-			CARDSTrackingPlugin.register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
+			CARDSTrackingPlugin.register(ref frame, ref zone, targets, ref nbTarget, maxTarget);
 #else
-            Register(id, ref frame, ref zoneObject, targets, ref nbTarget, maxTarget);
+            Register(ref frame, ref zone, targets, ref nbTarget, maxTarget);
 #endif
+		}
 
-		public static unsafe void UnRegisterWrapped(int id, Target* targets, ref int nbTarget) =>
+		public static unsafe void UnRegisterWrapped(int id, Target* targets, ref int nbTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.un_register(id, targets, ref nbTarget);
 #else
             UnRegister(id, targets, ref nbTarget);
 #endif
+		}
 
-
-		public static unsafe void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget) =>
+		public static unsafe void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #else
             Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
 #endif
+		}
 
-		public static unsafe void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget) =>
+		public static unsafe void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.check_track(ref frame, targets, nbTarget);
 #else
             CheckTrack(ref frame, targets, nbTarget);
 #endif
+		}
 
-
-		public static unsafe void TrackWrapped(ref Frame frame, Target* targets, int nbTarget) =>
+		public static unsafe void TrackWrapped(ref Frame frame, Target* targets, int nbTarget)
+		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.track(ref frame, targets, nbTarget);
 #else
             Track(ref frame, targets, nbTarget);
 #endif
-
+		}
 		#endregion
 	}
 }
