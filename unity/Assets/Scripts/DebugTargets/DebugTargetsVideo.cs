@@ -13,20 +13,20 @@ using Xml2CSharp;
 /// </summary>
 public class DebugTargetsVideo : DebugTargets
 {
-	private XMLVideoAnotations _xmlroot;
+	private OpencvStorage _xmlroot;
 
 	protected override bool GetRealPositionTarget(int id, out Vector3 pos, out StateTracker state)
 	{
 		pos = Vector3.zero;
 		state = StateTracker.Undefined;
-		XMLFrame frame = _xmlroot.Frames.Find(delegate (XMLFrame f)
+		XMLFrame frame = _xmlroot.ListFrames.Frames.Find(delegate (XMLFrame f)
 	   {
 		   return f.Number == tracking.NbFrame.ToString();
 	   });
 
 		if(frame != null)
 		{
-			XMLTarget target = frame.Objects.Find(delegate (XMLTarget t)
+			XMLTarget target = frame.ListTargets.Targets.Find(delegate (XMLTarget t)
 			{
 				return t.Id == id.ToString();
 			});
@@ -73,7 +73,7 @@ public class DebugTargetsVideo : DebugTargets
 		string path = Path.ChangeExtension(parameters.file_path_video, ".xml");
 		if(File.Exists(parameters.file_path_video))
 		{
-			_xmlroot = XMLVideoAnotations.Load(path);
+			_xmlroot = OpencvStorage.Load(path);
 		}
 		else
 		{

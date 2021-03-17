@@ -8,10 +8,10 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	TestWorkflowVideo();
+	//TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoContext();
-	//TestWriteXML();
+	TestWriteXML();
 	//TestVideoComparison();
 }
 
@@ -160,7 +160,7 @@ void TestWriteXML()
 	}
 	bool isinitialised = false;
 
-	fs << "frame" << "[";
+	fs << "Frames" << "{";
 
 	for(int i = 0;;)
 	{
@@ -181,7 +181,8 @@ void TestWriteXML()
 		{
 			if(i % freq_record == 0)
 			{
-				fs << "{" << "number" << i << "Object" << "[";
+				fs << "Frame";
+				fs << "{" << "number" << i << "ListTargets" << "{";
 
 				Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
 				cvtColor( texture,texture,cv::COLOR_RGBA2BGR );
@@ -194,26 +195,30 @@ void TestWriteXML()
 
 				for(int j = 0; j < maxTargets; j++)
 				{
-					Rect roi = selectROI( "select",texture );
 					cout << "Id " << j << endl;
+					Rect roi = selectROI( "select",texture );
+					fs << "XMLTarget";
 					if((roi.width == 0) && (roi.height == 0))
 					{
-						fs << "{" << "id" << ids_to_use[j];
-						fs << "state" << "Lost" << "}";
+						fs << "{" << "id" << ids_to_use[j]
+							<< "state" << "Lost" << "}";
 					}
 					else
 					{
-						fs << "{" << "id" << ids_to_use[j];
-						fs << "state" << "Live";
-						fs << "x" << roi.x << "y" << roi.y << "width" << roi.width << "height" << roi.height << "}";
+						fs << "{" << "id" << ids_to_use[j]
+							<< "state" << "Live"
+							<< "x" << roi.x
+							<< "y" << roi.y
+							<< "width" << roi.width
+							<< "height" << roi.height << "}";
 					}
 				}
-				fs << "]" << "}";
+				fs << "}" << "}";
 			}
 			i++;
 		}
 	}
-	fs << "]";
+	fs << "}";
 	fs.release();
 
 	std::cout << "End test WriteXML." << endl;
@@ -280,7 +285,7 @@ void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage )
 					frame_number = (int)(*it)["number"];
 				}
 
-				FileNode xmlframe = (*it)["Object"];
+				FileNode xmlframe = (*it)["Targets"];
 				FileNodeIterator it_frame = xmlframe.begin(),it_frame_end = xmlframe.end();
 				int idx_frame = 0;
 				//std::cout << "Frame " << num_frame << ", Frame number " << frame_number << endl;

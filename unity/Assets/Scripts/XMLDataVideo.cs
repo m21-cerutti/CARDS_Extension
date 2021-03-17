@@ -12,45 +12,60 @@ using System.Xml.Serialization;
 /// </summary>
 namespace Xml2CSharp
 {
-	[XmlRoot(ElementName = "Object")]
+	[XmlRoot(ElementName = "XMLTarget")]
 	public class XMLTarget
 	{
-		[XmlAttribute(AttributeName = "id")]
+		[XmlElement(ElementName = "id")]
 		public string Id { get; set; }
-		[XmlAttribute(AttributeName = "state")]
+		[XmlElement(ElementName = "state")]
 		public string State { get; set; }
-		[XmlAttribute(AttributeName = "x")]
+		[XmlElement(ElementName = "x")]
 		public string X { get; set; }
-		[XmlAttribute(AttributeName = "y")]
+		[XmlElement(ElementName = "y")]
 		public string Y { get; set; }
-		[XmlAttribute(AttributeName = "width")]
+		[XmlElement(ElementName = "width")]
 		public string Width { get; set; }
-		[XmlAttribute(AttributeName = "height")]
+		[XmlElement(ElementName = "height")]
 		public string Height { get; set; }
 	}
 
-	[XmlRoot(ElementName = "frame")]
-	public class XMLFrame
+	[XmlRoot(ElementName = "ListTargets")]
+	public class ListTargets
 	{
-		[XmlElement(ElementName = "Object")]
-		public List<XMLTarget> Objects { get; set; }
-		[XmlAttribute(AttributeName = "number")]
-		public string Number { get; set; }
+		[XmlElement(ElementName = "XMLTarget")]
+		public List<XMLTarget> Targets { get; set; }
 	}
 
-	[XmlRoot(ElementName = "Video_annotations")]
-	public class XMLVideoAnotations
+	[XmlRoot(ElementName = "Frame")]
+	public class XMLFrame
 	{
-		[XmlElement(ElementName = "frame")]
+		[XmlElement(ElementName = "number")]
+		public string Number { get; set; }
+		[XmlElement(ElementName = "ListTargets")]
+		public ListTargets ListTargets { get; set; }
+	}
+
+	[XmlRoot(ElementName = "Frames")]
+	public class ListFrames
+	{
+		[XmlElement(ElementName = "Frame")]
 		public List<XMLFrame> Frames { get; set; }
-		public static XMLVideoAnotations Load(string path)
+	}
+
+	[XmlRoot(ElementName = "opencv_storage")]
+	public class OpencvStorage
+	{
+		[XmlElement(ElementName = "Frames")]
+		public ListFrames ListFrames { get; set; }
+
+		public static OpencvStorage Load(string path)
 		{
 			try
 			{
-				XmlSerializer serializer = new XmlSerializer(typeof(XMLVideoAnotations));
+				XmlSerializer serializer = new XmlSerializer(typeof(OpencvStorage));
 				using(FileStream stream = new FileStream(path, FileMode.Open))
 				{
-					return serializer.Deserialize(stream) as XMLVideoAnotations;
+					return serializer.Deserialize(stream) as OpencvStorage;
 				}
 			}
 			catch(Exception e)
