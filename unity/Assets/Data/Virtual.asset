@@ -14,6 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera_width: 256
   camera_height: 256
+  intrinsic_matrix_camera:
+    c_00: 12
+    c_01: 0
+    c_02: 128
+    c_03: 0
+    c_10: 0
+    c_11: 12
+    c_12: 128
+    c_13: 0
+    c_20: 0
+    c_21: 0
+    c_22: 0
+    c_23: 0
+    c_30: 0
+    c_31: 0
+    c_32: 0
+    c_33: 1
   requested_camera_fps: 60
   starting_frame: 1
   debug_cv: 0

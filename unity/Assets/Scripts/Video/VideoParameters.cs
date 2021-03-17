@@ -12,6 +12,8 @@ public class VideoParameters : ScriptableObject
 	public int camera_width = 256;
 	public int camera_height = 256;
 
+	public Matrix3x3f intrinsic_matrix_camera;
+
 	public int requested_camera_fps = 60;
 
 	public int starting_frame = 10;

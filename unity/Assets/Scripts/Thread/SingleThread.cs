@@ -9,8 +9,7 @@ public class SingleThread : Tracking
 	/// </summary>
 	protected override void InternalTrackingLoop()
 	{
-		Frame fr;
-		if(!video.GetFrame(out fr))
+		if(!video.GetFrame(out frame_buffer))
 		{
 			Debug.LogWarning("Empty frames.");
 			return;
@@ -24,7 +23,7 @@ public class SingleThread : Tracking
 				{
 					//Debug.Log("Register manual");
 					Time.timeScale = 0;
-					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref fr, outTargets, ref nb_targets, max_targets);
+					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref frame_buffer, outTargets, ref nb_targets, max_targets);
 					Time.timeScale = 1;
 				}
 			}
@@ -71,10 +70,10 @@ public class SingleThread : Tracking
 					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("Track");
-						CARDSTrackingPlugin.TrackWrapped(ref fr, outTargets, nb_targets);
+						CARDSTrackingPlugin.TrackWrapped(ref frame_buffer, outTargets, nb_targets);
 						if(parameters.debug_cv)
 						{
-							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref fr, outTargets, nb_targets);
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, nb_targets);
 						}
 					}
 				}

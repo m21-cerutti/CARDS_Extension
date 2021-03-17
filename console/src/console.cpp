@@ -8,14 +8,13 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWorkflowVideo();
+	TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoContext();
-	WriteXML();
+	//WriteXML();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
-static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
 
 void TestDLL()
 {
@@ -92,6 +91,12 @@ void TestWorkflow( VideoProviderConsole& provider )
 			else
 			{
 				Track( fr,targets,nbtargets );
+				if(targets[0].state != StateTracker::Undefined)
+				{
+					Matrix4x4f matpos = EstimatePose( targets[0],Matrix3x3f(),1.5 );
+					//cout << targets[0].original_size.x << endl;
+					//cout << matpos.c_23 << endl;
+				}
 			}
 			DebugTargets( fr,targets,nbtargets );
 			i++;
@@ -130,20 +135,7 @@ void TestVideoContext()
 	std::cout << "End test VideoProvider." << endl;
 }
 
-void TestVideoComparison()
-{
-	std::cerr << "Opening video test.avi ...\r";
-
-	VideoProviderConsole video( "test.avi" );
-	FileStorage fs2( "test.xml",FileStorage::READ );
-	TestComparison( video,fs2 );
-
-	fs2.release();
-
-	std::cout << "End test VideoComparison." << endl;
-}
-
-void TestWriteXML()
+void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 

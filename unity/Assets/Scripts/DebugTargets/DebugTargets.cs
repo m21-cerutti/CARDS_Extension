@@ -64,11 +64,9 @@ public abstract class DebugTargets : MonoBehaviour
 							break;
 						case StateTracker.Live:
 							{
-								Vector3 point = GetCenterScreenTarget(t);
-								Vector3 prevision = GetScreenToWorldSpace(point);
-
+								Vector3 prevision = GetEstimateWorldPosition(t);
 								//TODO Use y but need pose
-								prevision.y = real_position.y;
+								//prevision.y = real_position.y;
 
 								float error = Vector3.Distance(real_position, prevision);
 								if(parameters.log_datas)
@@ -98,6 +96,16 @@ public abstract class DebugTargets : MonoBehaviour
 
 
 		}
+	}
+
+	private Vector3 GetEstimateWorldPosition(Target t)
+	{
+		Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, parameters.intrinsic_matrix_camera, camera_table.transform.position.magnitude);
+		float depth = mat.c_23;
+		Debug.Log(depth);
+		Vector2 screenpoint = GetCenterScreenTarget(t);
+		Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, mat.c_23);
+		return worldPoint;
 	}
 
 	#region Utilities methods
@@ -190,17 +198,17 @@ public abstract class DebugTargets : MonoBehaviour
 						{
 							col = Color.red;
 							Debug.LogWarning("Not same state in target " + t.id);
+							Debug.LogWarning("Real " + state);
+							Debug.LogWarning("Tracker " + t.state);
 						}
 					}
 					else
 					{
 						col = Color.gray;
 					}
-					Vector3 point = GetCenterScreenTarget(t);
-					Vector3 prevision = GetScreenToWorldSpace(point);
-
+					Vector3 prevision = GetEstimateWorldPosition(t);
 					//TODO Use y but need pose
-					prevision.y = real_position.y;
+					//prevision.y = real_position.y;
 
 					Gizmos.color = col;
 					Gizmos.DrawWireSphere(prevision, 0.1f);

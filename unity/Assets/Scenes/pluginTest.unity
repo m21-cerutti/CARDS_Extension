@@ -1382,9 +1382,9 @@ Camera:
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
+  m_SensorSize: {x: 10.26, y: 7.49}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 44.78461
+  m_FocalLength: 12
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -1393,7 +1393,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 30.000002
+  field of view: 34.664547
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1706,7 +1706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d018c78099b4cd0439bde28312a27098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: {fileID: 11400000, guid: 3ee94d59d35f5d3419d8f0330f0738f2, type: 2}
+  parameters: {fileID: 11400000, guid: b7622abc25827f44b9d23d41795698a1, type: 2}
 --- !u!4 &2121554695
 Transform:
   m_ObjectHideFlags: 0

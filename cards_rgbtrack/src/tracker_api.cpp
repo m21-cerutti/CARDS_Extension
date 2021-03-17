@@ -3,7 +3,7 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "MOSSE";
+String trackingAlg = "CSRT";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> occupied_place;
 
@@ -55,6 +55,9 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
+
+	targets[id].original_size.x = zone.width;
+	targets[id].original_size.y = zone.height;
 
 	occupied_place[id] = true;
 	nbTarget++;
@@ -113,8 +116,32 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	}
 }
 
-Matrix4x4f EstimatePose( const Frame& frame,const Target& targets )
+Matrix4x4f EstimatePose( const Target& target,Matrix3x3f intrinsic,float dist_cam_table )
 {
-	//TODO
-	return Matrix4x4f();
+	float Cx = intrinsic.c_02;
+	float Cy = intrinsic.c_12;
+	float f = intrinsic.c_00;
+
+	float x = (target.rect.x + target.rect.width / 2.0);
+	float y = (target.rect.y + target.rect.height / 2.0);
+
+	float WRatio = target.rect.width / 1.0 * target.original_size.x;
+	float HRatio = target.rect.height / 1.0 * target.original_size.y;
+
+	//Not working
+	float Z = (dist_cam_table * WRatio + dist_cam_table * HRatio) / 2.0;
+
+	Matrix4x4f pose;
+	pose.c_03 = x;
+	pose.c_13 = y;
+	pose.c_23 = Z;
+
+	//TODO ROTATION
+
+	//Homogenous
+	pose.c_30 = 1;
+	pose.c_31 = 1;
+	pose.c_32 = 1;
+	pose.c_33 = 1;
+	return pose;
 }

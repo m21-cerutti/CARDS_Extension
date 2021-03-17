@@ -13,6 +13,7 @@ public abstract class Tracking : MonoBehaviour
 	[SerializeField]
 	protected VideoParameters parameters; //Scenario that you can interchange (Virtual, Webcam)
 
+	protected Frame frame_buffer;
 	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;
@@ -69,10 +70,13 @@ public abstract class Tracking : MonoBehaviour
 		List<Target> final = new List<Target>();
 		for(int i = 0; i < MaxTargets; i++)
 		{
+			Vector2f original_size = targets[i].original_size;
+			original_size.y *= -1;
 			Target t = new Target
 			{
 				id = targets[i].id,
 				rect = ConvertRectToUnityScreen(targets[i].rect),
+				original_size = original_size,
 				state = targets[i].state
 			};
 			final.Add(t);

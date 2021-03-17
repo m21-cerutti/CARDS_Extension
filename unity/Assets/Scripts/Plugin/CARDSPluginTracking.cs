@@ -14,12 +14,35 @@ namespace Plugin
 	#region Basic structures
 
 	[System.Serializable]
+	public struct Vector2f
+	{
+		public float x;
+		public float y;
+	};
+
+
+	[System.Serializable]
 	public struct Vector3f
 	{
 		public float x;
 		public float y;
 		public float z;
 	};
+
+	[System.Serializable]
+	public struct Matrix3x3f
+	{
+		public float c_00;
+		public float c_01;
+		public float c_02;
+		public float c_10;
+		public float c_11;
+		public float c_12;
+		public float c_20;
+		public float c_21;
+		public float c_22;
+	};
+
 
 	[System.Serializable]
 	public struct Matrix4x4f
@@ -46,8 +69,8 @@ namespace Plugin
 	[StructLayout(LayoutKind.Sequential)]
 	public struct RectStruct
 	{
-		public float x; //in cm
-		public float y; //in cm
+		public float x;
+		public float y;
 		public float width;
 		public float height;
 	};
@@ -70,6 +93,7 @@ namespace Plugin
 	{
 		public short id;
 		public RectStruct rect;
+		public Vector2f original_size;
 		public StateTracker state;
 	};
 
@@ -130,6 +154,10 @@ namespace Plugin
 		[PluginFunctionAttr("Track")]
 		public static Track track = null;
 		public unsafe delegate void Track(ref Frame frame, Target* targets, int nbTarget);
+
+		[PluginFunctionAttr("EstimatePose")]
+		public static EstimatePose estimate_pose = null;
+		public delegate Matrix4x4f EstimatePose(ref Target target, Matrix3x3f intrinsic, float dist_cam_table);
 #else
         [DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Init(Target* targets, ref int nbTarget, int maxTarget);
@@ -151,6 +179,9 @@ namespace Plugin
 
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
+
+		[DllImport("cards_rgbtrack")]
+		internal static extern Matrix4x4f EstimatePose( ref Target target, Matrix3x3f intrinsic);
 #endif
 
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
@@ -220,6 +251,16 @@ namespace Plugin
             Track(ref frame, targets, nbTarget);
 #endif
 		}
+
+		public static Matrix4x4f EstimatePoseWrapped(ref Target target, Matrix3x3f intrinsic, float dist_cam_table)
+		{
+#if UNITY_EDITOR
+			return CARDSTrackingPlugin.estimate_pose(ref target, intrinsic, dist_cam_table);
+#else
+            return EstimatePose(ref target, intrinsic, dist_cam_table);
+#endif
+		}
+
 		#endregion
 	}
 }
