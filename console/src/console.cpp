@@ -15,7 +15,6 @@ int main( int argc,char** argv )
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
-static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
 
 void TestDLL()
 {
@@ -130,20 +129,7 @@ void TestVideoContext()
 	std::cout << "End test VideoProvider." << endl;
 }
 
-void TestVideoComparison()
-{
-	std::cerr << "Opening video test.avi ...\r";
-
-	VideoProviderConsole video( "test.avi" );
-	FileStorage fs2( "test.xml",FileStorage::READ );
-	TestComparison( video,fs2 );
-
-	fs2.release();
-
-	std::cout << "End test VideoComparison." << endl;
-}
-
-void TestWriteXML()
+void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 
