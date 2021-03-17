@@ -7,6 +7,8 @@ String trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> free_place;
 
+/// @brief Permit to search for the first empty space in memory.
+/// @return The index/id of the new object memory.
 inline static int FindFirstFreeMemoryTracker()
 {
 	auto it = std::find_if( free_place.begin(),free_place.end(),[&]( const auto& val )
@@ -28,15 +30,17 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 
 void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
-	int tmp = nbTarget;
-	for(int i = 0; i < tmp; i++)
+	for(int i = 0; i < maxTarget; i++)
 	{
-		UnRegister( targets[i].id,targets,nbTarget );
+		if(targets[i].state == StateTracker::Undefined)
+		{
+			UnRegister( targets[i].id,targets,nbTarget );
+		}
 	}
 	free_place.clear();
 }
 
-void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
+int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
 
@@ -53,6 +57,7 @@ void Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nb
 
 	free_place[id] = true;
 	nbTarget++;
+	return id;
 }
 
 void UnRegister( const int id,Target* targets,int& nbTarget )
@@ -108,7 +113,8 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	}
 }
 
-EXPORT_API void __stdcall EstimatePose( const Frame& frame,Target* targets,const int nbTarget )
+Matrix4x4f EstimatePose( const Frame& frame,const Target& targets )
 {
 	//TODO
+	return Matrix4x4f();
 }

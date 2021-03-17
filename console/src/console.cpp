@@ -8,11 +8,11 @@ int main( int argc,char** argv )
 {
 	TestDLL();
 	//TestWebcam();
-	//TestWorkflowVideo();
+	TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoContext();
 	//TestWriteXML();
-	TestVideoComparison();
+	//TestVideoComparison();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );

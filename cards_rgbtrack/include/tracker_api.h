@@ -13,12 +13,17 @@
 using namespace std;
 using namespace cv;
 
+
 /*
 * CONVENTIONS :
-*
+* We use for the inputs the OpenCV Convention for RectStruct that represent an object in screen space in pixel.
+* The coordinate (0,0) is at top-left corner at the image. Watchout for compatibility with Unity that use the bottom-left corner
+* as origin.
+* No extra work are needed to convert images in this convention, since FlipMode in Frame structure permet to correct it for specific devices conventions,
+* by default None is the conversion from Unity to OpenCV standart.
 */
 
-/*Structure data*/
+#pragma region Basic structures
 
 struct Vector3f
 {
@@ -49,13 +54,16 @@ struct Matrix4x4f
 
 struct RectStruct
 {
-	float x;      //in px
-	float y;      //in px
-	float width;  //in px
-	float height; //in px
+	float x;
+	float y;
+	float width;
+	float height;
 };
 
-/* Tracker definition */
+
+#pragma endregion
+
+#pragma region Trarget tracker structures
 
 enum class StateTracker
 {
@@ -77,7 +85,11 @@ struct Target
 	StateTracker state;
 };
 
-/*Use for frame pass from C# to C++*/
+
+#pragma endregion
+
+#pragma region Frame structures
+
 struct Color32
 {
 	Color32() : red( 0 ),green( 0 ),blue( 0 ),alpha( 0 )
@@ -109,31 +121,65 @@ struct Frame
 };
 
 
+#pragma endregion
+
+/* Plugin */
+
 extern "C"
 {
-	// Init the tracking context
+
+	/// @brief Init the tracking context and internal memory.
+	/// @param targets The array of targets, need to be initialised in memory.
+	/// @param nbTarget The number of targets tyhat will be set to zero.
+	/// @param maxTarget The maximum number of targets this context will handle.
 	EXPORT_API void __stdcall Init( Target* targets,int& nbTarget,const int maxTarget );
 
-	// Close the tracking context
+
+	/// @brief Colse the tracking context and free internal datas.
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
+	/// @param maxTarget The maximum number of targets
 	EXPORT_API void __stdcall Close( Target* targets,int& nbTarget,const int maxTarget );
 
-	// Register an object for tracking
-	EXPORT_API void __stdcall Register( const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
+	/// @brief Register a new target to tracking context.
+	/// @param frame The current frame. 
+	/// @param zone The zone of the object bounding box, watchout see convention for more information.
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
+	/// @param maxTarget The maximum number of targets
+	EXPORT_API int __stdcall Register( const Frame& frame,const RectStruct& zoneObject,Target* targets,int& nbTarget,const int maxTarget );
 
-	// Unregister object
+	/// @brief Unregister a given target from tracking context.
+	/// @param id The id of the object
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
 	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
-	// Detect on a zone if a new object was detected and register it.
-	// TODO
+	//TODO Verification also if already exist ?
+	/// @brief Permit to detect if a new object is inserted to the zoneDetection, and register it.
+	/// @param frame The current frame
+	/// @param zoneDetection The zone of area of detection, watchout see convention for more information.
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
+	/// @param maxTarget The maximum number of targets
 	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
 
-	// Check the tracking accuracy, occlusion with detection or heavy operations and correct it.
-	//TODO
+	/// @brief Check if the Track algorithm have made mistakes, and correct it.
+	/// Also permit to research object lost, occluded or out of camera to actualise their state.
+	/// Use it only periodically and not in each frame.
+	/// @param frame The current frame
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
 	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int nbTarget );
 
-	// Update the taget object with light tracking
+	/// @brief Track the objects registered and give an approximation of their location.
+	/// Mistakes can be made, and some cases are not handle for performances issues.
+	/// Can be use at each frame.
+	/// @param frame The current frame
+	/// @param targets The array of targets
+	/// @param nbTarget The number of targets
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
 
-	// TODO
-	EXPORT_API void __stdcall EstimatePose( const Frame& frame,Target* targets,const int nbTarget );
+	//TODO
+	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Frame& frame,const Target& targets );
 }

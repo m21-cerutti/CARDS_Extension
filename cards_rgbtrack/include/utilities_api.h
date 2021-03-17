@@ -4,9 +4,16 @@
 
 extern "C"
 {
-	// Select ROI register from OpenCV windows
+	/// @brief 
+	/// @param frame 
+	/// @param targets 
+	/// @param nbTarget 
+	/// @param maxTarget 
 	EXPORT_API void __stdcall ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget );
 
-	// Debug targets
+	/// @brief 
+	/// @param frame 
+	/// @param targets 
+	/// @param nbTarget 
 	EXPORT_API void __stdcall DebugTargets( const Frame& frame,Target* targets,const int nbTarget );
 }

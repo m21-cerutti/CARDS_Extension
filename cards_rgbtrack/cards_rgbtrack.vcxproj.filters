@@ -33,10 +33,7 @@
     <ClCompile Include="src\videoprovider.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="include\interfaceTracker.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="include\trackerColor.cpp">
+    <ClCompile Include="src\tracker_color.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,10 +56,10 @@
     <ClInclude Include="include\videoprovider.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\interfaceTracker.h">
-      <Filter>Fichiers sources</Filter>
+    <ClInclude Include="include\tracker_color.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\trackerColor.h">
+    <ClInclude Include="include\interface_tracker.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

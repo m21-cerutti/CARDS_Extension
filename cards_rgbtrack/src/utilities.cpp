@@ -1,7 +1,6 @@
 #include "utilities.h"
 #include "tracker_api.h"
-
-#include "trackerColor.h"
+#include "tracker_color.h"
 
 using namespace std;
 using namespace cv;
@@ -107,7 +106,7 @@ Ptr<ITracker> createTrackerByName( const std::string& name )
 		tracker = CardsMOSSE::create();
 	else if(name == "CSRT")
 		tracker = CardsCSRT::create();
-	else if (name == "COLOR")
+	else if(name == "COLOR")
 		tracker = TrackerCOLOR::create();
 	else
 		CV_Error( cv::Error::StsBadArg,"Invalid tracking algorithm name\n" );

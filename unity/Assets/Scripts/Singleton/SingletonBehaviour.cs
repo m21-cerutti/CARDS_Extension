@@ -12,7 +12,13 @@ namespace Utility.Singleton
 		/// Static singleton instance of the component.
 		/// </summary>
 		private static T m_Instance = null;
-		public static T Instance => m_Instance;
+		public static T Instance
+		{
+			get
+			{
+				return m_Instance;
+			}
+		}
 
 		/// <summary>
 		/// If true, the component's root Transform is marked as DontDestroyOnLoad().

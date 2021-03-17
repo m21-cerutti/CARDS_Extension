@@ -4,14 +4,26 @@
 
 extern "C"
 {
-	//Camera
+	/// @brief 
+	/// @param width 
+	/// @param height 
+	/// @return 
 	EXPORT_API VideoProvider* __stdcall CreateCameraContext( int width,int height );
 
-	//VideoFile
+	/// @brief 
+	/// @param filename 
+	/// @param width 
+	/// @param height 
+	/// @return
 	EXPORT_API VideoProvider* __stdcall CreateVideoContext( const char* filename,int width,int height );
 
+	/// @brief 
+	/// @param video 
 	EXPORT_API void __stdcall FreeVideoContext( VideoProvider* video );
 
-	//Only fill raw_data of frame
+	/// @brief 
+	/// @param video 
+	/// @param frame 
+	/// @return 
 	EXPORT_API bool __stdcall GetFrame( VideoProvider* video,Frame& frame );
 }

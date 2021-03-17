@@ -24,7 +24,13 @@ public class VideoParameters : ScriptableObject
 	/// Device choice, -1 for virtual, -2 for video, >=0 index for computer hardware if multiple
 	/// </summary>
 	public int device_index = -1;
-	public bool UseWebcam => device_index >= 0;
+	public bool UseWebcam
+	{
+		get
+		{
+			return device_index >= 0;
+		}
+	}
 
 	public FlipMode flip_mode = 0;
 
