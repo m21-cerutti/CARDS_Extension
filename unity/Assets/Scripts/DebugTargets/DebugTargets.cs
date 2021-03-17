@@ -77,9 +77,7 @@ public abstract class DebugTargets : MonoBehaviour
 								}
 							}
 							break;
-						case StateTracker.Occluded:
-						case StateTracker.OutOfCamera:
-						case StateTracker.Lost:
+						default:
 							if(parameters.log_datas)
 							{
 								LogsData.Instance.DebugTargetsError("0");

@@ -35,7 +35,6 @@ public class DebugTargetsVideo : DebugTargets
 			{
 				return false;
 			}
-
 			if(target.State == "Lost")
 			{
 				state = StateTracker.Lost;
