@@ -24,7 +24,6 @@ using namespace cv;
 */
 
 #pragma region Basic structures
-//TODO Constructor
 
 struct Vector2f
 {

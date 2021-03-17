@@ -47,6 +47,7 @@ void VideoProvider::InitCameraFrame( int width,int height )
 	_cap.set( CAP_PROP_FRAME_WIDTH,width );
 	_cap.set( CAP_PROP_FRAME_HEIGHT,height );
 
+	//Set back width and height since capture can override the requested width and height.
 	_frame.height = _cap.get( CAP_PROP_FRAME_HEIGHT );
 	_frame.width = _cap.get( CAP_PROP_FRAME_WIDTH );
 	_frame.rawData = new Color32[(size_t)_frame.height * _frame.width];

@@ -3,8 +3,9 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "COLOR";
+string trackingAlg = "COLOR";
 MultiTrackerCARDS multitrackers;
+/// @brief Handle memory space for trackers.
 std::vector<bool> occupied_place;
 
 /// @brief Permit to search for the first empty space in memory.

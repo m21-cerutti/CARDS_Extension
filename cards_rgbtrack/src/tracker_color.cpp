@@ -55,17 +55,18 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	bgr_frame = image.getMat();
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV,0 );
 	vector<vector<Point>> contours;
-	Vec3b lower = Vec3b( color - delta,100,100 );
-	Vec3b higher = Vec3b( color + delta,255,255 );
+	Vec3b lower = Vec3b( color - epsilon,100,100 );
+	Vec3b higher = Vec3b( color + epsilon,255,255 );
 	inRange( hsv_frame,lower,higher,thresh_frame );
 	Mat tmp_frame = Mat( thresh_frame.rows,thresh_frame.cols,thresh_frame.type() );
 	erode( thresh_frame,tmp_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	dilate( tmp_frame,thresh_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
-	imshow("Thresh", thresh_frame);
-	if (!contours.empty()) {
-		Rect2d rect = boundingRect( contours[0] );
-		boundingBox = rect;
+	Rect rect = boundingRect( contours[0] );
+	if(rect.area() < minArea)
+	{
+//TODO convert rect into RectStruct (function in utilities)
+// garder rect et on prend l'angle avec le rotated
 	}
 //	if(rect.area() < minArea)
 //	{

@@ -14,6 +14,7 @@
 using namespace std;
 using namespace cv;
 
+/// @brief Interface for all tracker compatible with the MultiTracker class.
 __interface ITracker
 {
 public:
@@ -21,7 +22,7 @@ public:
 	virtual bool update( InputArray image,Rect2d& boundingBox );
 };
 
-//TODO pragma region for visual
+#pragma region Wrapper OpenCV 
 
 class CardsKCF : public ITracker
 {
@@ -223,5 +224,8 @@ public:
 	{
 		return Ptr<ITracker>( new CardsCSRT() );
 	}
+
+#pragma endregion
+
 };
 

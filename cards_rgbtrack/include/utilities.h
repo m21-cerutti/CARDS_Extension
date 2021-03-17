@@ -20,32 +20,47 @@ extern struct RectStruct;
 extern struct Target;
 extern struct Frame;
 
-// Convert texture in rawdata frame to Mat OpenCV
+/// @brief Convert texture in rawdata frame to Mat OpenCV
+/// @param frame the frame to convert.
+/// @return The resulting Mat in BGR format.
 Mat FrameToCVMat( const Frame& frame );
 
-// Fill the rawdata field with mat texture
+/// @brief Fill the rawdata field with mat texture.
+/// @param src The source.
+/// @param dst The destination. Other fields than rawData are not touched, verify before the matrix correspond to frame.
 void CVMatToFrameRawData( const Mat& src,Frame& dst );
 
-//Convert Rect2d to Rect
+/// @brief Convert Rect2d to Rect
+/// @param rect source
+/// @return a RectStruct.
 RectStruct Rect2dToRectStruct( const Rect2d& rect );
 
-//Convert Rect to Rect2d
+/// @brief Convert Rect to Rect2d
+/// @param rect source
+/// @return a Rect2d
 Rect2d Rect2dToRectStruct( const RectStruct& rect );
 
+/// @brief Debug an image with waitkey.
+/// @param frame 
 //Convert Matrix3x3f to Mat
 Mat Matrix3x3fToMat( const Matrix3x3f& mat );
 
 //Convert Mat to Matrix3x3f
 Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
-// Debug an image with waitkey
 void DebugMat( const Mat& frame );
 
-// Debug targets represented by rect2d
-void DebugCVTargets( const Mat& mat,const std::vector<Rect2d>& objects,int number );
-void DebugCVTargets( const Mat& mat,const Target* targets,int number );
+/// @brief Debug in OpenCV window the actual frame and targets. Green if Live, Red otherwise.
+/// @param frame The current frame with objects.
+/// @param targets An allocated array of targets.
+/// @param maxTarget The number maximum of targets.
+void DebugCVTargets( const Mat& mat,const Target* targets,const int maxTarget );
 
-// Create tracker by name
+/// @brief Create tracker by name.
+/// @param name 
+/// Refer to existing tracker in OpenCV without GOTURN that need deeplearning network datas.
+/// COLOR for a custom colorTracker.
+/// @return The pointer of a  tracker allocated.
 Ptr<ITracker> createTrackerByName( const std::string& name );
 
 

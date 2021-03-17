@@ -3,12 +3,12 @@
 
 void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget )
 {
+	//TODO verify targets
+
 	Mat img = FrameToCVMat( frame );
 
 	vector<Rect> ROIs;
-	selectROIs( "tracker",img,ROIs );
-
-	//quit when the tracked object(s) is not provided
+	selectROIs( "select ROI",img,ROIs );
 	if(ROIs.size() < 1)
 		return;
 
@@ -18,8 +18,8 @@ void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int 
 	}
 }
 
-void DebugTargets( const Frame& frame,Target* targets,const int nbTarget )
+void DebugTargets( const Frame& frame,Target* targets,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
-	DebugCVTargets( img,targets,nbTarget );
+	DebugCVTargets( img,targets,maxTarget );
 }
