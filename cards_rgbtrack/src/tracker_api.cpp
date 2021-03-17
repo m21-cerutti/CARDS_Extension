@@ -32,7 +32,7 @@ void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
 	for(int i = 0; i < maxTarget; i++)
 	{
-		if(targets[i].state == StateTracker::Undefined)
+		if(targets[i].state != StateTracker::Undefined)
 		{
 			UnRegister( targets[i].id,targets,nbTarget );
 		}
@@ -101,7 +101,7 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	//Update Live only
 	for(int i = 0; i < nbTarget; i++)
 	{
-		if(targets[i].state == StateTracker::Live)
+		if(targets[i].state != StateTracker::Undefined)
 		{
 			if(!multitrackers.update( targets[i].id,img ))
 			{
