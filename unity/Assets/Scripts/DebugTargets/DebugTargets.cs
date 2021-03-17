@@ -65,7 +65,7 @@ public abstract class DebugTargets : MonoBehaviour
 						case StateTracker.Live:
 							{
 								Vector3 point = GetCenterScreenTarget(t);
-								Vector3 prevision = GetScreenToSpace(point);
+								Vector3 prevision = GetScreenToWorldSpace(point);
 
 								//TODO Use y but need pose
 								prevision.y = real_position.y;
@@ -110,7 +110,7 @@ public abstract class DebugTargets : MonoBehaviour
 	/// <param name="point">The screen point.</param>
 	/// <param name="depth">The depth set.</param>
 	/// <returns></returns>
-	protected Vector3 GetScreenToSpace(Vector2 point, float depth = -1)
+	protected Vector3 GetScreenToWorldSpace(Vector2 point, float depth = -1)
 	{
 		if(depth < 0)
 		{
@@ -143,17 +143,17 @@ public abstract class DebugTargets : MonoBehaviour
 	{
 		//Landmark debug
 		Gizmos.color = Color.white;
-		Gizmos.DrawWireSphere(GetScreenToSpace(new Vector2(0, 0)), 0.05f);
+		Gizmos.DrawWireSphere(GetScreenToWorldSpace(new Vector2(0, 0)), 0.05f);
 		Gizmos.color = Color.cyan;
-		Gizmos.DrawWireSphere(GetScreenToSpace(new Vector2(camera_table.pixelWidth, 0)), 0.05f);
-		Gizmos.DrawWireSphere(GetScreenToSpace(new Vector2(0, camera_table.pixelHeight)), 0.05f);
-		Gizmos.DrawWireSphere(GetScreenToSpace(new Vector2(camera_table.pixelWidth, camera_table.pixelHeight)), 0.05f);
+		Gizmos.DrawWireSphere(GetScreenToWorldSpace(new Vector2(camera_table.pixelWidth, 0)), 0.05f);
+		Gizmos.DrawWireSphere(GetScreenToWorldSpace(new Vector2(0, camera_table.pixelHeight)), 0.05f);
+		Gizmos.DrawWireSphere(GetScreenToWorldSpace(new Vector2(camera_table.pixelWidth, camera_table.pixelHeight)), 0.05f);
 
-		//Limits debug
+		//Detection zone debug
 		if(parameters.use_detection)
 		{
-			Vector3 pt1 = GetScreenToSpace(new Vector2(parameters.rect_detection.x, parameters.rect_detection.y));
-			Vector3 pt2 = GetScreenToSpace(new Vector2(
+			Vector3 pt1 = GetScreenToWorldSpace(new Vector2(parameters.rect_detection.x, parameters.rect_detection.y));
+			Vector3 pt2 = GetScreenToWorldSpace(new Vector2(
 				parameters.rect_detection.x + parameters.rect_detection.width,
 				parameters.rect_detection.y + parameters.rect_detection.height));
 
@@ -199,7 +199,7 @@ public abstract class DebugTargets : MonoBehaviour
 						col = Color.gray;
 					}
 					Vector3 point = GetCenterScreenTarget(t);
-					Vector3 prevision = GetScreenToSpace(point);
+					Vector3 prevision = GetScreenToWorldSpace(point);
 
 					//TODO Use y but need pose
 					prevision.y = real_position.y;

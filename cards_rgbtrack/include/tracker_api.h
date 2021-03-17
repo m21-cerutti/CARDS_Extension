@@ -24,6 +24,7 @@ using namespace cv;
 */
 
 #pragma region Basic structures
+//TODO Constructor
 
 struct Vector3f
 {
@@ -63,7 +64,7 @@ struct RectStruct
 
 #pragma endregion
 
-#pragma region Trarget tracker structures
+#pragma region Target tracker structures
 
 enum class StateTracker
 {
@@ -120,7 +121,6 @@ struct Frame
 	Color32* rawData;
 };
 
-
 #pragma endregion
 
 /* Plugin */
@@ -134,8 +134,7 @@ extern "C"
 	/// @param maxTarget The maximum number of targets this context will handle.
 	EXPORT_API void __stdcall Init( Target* targets,int& nbTarget,const int maxTarget );
 
-
-	/// @brief Colse the tracking context and free internal datas.
+	/// @brief Close the tracking context and free internal datas.
 	/// @param targets The array of targets
 	/// @param nbTarget The number of targets
 	/// @param maxTarget The maximum number of targets
@@ -155,8 +154,8 @@ extern "C"
 	/// @param nbTarget The number of targets
 	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
-	//TODO Verification also if already exist ?
 	/// @brief Permit to detect if a new object is inserted to the zoneDetection, and register it.
+	/// Watchout to already registered objects, unregister before.
 	/// @param frame The current frame
 	/// @param zoneDetection The zone of area of detection, watchout see convention for more information.
 	/// @param targets The array of targets

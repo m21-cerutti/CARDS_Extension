@@ -51,7 +51,7 @@ public class DebugTargetsVideo : DebugTargets
 				height = float.Parse(target.Height)
 			};
 			Vector2 screenpos = GetCenterScreenTarget(rect);
-			Vector3 prevision = GetScreenToSpace(screenpos);
+			Vector3 prevision = GetScreenToWorldSpace(screenpos);
 			pos = prevision;
 			return true;
 		}

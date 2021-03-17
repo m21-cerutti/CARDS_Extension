@@ -5,9 +5,7 @@ void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int 
 {
 	Mat img = FrameToCVMat( frame );
 
-	//TODO to fill with rect of new objects 
 	vector<Rect> ROIs;
-	//TODO to delete (using for test, after set it to size of objects automatically)
 	selectROIs( "tracker",img,ROIs );
 
 	//quit when the tracked object(s) is not provided

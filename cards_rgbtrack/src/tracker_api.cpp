@@ -5,17 +5,17 @@
 /* Intern memory */
 String trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
-std::vector<bool> free_place;
+std::vector<bool> occupied_place;
 
 /// @brief Permit to search for the first empty space in memory.
 /// @return The index/id of the new object memory.
 inline static int FindFirstFreeMemoryTracker()
 {
-	auto it = std::find_if( free_place.begin(),free_place.end(),[&]( const auto& val )
+	auto it = std::find_if( occupied_place.begin(),occupied_place.end(),[&]( const auto& val )
 							{
 								return val == false;
 							} );
-	return it - free_place.begin();
+	return it - occupied_place.begin();
 }
 
 void Init( Target* targets,int& nbTarget,const int maxTarget )
@@ -24,7 +24,7 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 	{
 		throw std::runtime_error( "Error: targets not initialised !" );
 	}
-	free_place.resize( maxTarget,false );
+	occupied_place.resize( maxTarget,false );
 	nbTarget = 0;
 }
 
@@ -37,7 +37,7 @@ void Close( Target* targets,int& nbTarget,const int maxTarget )
 			UnRegister( targets[i].id,targets,nbTarget );
 		}
 	}
-	free_place.clear();
+	occupied_place.clear();
 }
 
 int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
@@ -46,6 +46,7 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 
 	if(targets[nbTarget].state != StateTracker::Undefined)
 	{
+		// TODO Code error
 		throw std::runtime_error( "Error: Already existing ID or init to not Undefined !" );
 	}
 
@@ -55,7 +56,7 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
 
-	free_place[id] = true;
+	occupied_place[id] = true;
 	nbTarget++;
 	return id;
 }
@@ -71,7 +72,7 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	targets[id].state = StateTracker::Undefined;
 	multitrackers.remove( id );
 
-	free_place[id] = false;
+	occupied_place[id] = false;
 	nbTarget--;
 	return;
 }
@@ -96,12 +97,11 @@ void CheckTrack( const Frame& frame,Target* targets,const int nbTarget )
 void Track( const Frame& frame,Target* targets,const int nbTarget )
 {
 	Mat img = FrameToCVMat( frame );
-	//TODO preprocess to gray ? Color treshold ? etc.
 
 	//Update Live only
 	for(int i = 0; i < nbTarget; i++)
 	{
-		if(targets[i].state != StateTracker::Undefined)
+		if(targets[i].state == StateTracker::Live)
 		{
 			if(!multitrackers.update( targets[i].id,img ))
 			{

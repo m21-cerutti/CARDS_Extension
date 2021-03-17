@@ -5,8 +5,6 @@
 #include "utilities_api.h"
 #include "video_api.h"
 
-void TestWebcam();
-
 void TestDLL();
 
 void TestWorkflowVideo();

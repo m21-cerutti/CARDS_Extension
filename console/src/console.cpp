@@ -4,10 +4,10 @@
 using namespace std;
 using namespace cv;
 
+//TODO tests api Google ?
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWebcam();
 	TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoContext();
@@ -17,35 +17,6 @@ int main( int argc,char** argv )
 
 static void TestWorkflow( VideoProviderConsole& provider );
 static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
-
-
-void TestWebcam()
-{
-	std::cerr << "Opening camera..." << endl;
-	//TODO Need to accelerate opening
-	VideoCapture cap;
-	if(!cap.open( 0,cv::CAP_ANY ))
-	{
-		std::cerr << "Test camera failed ! Can't open." << std::endl;
-		return;
-	}
-
-	for(int i = 0; i < 200; i++)
-	{
-		Mat frame;
-		cap >> frame;
-		if(frame.empty())
-		{
-			std::cerr << "Warning! Empty frame." << std::endl;
-			break;
-		}
-		imshow( "Test webcam",frame );
-		if(waitKey( 10 ) == 27) break; // stop capturing by pressing ESC
-	}
-	cv::destroyAllWindows();
-	cap.release();
-	std::cout << "End test Webcam." << endl;
-}
 
 void TestDLL()
 {
@@ -181,8 +152,12 @@ void TestWriteXML()
 	FileStorage fs( "test.xml",FileStorage::WRITE );
 
 	int freq_record = 20;
-	int maxTargets = 1;
-	int ids_to_use[1] = { 0 };
+	int maxTargets = 5;
+	int ids_to_use[5];
+	for(int i = 0; i < maxTargets; i++)
+	{
+		ids_to_use[i] = i;
+	}
 	bool isinitialised = false;
 
 	fs << "frame" << "[";
@@ -220,6 +195,7 @@ void TestWriteXML()
 				for(int j = 0; j < maxTargets; j++)
 				{
 					Rect roi = selectROI( "select",texture );
+					cout << "Id " << j << endl;
 					if((roi.width == 0) && (roi.height == 0))
 					{
 						fs << "{" << "id" << ids_to_use[j];
@@ -237,7 +213,6 @@ void TestWriteXML()
 			i++;
 		}
 	}
-
 	fs << "]";
 	fs.release();
 

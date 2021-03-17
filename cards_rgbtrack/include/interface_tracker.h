@@ -21,6 +21,8 @@ public:
 	virtual bool update( InputArray image,Rect2d& boundingBox );
 };
 
+//TODO pragma region for visual
+
 class CardsKCF : public ITracker
 {
 private:

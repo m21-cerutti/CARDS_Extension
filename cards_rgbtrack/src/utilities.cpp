@@ -55,6 +55,7 @@ Rect2d Rect2dToRectStruct( const RectStruct& rect )
 void DebugMat( const Mat& mat )
 {
 	imshow( "DebugOpenCV",mat );
+	//TODO Delete wait
 	waitKey( 25 );
 }
 

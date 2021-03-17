@@ -4,7 +4,7 @@
 
 extern "C"
 {
-	/// @brief 
+	/// @brief Create camera context.
 	/// @param width 
 	/// @param height 
 	/// @return 
