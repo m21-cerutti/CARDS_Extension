@@ -52,6 +52,32 @@ Rect2d Rect2dToRectStruct( const RectStruct& rect )
 	return rect2d;
 }
 
+Mat Matrix3x3fToMat( const Matrix3x3f& mat )
+{
+	float data[9] = {
+		mat.c_00,mat.c_01,mat.c_02,
+		mat.c_10,mat.c_11,mat.c_12,
+		mat.c_20,mat.c_21,mat.c_22
+	};
+	Mat matcv( Size( 3,3 ),CV_32FC1,data );
+	return matcv.clone();
+}
+
+Matrix3x3f MatToMatrix3x3f( const Mat& mat )
+{
+	Matrix3x3f mat3x3;
+	mat3x3.c_00 = mat.at<double>( 0,0 );
+	mat3x3.c_01 = mat.at<double>( 0,1 );
+	mat3x3.c_02 = mat.at<double>( 0,2 );
+	mat3x3.c_10 = mat.at<double>( 1,0 );
+	mat3x3.c_11 = mat.at<double>( 1,1 );
+	mat3x3.c_12 = mat.at<double>( 1,2 );
+	mat3x3.c_20 = mat.at<double>( 2,0 );
+	mat3x3.c_21 = mat.at<double>( 2,1 );
+	mat3x3.c_22 = mat.at<double>( 2,2 );
+	return mat3x3;
+}
+
 void DebugMat( const Mat& mat )
 {
 	imshow( "DebugOpenCV",mat );

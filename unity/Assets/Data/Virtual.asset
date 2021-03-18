@@ -16,9 +16,25 @@ MonoBehaviour:
   camera_height: 256
   requested_camera_fps: 60
   starting_frame: 1
-  debug_cv: 0
+  debug_cv: 1
   log_datas: 0
   device_index: -1
+  use_file_calibration: 0
+  path_subfolder_calibration: 
+  calibration:
+    intrinsic_camera:
+      c_00: 15
+      c_01: 0
+      c_02: 128
+      c_10: 0
+      c_11: 15
+      c_12: 128
+      c_20: 0
+      c_21: 0
+      c_22: 1
+    dist_cam: 1.5
+    meter_pixel_x_ratio: 1.026
+    meter_pixel_y_ratio: 0.749
   flip_mode: 0
   checktrack_frequency: 20
   use_detection: 0

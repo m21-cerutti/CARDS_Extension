@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using Plugin;
 
@@ -13,6 +14,7 @@ public abstract class Tracking : MonoBehaviour
 	[SerializeField]
 	protected VideoParameters parameters; //Scenario that you can interchange (Virtual, Webcam)
 
+	protected Frame frame_buffer;
 	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;
@@ -69,10 +71,13 @@ public abstract class Tracking : MonoBehaviour
 		List<Target> final = new List<Target>();
 		for(int i = 0; i < MaxTargets; i++)
 		{
+			Vector2f original_size = targets[i].original_size;
+			original_size.y *= -1;
 			Target t = new Target
 			{
 				id = targets[i].id,
 				rect = ConvertRectToUnityScreen(targets[i].rect),
+				original_size = original_size,
 				state = targets[i].state
 			};
 			final.Add(t);
@@ -117,6 +122,26 @@ public abstract class Tracking : MonoBehaviour
 		}
 
 		Debug.Log("Start tracking.");
+
+		//File calibration
+		if(parameters.use_file_calibration)
+		{
+			string path = Path.Combine(Application.streamingAssetsPath, parameters.path_subfolder_calibration);
+			if(!Directory.Exists(path))
+			{
+				throw new System.Exception("Folder " + path + " does not exist.");
+			}
+			if(!CARDSCalibrationPlugin.GetPoseParametersWrapped(path, ref parameters.calibration))
+			{
+				throw new System.Exception("Loading parameters " + path + " failed.");
+			}
+		}
+		else if(parameters.device_index != -1)
+		{
+			Debug.LogWarning("Not recommended to not use calibrtation file in other context than virtual.");
+		}
+
+		// Init video
 		if(parameters.UseWebcam)
 		{
 			video = new WebcamTexture();
@@ -134,7 +159,7 @@ public abstract class Tracking : MonoBehaviour
 		}
 		video.Init(parameters);
 
-		Debug.Log("Init");
+		// Init plugin
 		unsafe
 		{
 			fixed(Target* outTargets = targets)

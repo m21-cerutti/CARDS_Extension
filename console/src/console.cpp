@@ -8,14 +8,13 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	TestWorkflowVideo();
-	//TestWorkflowWebcam();
+	//TestWorkflowVideo();
+	TestWorkflowWebcam();
 	//TestVideoContext();
-	WriteXML();
+	//WriteXML();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
-//static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
 
 void TestDLL()
 {
@@ -50,9 +49,13 @@ void TestWorkflowWebcam()
 
 void TestWorkflow( VideoProviderConsole& provider )
 {
+	PoseParameters pose_params = PoseParameters();
+	GetPoseParameters( ".",pose_params );
+
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 	bool isinitialised = false;
+
 	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
 
@@ -92,6 +95,13 @@ void TestWorkflow( VideoProviderConsole& provider )
 			else
 			{
 				Track( fr,targets,nbtargets );
+				if(targets[0].state != StateTracker::Undefined)
+				{
+					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
+					//cout << matpos.c_03 << endl; // X
+					//cout << matpos.c_13 << endl; // Y
+					cout << matpos.c_23 << endl; // Z
+				}
 			}
 			DebugTargets( fr,targets,nbtargets );
 			i++;
@@ -128,19 +138,6 @@ void TestVideoContext()
 	FreeVideoContext( video );
 
 	std::cout << "End test VideoProvider." << endl;
-}
-
-void TestVideoComparison()
-{
-	std::cerr << "Opening video test.avi ...\r";
-
-	VideoProviderConsole video( "test.avi" );
-	FileStorage fs2( "test.xml",FileStorage::READ );
-	//TestComparison( video,fs2 );
-
-	fs2.release();
-
-	std::cout << "End test VideoComparison." << endl;
 }
 
 void WriteXML()

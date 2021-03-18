@@ -12,6 +12,7 @@ public class VideoParameters : ScriptableObject
 	public int camera_width = 256;
 	public int camera_height = 256;
 
+
 	public int requested_camera_fps = 60;
 
 	public int starting_frame = 10;
@@ -31,6 +32,14 @@ public class VideoParameters : ScriptableObject
 			return device_index >= 0;
 		}
 	}
+
+	public bool use_file_calibration = true;
+
+	[ShowWhen("use_file_calibration", true)]
+	public string path_subfolder_calibration;
+
+	[ShowWhen("use_file_calibration", false)]
+	public PoseParameters calibration;
 
 	public FlipMode flip_mode = 0;
 

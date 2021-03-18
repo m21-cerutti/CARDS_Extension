@@ -26,39 +26,58 @@ using namespace cv;
 #pragma region Basic structures
 //TODO Constructor
 
+struct Vector2f
+{
+	float x = 0;
+	float y = 0;
+};
+
 struct Vector3f
 {
-	float x;
-	float y;
-	float z;
+	float x = 0;
+	float y = 0;
+	float z = 0;
+};
+
+struct Matrix3x3f
+{
+	float c_00 = 0;
+	float c_01 = 0;
+	float c_02 = 0;
+	float c_10 = 0;
+	float c_11 = 0;
+	float c_12 = 0;
+	float c_20 = 0;
+	float c_21 = 0;
+	float c_22 = 0;
 };
 
 struct Matrix4x4f
 {
-	float c_00;
-	float c_01;
-	float c_02;
-	float c_03;
-	float c_10;
-	float c_11;
-	float c_12;
-	float c_13;
-	float c_20;
-	float c_21;
-	float c_22;
-	float c_23;
-	float c_30;
-	float c_31;
-	float c_32;
-	float c_33;
+	float c_00 = 0;
+	float c_01 = 0;
+	float c_02 = 0;
+	float c_03 = 0;
+	float c_10 = 0;
+	float c_11 = 0;
+	float c_12 = 0;
+	float c_13 = 0;
+	float c_20 = 0;
+	float c_21 = 0;
+	float c_22 = 0;
+	float c_23 = 0;
+	float c_30 = 0;
+	float c_31 = 0;
+	float c_32 = 0;
+	float c_33 = 0;
 };
 
 struct RectStruct
 {
-	float x;
-	float y;
-	float width;
-	float height;
+	float x = 0;
+	float y = 0;
+	float width = 0;
+	float height = 0;
 };
 
 
@@ -77,15 +96,26 @@ enum class StateTracker
 
 struct Target
 {
-	Target() : id( -1 ),rect(),state( StateTracker::Undefined )
+	Target() : id( -1 ),rect(),original_size(),state( StateTracker::Undefined )
 	{
 	}
 	short id;
 	RectStruct rect;
+	Vector2f original_size;
 	//TODO angle or rotation matrix
 	StateTracker state;
 };
 
+struct PoseParameters
+{
+	PoseParameters() : intrinsic_camera(),dist_cam( 0 ),meter_pixel_x_ratio( 0 ),meter_pixel_y_ratio( 0 )
+	{
+	}
+	Matrix3x3f intrinsic_camera;
+	float dist_cam;
+	float meter_pixel_x_ratio;
+	float meter_pixel_y_ratio;
+};
 
 #pragma endregion
 
@@ -180,5 +210,5 @@ extern "C"
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
 
 	//TODO
-	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Frame& frame,const Target& targets );
+	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,const PoseParameters& params );
 }

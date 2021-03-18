@@ -3,7 +3,7 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "COLOR";
+String trackingAlg = "CSRT";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> occupied_place;
 
@@ -55,6 +55,9 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
+
+	targets[id].original_size.x = zone.width;
+	targets[id].original_size.y = zone.height;
 
 	occupied_place[id] = true;
 	nbTarget++;
@@ -113,8 +116,35 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	}
 }
 
-Matrix4x4f EstimatePose( const Frame& frame,const Target& targets )
+Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 {
-	//TODO
-	return Matrix4x4f();
+	double Cx = params.intrinsic_camera.c_02;
+	double Cy = params.intrinsic_camera.c_12;
+	double f = params.intrinsic_camera.c_00;
+
+	double Xscreen = (target.rect.x + target.rect.width / 2.0);
+	double Yscreen = (target.rect.y + target.rect.height / 2.0);
+
+	double WpixRatio = target.original_size.x / (1.0 * target.rect.width);
+	double HpixRatio = target.original_size.y / (1.0 * target.rect.height);
+
+	// Coordinates
+	//float X = (Xscreen-Cx) * params.meter_pixel_x_ratio;
+	//float Y = (Yscreen-Cy) * params.meter_pixel_y_ratio;
+
+	double Z = (((WpixRatio * params.meter_pixel_x_ratio) + (HpixRatio * params.meter_pixel_y_ratio)) / 2.0);
+
+	Matrix4x4f pose;
+	pose.c_03 = Xscreen;
+	pose.c_13 = Yscreen;
+	pose.c_23 = Z;
+
+	//TODO ROTATION
+
+	//Homogenous
+	pose.c_30 = 1;
+	pose.c_31 = 1;
+	pose.c_32 = 1;
+	pose.c_33 = 1;
+	return pose;
 }
