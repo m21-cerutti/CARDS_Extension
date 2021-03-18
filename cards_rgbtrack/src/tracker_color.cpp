@@ -18,7 +18,7 @@ short TrackerCOLOR::findColor( Mat img )
 	{
 		for(int j = 0; j < img.cols; j++)
 		{
-			hist[img.at<Vec3b>(i, j)[0]] += 1;
+			hist[img.at<Vec3b>( i,j )[0]] += 1;
 		}
 	}
 
@@ -44,7 +44,8 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 	if(bgr_frame.empty())
 		return false;
 	hsv_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
-	cvtColor(bgr_frame, hsv_frame, COLOR_BGR2HSV, 0);
+	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV,0 );
+
 	thresh_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	color = findColor( Mat(hsv_frame, boundingBox) );
 	return true;
@@ -55,24 +56,24 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	bgr_frame = image.getMat();
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV,0 );
 	vector<vector<Point>> contours;
+
 	Vec3b lower = Vec3b( color - epsilon,100,100 );
 	Vec3b higher = Vec3b( color + epsilon,255,255 );
+
 	inRange( hsv_frame,lower,higher,thresh_frame );
+
 	Mat tmp_frame = Mat( thresh_frame.rows,thresh_frame.cols,thresh_frame.type() );
 	erode( thresh_frame,tmp_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	dilate( tmp_frame,thresh_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
+
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
-	Rect rect = boundingRect( contours[0] );
-	if(rect.area() < minArea)
+	imshow( "Thresh",thresh_frame );
+
+	if(!contours.empty())
 	{
-//TODO convert rect into RectStruct (function in utilities)
-// garder rect et on prend l'angle avec le rotated
+		Rect2d rect = boundingRect( contours[0] );
+		boundingBox = rect;
 	}
-//	if(rect.area() < minArea)
-//	{
-////TODO convert rect into RectStruct (new function ?)
-//// garder rect et on prend l'angle avec le rotated
-//	}
 
 	return true;
 }
