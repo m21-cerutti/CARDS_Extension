@@ -98,8 +98,9 @@ void TestWorkflow( VideoProviderConsole& provider )
 				if(targets[0].state != StateTracker::Undefined)
 				{
 					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
-					//cout << targets[0].original_size.x << endl;
-					//cout << matpos.c_23 << endl; // Z
+					//cout << matpos.c_03 << endl; // X
+					//cout << matpos.c_13 << endl; // Y
+					cout << matpos.c_23 << endl; // Z
 				}
 			}
 			DebugTargets( fr,targets,nbtargets );

@@ -3,10 +3,13 @@
 VideoProviderConsole::VideoProviderConsole()
 {
 	_frame.rawData = nullptr;
-	if(!_cap.open( 0,cv::CAP_ANY ))
+	if(!_cap.open( 0,CAP_DSHOW ))
 	{
 		throw std::runtime_error( "Can't open camera." );
 	}
+
+	_cap.set( CAP_PROP_FRAME_WIDTH,256 );
+	_cap.set( CAP_PROP_FRAME_HEIGHT,256 );
 }
 
 VideoProviderConsole::VideoProviderConsole( string filename )
@@ -16,6 +19,9 @@ VideoProviderConsole::VideoProviderConsole( string filename )
 	{
 		throw std::runtime_error( "Can't open file " + filename );
 	}
+
+	_cap.set( CAP_PROP_FRAME_WIDTH,256 );
+	_cap.set( CAP_PROP_FRAME_HEIGHT,256 );
 }
 
 VideoProviderConsole::~VideoProviderConsole()

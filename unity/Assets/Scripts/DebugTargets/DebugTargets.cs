@@ -101,10 +101,15 @@ public abstract class DebugTargets : MonoBehaviour
 	private Vector3 GetEstimateWorldPosition(Target t)
 	{
 		Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
-		float depth = mat.c_23;
-		Debug.Log(depth);
+		float depth = mat.c_23 * parameters.calibration.dist_cam;
+		Debug.Log("D " + depth);
 		Vector2 screenpoint = GetCenterScreenTarget(t);
-		Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, mat.c_23);
+		Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, depth);
+
+		/*
+		Vector3 worldPoint = new Vector3(mat.c_03 - 0.5f, mat.c_23, mat.c_13 - 0.5f);
+		*/
+		Debug.Log(worldPoint);
 		return worldPoint;
 	}
 

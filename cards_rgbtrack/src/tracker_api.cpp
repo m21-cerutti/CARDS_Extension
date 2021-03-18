@@ -118,24 +118,25 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 
 Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 {
-	float Cx = params.intrinsic_camera.c_02;
-	float Cy = params.intrinsic_camera.c_12;
-	float f = params.intrinsic_camera.c_00;
+	double Cx = params.intrinsic_camera.c_02;
+	double Cy = params.intrinsic_camera.c_12;
+	double f = params.intrinsic_camera.c_00;
 
-	float X = (target.rect.x + target.rect.width / 2.0);
-	float Y = (target.rect.y + target.rect.height / 2.0);
+	double Xscreen = (target.rect.x + target.rect.width / 2.0);
+	double Yscreen = (target.rect.y + target.rect.height / 2.0);
 
-	float WpixRatio = target.rect.width / 1.0 * target.original_size.x;
-	float HpixRatio = target.rect.height / 1.0 * target.original_size.y;
+	double WpixRatio = target.original_size.x / (1.0 * target.rect.width);
+	double HpixRatio = target.original_size.y / (1.0 * target.rect.height);
 
-	float Z = (
-		(WpixRatio * params.pixel_mm_x_ratio) +
-		(HpixRatio * params.pixel_mm_y_ratio)
-		) / 2.0f;
+	// Coordinates
+	//float X = (Xscreen-Cx) * params.meter_pixel_x_ratio;
+	//float Y = (Yscreen-Cy) * params.meter_pixel_y_ratio;
+
+	double Z = (((WpixRatio * params.meter_pixel_x_ratio) + (HpixRatio * params.meter_pixel_y_ratio)) / 2.0);
 
 	Matrix4x4f pose;
-	pose.c_03 = X;
-	pose.c_13 = Y;
+	pose.c_03 = Xscreen;
+	pose.c_13 = Yscreen;
 	pose.c_23 = Z;
 
 	//TODO ROTATION

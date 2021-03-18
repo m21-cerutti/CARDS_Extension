@@ -124,8 +124,8 @@ namespace Plugin
 	{
 		public Matrix3x3f intrinsic_camera;
 		public float dist_cam;
-		public float pixel_mm_x_ratio;
-		public float pixel_mm_y_ratio;
+		public float meter_pixel_x_ratio;
+		public float meter_pixel_y_ratio;
 	};
 
 	#endregion

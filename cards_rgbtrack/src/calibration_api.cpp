@@ -20,8 +20,8 @@ bool GetPoseParameters( const char* resourceDirectory,PoseParameters& parameters
 	fs["dist_cam"] >> dist_cam;
 
 	parameters.dist_cam = dist_cam;
-	parameters.pixel_mm_x_ratio = ratio_x;
-	parameters.pixel_mm_y_ratio = ratio_y;
+	parameters.meter_pixel_x_ratio = ratio_x;
+	parameters.meter_pixel_y_ratio = ratio_y;
 	parameters.intrinsic_camera = MatToMatrix3x3f( camera_matrix );
 
 	return true;

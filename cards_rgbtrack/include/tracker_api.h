@@ -108,13 +108,13 @@ struct Target
 
 struct PoseParameters
 {
-	PoseParameters() : intrinsic_camera(),dist_cam( 0 ),pixel_mm_x_ratio( 0 ),pixel_mm_y_ratio( 0 )
+	PoseParameters() : intrinsic_camera(),dist_cam( 0 ),meter_pixel_x_ratio( 0 ),meter_pixel_y_ratio( 0 )
 	{
 	}
 	Matrix3x3f intrinsic_camera;
 	float dist_cam;
-	float pixel_mm_x_ratio;
-	float pixel_mm_y_ratio;
+	float meter_pixel_x_ratio;
+	float meter_pixel_y_ratio;
 };
 
 #pragma endregion

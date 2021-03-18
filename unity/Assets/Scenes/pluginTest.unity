@@ -208,7 +208,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14837956}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: -0.226}
+  m_LocalPosition: {x: 0, y: 0.037, z: -0.226}
   m_LocalScale: {x: 0.1, y: 0.05, z: 0.08}
   m_Children: []
   m_Father: {fileID: 978554853}
@@ -422,7 +422,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75360977}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0.153}
+  m_LocalPosition: {x: 0, y: 0.037, z: 0.153}
   m_LocalScale: {x: 0.1, y: 0.05, z: 0.08}
   m_Children: []
   m_Father: {fileID: 978554853}
@@ -629,7 +629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 917458847}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.279, y: 0.1, z: 0}
+  m_LocalPosition: {x: 0.279, y: 0.037, z: 0}
   m_LocalScale: {x: 0.1, y: 0.05, z: 0.08}
   m_Children: []
   m_Father: {fileID: 978554853}
@@ -699,6 +699,7 @@ Transform:
   - {fileID: 14837960}
   - {fileID: 917458851}
   - {fileID: 75360981}
+  - {fileID: 1486922379}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -805,7 +806,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1059688450}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.275, y: 0.1, z: 0.178}
+  m_LocalPosition: {x: -0.275, y: 0.037, z: 0.178}
   m_LocalScale: {x: 0.1, y: 0.05, z: 0.08}
   m_Children: []
   m_Father: {fileID: 978554853}
@@ -1250,12 +1251,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486922377}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.778, y: 0.039, z: -0.149}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_Father: {fileID: 978554853}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1510970813
 GameObject:
@@ -1465,7 +1466,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 10.26, y: 7.49}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 12
+  m_FocalLength: 15
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -1474,7 +1475,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34.664547
+  field of view: 28.036533
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1787,7 +1788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d018c78099b4cd0439bde28312a27098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters: {fileID: 11400000, guid: 39cd6bd6271f85f4a9403f0acf4b1e99, type: 2}
+  parameters: {fileID: 11400000, guid: b7622abc25827f44b9d23d41795698a1, type: 2}
 --- !u!4 &2121554695
 Transform:
   m_ObjectHideFlags: 0

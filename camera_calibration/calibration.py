@@ -19,7 +19,7 @@ CHECKERBOARD = (6, 9)
 SQUARE_SIZE = 0.022 # in m
 
 #DISTANCE_CAMERA (to musure in m)
-DISTANCE_CAMERA = 1.5
+DISTANCE_CAMERA = 0.6
   
 # stop the iteration when specified 
 # accuracy, epsilon, is reached or 
