@@ -4,7 +4,7 @@
 bool GetPoseParameters( const char* resourceDirectory,PoseParameters& parameters )
 {
 	FileStorage fs;
-	string filepath = string( resourceDirectory ) + "calibration.xml";
+	string filepath = string( resourceDirectory ) + "/calibration.xml";
 	fs.open( filepath,FileStorage::READ );
 	if(!fs.isOpened())
 	{

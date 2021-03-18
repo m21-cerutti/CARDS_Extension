@@ -8,8 +8,8 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	TestWorkflowVideo();
-	//TestWorkflowWebcam();
+	//TestWorkflowVideo();
+	TestWorkflowWebcam();
 	//TestVideoContext();
 	//WriteXML();
 }
@@ -50,7 +50,7 @@ void TestWorkflowWebcam()
 void TestWorkflow( VideoProviderConsole& provider )
 {
 	PoseParameters pose_params = PoseParameters();
-	GetPoseParameters( "./",pose_params );
+	GetPoseParameters( ".",pose_params );
 
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];

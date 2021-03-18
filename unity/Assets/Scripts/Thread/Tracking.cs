@@ -126,14 +126,14 @@ public abstract class Tracking : MonoBehaviour
 		//File calibration
 		if(parameters.use_file_calibration)
 		{
-			string path = Path.Combine(Application.streamingAssetsPath, parameters.path_subfolder_calibration, "calibration.xml");
-			if(!File.Exists(path))
+			string path = Path.Combine(Application.streamingAssetsPath, parameters.path_subfolder_calibration);
+			if(!Directory.Exists(path))
 			{
-				throw new System.Exception("File " + path + " does not exist.");
+				throw new System.Exception("Folder " + path + " does not exist.");
 			}
 			if(!CARDSCalibrationPlugin.GetPoseParametersWrapped(path, ref parameters.calibration))
 			{
-				throw new System.Exception("Loading file " + path + " failed.");
+				throw new System.Exception("Loading parameters " + path + " failed.");
 			}
 		}
 		else if(parameters.device_index != -1)
