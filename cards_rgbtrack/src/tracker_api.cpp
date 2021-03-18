@@ -129,10 +129,10 @@ Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 	double HpixRatio = target.original_size.y / (1.0 * target.rect.height);
 
 	// Coordinates
-	//float X = (Xscreen-Cx) * params.meter_pixel_x_ratio;
-	//float Y = (Yscreen-Cy) * params.meter_pixel_y_ratio;
+	//float X = (Xscreen-Cx) * params.meter_pixel_x_ratio * f;
+	//float Y = (Yscreen-Cy) * params.meter_pixel_y_ratio * f;
 
-	double Z = (((WpixRatio * params.meter_pixel_x_ratio) + (HpixRatio * params.meter_pixel_y_ratio)) / 2.0);
+	double Z = (((WpixRatio * 1.0 * params.meter_pixel_x_ratio) + (HpixRatio * 1.0 * params.meter_pixel_y_ratio)) / 2.0);
 
 	Matrix4x4f pose;
 	pose.c_03 = Xscreen;

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 using Plugin;
 
 using UnityEngine;
@@ -13,6 +15,8 @@ public abstract class DebugTargets : MonoBehaviour
 	protected VideoParameters parameters;
 	protected Tracking tracking;
 	protected Camera camera_table;
+
+	protected Dictionary<int, Vector3> estimate_pos = new Dictionary<int, Vector3>();
 
 	/// <summary>
 	/// Permit to get real data, specific to implementation.
@@ -47,6 +51,7 @@ public abstract class DebugTargets : MonoBehaviour
 	{
 		foreach(Target t in tracking.GetTargets())
 		{
+			SetEstimateWorldPosition(t);
 			Vector3 real_position;
 			StateTracker state;
 			if(GetRealPositionTarget(t.id, out real_position, out state))
@@ -64,14 +69,15 @@ public abstract class DebugTargets : MonoBehaviour
 							break;
 						case StateTracker.Live:
 							{
-								Vector3 prevision = GetEstimateWorldPosition(t);
-								//TODO Use y but need pose
-								//prevision.y = real_position.y;
-
-								float error = Vector3.Distance(real_position, prevision);
-								if(parameters.log_datas)
+								Vector3 prevision;
+								estimate_pos.TryGetValue(t.id, out prevision);
+								if(prevision != null)
 								{
-									LogsData.Instance.DebugTargetsError(error.ToString());
+									float error = Vector3.Distance(real_position, prevision);
+									if(parameters.log_datas)
+									{
+										LogsData.Instance.DebugTargetsError(error.ToString());
+									}
 								}
 							}
 							break;
@@ -98,19 +104,27 @@ public abstract class DebugTargets : MonoBehaviour
 		}
 	}
 
-	private Vector3 GetEstimateWorldPosition(Target t)
+	private void SetEstimateWorldPosition(Target t)
 	{
-		Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
-		float depth = mat.c_23 * parameters.calibration.dist_cam;
-		Debug.Log("D " + depth);
-		Vector2 screenpoint = GetCenterScreenTarget(t);
-		Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, depth);
+		if(t.state != StateTracker.Undefined)
+		{
+			Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
+			float depth = mat.c_23 * parameters.calibration.dist_cam;
+			Debug.Log("D " + depth);
+			Vector2 screenpoint = GetCenterScreenTarget(t);
+			Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, depth);
 
-		/*
-		Vector3 worldPoint = new Vector3(mat.c_03 - 0.5f, mat.c_23, mat.c_13 - 0.5f);
-		*/
-		Debug.Log(worldPoint);
-		return worldPoint;
+			/* REAL POSE TODO
+			Vector3 worldPoint = new Vector3(mat.c_03, mat.c_23, mat.c_13);
+			*/
+			Debug.Log(worldPoint);
+			if(!estimate_pos.ContainsKey(t.id))
+			{
+				estimate_pos[t.id] = Vector3.zero;
+			}
+			estimate_pos[t.id] = Vector3.Slerp(estimate_pos[t.id], worldPoint, 0.4f);
+			;
+		}
 	}
 
 	#region Utilities methods
@@ -211,12 +225,13 @@ public abstract class DebugTargets : MonoBehaviour
 					{
 						col = Color.gray;
 					}
-					Vector3 prevision = GetEstimateWorldPosition(t);
-					//TODO Use y but need pose
-					//prevision.y = real_position.y;
-
-					Gizmos.color = col;
-					Gizmos.DrawWireSphere(prevision, 0.1f);
+					Vector3 prevision;
+					estimate_pos.TryGetValue(t.id, out prevision);
+					if(prevision != null)
+					{
+						Gizmos.color = col;
+						Gizmos.DrawWireSphere(prevision, 0.1f);
+					}
 				}
 
 			}
