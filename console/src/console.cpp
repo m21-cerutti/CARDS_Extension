@@ -8,14 +8,14 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWorkflowVideo();
+	TestWorkflowVideo();
 	//TestWorkflowWebcam();
 	//TestVideoContext();
 	WriteXML();
 }
 
 static void TestWorkflow( VideoProviderConsole& provider );
-static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
+//static void TestComparison( VideoProviderConsole& provider,FileStorage& file_storage );
 
 void TestDLL()
 {
@@ -31,9 +31,9 @@ void TestDLL()
 
 void TestWorkflowVideo()
 {
-	std::cerr << "Opening video test.avi ..." << endl;
+	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "test.avi" );
+	VideoProviderConsole video( "test2.mp4" );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -136,14 +136,14 @@ void TestVideoComparison()
 
 	VideoProviderConsole video( "test.avi" );
 	FileStorage fs2( "test.xml",FileStorage::READ );
-	TestComparison( video,fs2 );
+	//TestComparison( video,fs2 );
 
 	fs2.release();
 
 	std::cout << "End test VideoComparison." << endl;
 }
 
-void TestWriteXML()
+void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 

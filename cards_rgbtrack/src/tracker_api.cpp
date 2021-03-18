@@ -3,7 +3,7 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "MOSSE";
+String trackingAlg = "COLOR";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> occupied_place;
 

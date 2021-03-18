@@ -9,7 +9,7 @@ private:
 	Mat hsv_frame;
 	Mat thresh_frame;
 
-	short delta = 10;
+	short delta = 20;
 	short color = 0;
 
 	int minArea = 10;
