@@ -49,9 +49,13 @@ void TestWorkflowWebcam()
 
 void TestWorkflow( VideoProviderConsole& provider )
 {
+	PoseParameters pose_params = PoseParameters();
+	GetPoseParameters( "./",pose_params );
+
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 	bool isinitialised = false;
+
 	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
 
@@ -93,9 +97,9 @@ void TestWorkflow( VideoProviderConsole& provider )
 				Track( fr,targets,nbtargets );
 				if(targets[0].state != StateTracker::Undefined)
 				{
-					Matrix4x4f matpos = EstimatePose( targets[0],Matrix3x3f(),1.5 );
+					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
 					//cout << targets[0].original_size.x << endl;
-					//cout << matpos.c_23 << endl;
+					//cout << matpos.c_23 << endl; // Z
 				}
 			}
 			DebugTargets( fr,targets,nbtargets );

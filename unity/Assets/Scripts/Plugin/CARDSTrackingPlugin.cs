@@ -119,6 +119,15 @@ namespace Plugin
 		public IntPtr raw_data;
 	};
 
+	[System.Serializable]
+	public struct PoseParameters
+	{
+		public Matrix3x3f intrinsic_camera;
+		public float dist_cam;
+		public float pixel_mm_x_ratio;
+		public float pixel_mm_y_ratio;
+	};
+
 	#endregion
 
 	/* Wrapper */
@@ -157,7 +166,7 @@ namespace Plugin
 
 		[PluginFunctionAttr("EstimatePose")]
 		public static EstimatePose estimate_pose = null;
-		public delegate Matrix4x4f EstimatePose(ref Target target, Matrix3x3f intrinsic, float dist_cam_table);
+		public delegate Matrix4x4f EstimatePose(ref Target target, ref PoseParameters param);
 #else
         [DllImport("cards_rgbtrack")]
 		internal unsafe static extern void Init(Target* targets, ref int nbTarget, int maxTarget);
@@ -181,7 +190,7 @@ namespace Plugin
 		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal static extern Matrix4x4f EstimatePose( ref Target target, Matrix3x3f intrinsic);
+		internal static extern Matrix4x4f EstimatePose( ref Target target, ref PoseParameters param);
 #endif
 
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
@@ -252,12 +261,12 @@ namespace Plugin
 #endif
 		}
 
-		public static Matrix4x4f EstimatePoseWrapped(ref Target target, Matrix3x3f intrinsic, float dist_cam_table)
+		public static Matrix4x4f EstimatePoseWrapped(ref Target target, ref PoseParameters param)
 		{
 #if UNITY_EDITOR
-			return CARDSTrackingPlugin.estimate_pose(ref target, intrinsic, dist_cam_table);
+			return CARDSTrackingPlugin.estimate_pose(ref target, ref param);
 #else
-            return EstimatePose(ref target, intrinsic, dist_cam_table);
+            return EstimatePose(ref target, ref param);
 #endif
 		}
 

@@ -465,3 +465,5 @@ FodyWeavers.xsd
 *.avi
 
 videos_tests/
+
+camera_calibration/img_calibration/*.jpg

@@ -100,7 +100,7 @@ public abstract class DebugTargets : MonoBehaviour
 
 	private Vector3 GetEstimateWorldPosition(Target t)
 	{
-		Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, parameters.intrinsic_matrix_camera, camera_table.transform.position.magnitude);
+		Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
 		float depth = mat.c_23;
 		Debug.Log(depth);
 		Vector2 screenpoint = GetCenterScreenTarget(t);

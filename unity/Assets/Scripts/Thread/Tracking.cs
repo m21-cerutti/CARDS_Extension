@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using Plugin;
 
@@ -121,6 +122,26 @@ public abstract class Tracking : MonoBehaviour
 		}
 
 		Debug.Log("Start tracking.");
+
+		//File calibration
+		if(parameters.use_file_calibration)
+		{
+			string path = Path.Combine(Application.streamingAssetsPath, parameters.path_subfolder_calibration, "calibration.xml");
+			if(!File.Exists(path))
+			{
+				throw new System.Exception("File " + path + " does not exist.");
+			}
+			if(!CARDSCalibrationPlugin.GetPoseParametersWrapped(path, ref parameters.calibration))
+			{
+				throw new System.Exception("Loading file " + path + " failed.");
+			}
+		}
+		else if(parameters.device_index != -1)
+		{
+			Debug.LogWarning("Not recommended to not use calibrtation file in other context than virtual.");
+		}
+
+		// Init video
 		if(parameters.UseWebcam)
 		{
 			video = new WebcamTexture();
@@ -138,7 +159,7 @@ public abstract class Tracking : MonoBehaviour
 		}
 		video.Init(parameters);
 
-		Debug.Log("Init");
+		// Init plugin
 		unsafe
 		{
 			fixed(Target* outTargets = targets)

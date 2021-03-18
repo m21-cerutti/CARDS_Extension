@@ -4,6 +4,7 @@
 #include "tracker_api.h"
 #include "utilities_api.h"
 #include "video_api.h"
+#include "calibration_api.h"
 
 void TestDLL();
 

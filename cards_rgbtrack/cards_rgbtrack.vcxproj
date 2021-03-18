@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\calibration_api.cpp" />
     <ClCompile Include="src\tracker_color.cpp" />
     <ClCompile Include="src\utilities.cpp" />
     <ClCompile Include="src\multitracker.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="src\video_api.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\calibration_api.h" />
     <ClInclude Include="include\interface_tracker.h" />
     <ClInclude Include="include\tracker_color.h" />
     <ClInclude Include="include\utilities.h" />

@@ -3,7 +3,7 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "CSRT";
+String trackingAlg = "MIL";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> occupied_place;
 
@@ -130,8 +130,8 @@ Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 
 	//To test
 	float Z = (
-		(params.dist_cam * WpixRatio * params.pixelmmXRatio) +
-		(params.dist_cam * HpixRatio * params.pixelmmYRatio)
+		(WpixRatio * params.pixel_mm_x_ratio) +
+		(HpixRatio * params.pixel_mm_y_ratio)
 		) / 2.0f;
 
 	Matrix4x4f pose;

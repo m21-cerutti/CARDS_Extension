@@ -15,6 +15,7 @@
 using namespace std;
 using namespace cv;
 
+extern struct Matrix3x3f;
 extern struct RectStruct;
 extern struct Target;
 extern struct Frame;
@@ -30,6 +31,12 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect );
 
 //Convert Rect to Rect2d
 Rect2d Rect2dToRectStruct( const RectStruct& rect );
+
+//Convert Matrix3x3f to Mat
+Mat Matrix3x3fToMat( const Matrix3x3f& mat );
+
+//Convert Mat to Matrix3x3f
+Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
 // Debug an image with waitkey
 void DebugMat( const Mat& frame );
