@@ -3,7 +3,7 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "MIL";
+String trackingAlg = "CSRT";
 MultiTrackerCARDS multitrackers;
 std::vector<bool> occupied_place;
 
@@ -122,21 +122,20 @@ Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 	float Cy = params.intrinsic_camera.c_12;
 	float f = params.intrinsic_camera.c_00;
 
-	float x = (target.rect.x + target.rect.width / 2.0);
-	float y = (target.rect.y + target.rect.height / 2.0);
+	float X = (target.rect.x + target.rect.width / 2.0);
+	float Y = (target.rect.y + target.rect.height / 2.0);
 
 	float WpixRatio = target.rect.width / 1.0 * target.original_size.x;
 	float HpixRatio = target.rect.height / 1.0 * target.original_size.y;
 
-	//To test
 	float Z = (
 		(WpixRatio * params.pixel_mm_x_ratio) +
 		(HpixRatio * params.pixel_mm_y_ratio)
 		) / 2.0f;
 
 	Matrix4x4f pose;
-	pose.c_03 = x;
-	pose.c_13 = y;
+	pose.c_03 = X;
+	pose.c_13 = Y;
 	pose.c_23 = Z;
 
 	//TODO ROTATION

@@ -205,7 +205,9 @@ private:
 public:
 	CardsCSRT()
 	{
-		tracker = TrackerCSRT::create();
+		TrackerCSRT::Params params;
+		params.scale_lr = 0.2;
+		tracker = TrackerCSRT::create( params );
 	}
 
 	bool init( InputArray image,const Rect2d& boundingBox ) override
