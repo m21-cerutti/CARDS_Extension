@@ -106,6 +106,17 @@ struct Target
 	StateTracker state;
 };
 
+struct PoseParameters
+{
+	PoseParameters() : intrinsic_camera(),dist_cam( 0 ),pixelmmXRatio( 0 ),pixelmmYRatio( 0 )
+	{
+	}
+	Matrix3x3f intrinsic_camera;
+	float dist_cam;
+	float pixelmmXRatio;
+	float pixelmmYRatio;
+};
+
 #pragma endregion
 
 #pragma region Frame structures
@@ -199,5 +210,5 @@ extern "C"
 	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
 
 	//TODO
-	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,Matrix3x3f intrinsic,float dist_cam_table );
+	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,const PoseParameters& params );
 }

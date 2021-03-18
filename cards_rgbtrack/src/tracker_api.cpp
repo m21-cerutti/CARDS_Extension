@@ -116,20 +116,23 @@ void Track( const Frame& frame,Target* targets,const int nbTarget )
 	}
 }
 
-Matrix4x4f EstimatePose( const Target& target,Matrix3x3f intrinsic,float dist_cam_table )
+Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 {
-	float Cx = intrinsic.c_02;
-	float Cy = intrinsic.c_12;
-	float f = intrinsic.c_00;
+	float Cx = params.intrinsic_camera.c_02;
+	float Cy = params.intrinsic_camera.c_12;
+	float f = params.intrinsic_camera.c_00;
 
 	float x = (target.rect.x + target.rect.width / 2.0);
 	float y = (target.rect.y + target.rect.height / 2.0);
 
-	float WRatio = target.rect.width / 1.0 * target.original_size.x;
-	float HRatio = target.rect.height / 1.0 * target.original_size.y;
+	float WpixRatio = target.rect.width / 1.0 * target.original_size.x;
+	float HpixRatio = target.rect.height / 1.0 * target.original_size.y;
 
-	//Not working
-	float Z = (dist_cam_table * WRatio + dist_cam_table * HRatio) / 2.0;
+	//To test
+	float Z = (
+		(params.dist_cam * WpixRatio * params.pixelmmXRatio) +
+		(params.dist_cam * HpixRatio * params.pixelmmYRatio)
+		) / 2.0f;
 
 	Matrix4x4f pose;
 	pose.c_03 = x;
