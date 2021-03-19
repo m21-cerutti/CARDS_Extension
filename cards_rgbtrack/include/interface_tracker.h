@@ -20,6 +20,7 @@ __interface ITracker
 public:
 	virtual bool init( InputArray image,const Rect2d& boundingBox );
 	virtual bool update( InputArray image,Rect2d& boundingBox );
+	virtual void clear();
 };
 
 #pragma region Wrapper OpenCV 
@@ -42,11 +43,16 @@ public:
 	{
 		return tracker->update( image,boundingBox );
 	}
+	void clear() override
+	{
+		return tracker->clear();
+	}
 
 	static Ptr<ITracker> create()
 	{
 		return Ptr<ITracker>( new CardsKCF() );
 	}
+
 };
 
 class CardsTLD : public ITracker
@@ -66,6 +72,10 @@ public:
 	bool update( InputArray image,Rect2d& boundingBox ) override
 	{
 		return tracker->update( image,boundingBox );
+	}
+	void clear() override
+	{
+		return tracker->clear();
 	}
 
 	static Ptr<ITracker> create()
@@ -92,6 +102,10 @@ public:
 	{
 		return tracker->update( image,boundingBox );
 	}
+	void clear() override
+	{
+		return tracker->clear();
+	}
 
 	static Ptr<ITracker> create()
 	{
@@ -116,6 +130,10 @@ public:
 	bool update( InputArray image,Rect2d& boundingBox ) override
 	{
 		return tracker->update( image,boundingBox );
+	}
+	void clear() override
+	{
+		return tracker->clear();
 	}
 
 	static Ptr<ITracker> create()
@@ -142,6 +160,10 @@ public:
 	{
 		return tracker->update( image,boundingBox );
 	}
+	void clear() override
+	{
+		return tracker->clear();
+	}
 
 	static Ptr<ITracker> create()
 	{
@@ -167,6 +189,10 @@ public:
 	{
 		return tracker->update( image,boundingBox );
 	}
+	void clear() override
+	{
+		return tracker->clear();
+	}
 
 	static Ptr<ITracker> create()
 	{
@@ -191,6 +217,10 @@ public:
 	bool update( InputArray image,Rect2d& boundingBox ) override
 	{
 		return tracker->update( image,boundingBox );
+	}
+	void clear() override
+	{
+		return tracker->clear();
 	}
 
 	static Ptr<ITracker> create()
@@ -218,6 +248,10 @@ public:
 	bool update( InputArray image,Rect2d& boundingBox ) override
 	{
 		return tracker->update( image,boundingBox );
+	}
+	void clear() override
+	{
+		return tracker->clear();
 	}
 
 	static Ptr<ITracker> create()

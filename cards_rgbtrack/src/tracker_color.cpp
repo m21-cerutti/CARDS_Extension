@@ -4,6 +4,7 @@
 
 
 TrackerCOLOR::TrackerCOLOR()
+	: bgr_frame(),hsv_frame(),thresh_frame(),color( 0 )
 {
 }
 
@@ -81,7 +82,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	dilate( tmp_frame,thresh_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
 
-	DebugMat( thresh_frame,"Tresh " + to_string( color ) );
+	//DebugMat( thresh_frame,"Tresh " + to_string( color ) );
 
 	if(!contours.empty())
 	{
@@ -95,6 +96,14 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 //	}
 
 	return true;
+}
+
+void TrackerCOLOR::clear()
+{
+	bgr_frame = Mat();
+	hsv_frame = Mat();
+	thresh_frame = Mat();
+	color = 0;
 }
 
 Ptr<ITracker> TrackerCOLOR::create()

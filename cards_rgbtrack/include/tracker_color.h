@@ -13,6 +13,8 @@ public:
 
 	bool update( InputArray image,Rect2d& boundingBox ) override;
 
+	void clear() override;
+
 	static Ptr<ITracker> create();
 
 private:

@@ -32,7 +32,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "test2.mp4" );
+	VideoProviderConsole video( "test.avi" );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -90,7 +90,7 @@ void TestWorkflow( VideoProviderConsole& provider )
 			else if(i % detect_freq == 0)
 			{
 				//std::cout << "CheckTrack" << endl;
-				//CheckTrack( fr,zoneDetection,targets,nbTarget,maxTarget );
+				CheckTrack( fr,targets,nbtargets );
 			}
 			else
 			{
@@ -100,7 +100,7 @@ void TestWorkflow( VideoProviderConsole& provider )
 					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
 					//cout << matpos.c_03 << endl; // X
 					//cout << matpos.c_13 << endl; // Y
-					cout << matpos.c_23 << endl; // Z
+					//cout << matpos.c_23 << endl; // Z
 				}
 			}
 			DebugTargets( fr,targets,nbtargets );

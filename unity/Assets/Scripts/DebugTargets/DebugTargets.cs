@@ -110,14 +110,17 @@ public abstract class DebugTargets : MonoBehaviour
 		{
 			Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
 			float depth = mat.c_23 * parameters.calibration.dist_cam;
-			Debug.Log("D " + depth);
+			//Debug.Log("D " + depth);
 			Vector2 screenpoint = GetCenterScreenTarget(t);
 			Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, depth);
+
+			//	For debug purpose
+			worldPoint.y = 0;
 
 			/* REAL POSE TODO
 			Vector3 worldPoint = new Vector3(mat.c_03, mat.c_23, mat.c_13);
 			*/
-			Debug.Log(worldPoint);
+			//Debug.Log(worldPoint);
 			if(!estimate_pos.ContainsKey(t.id))
 			{
 				estimate_pos[t.id] = Vector3.zero;

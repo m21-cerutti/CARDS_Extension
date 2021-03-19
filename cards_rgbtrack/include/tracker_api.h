@@ -197,17 +197,20 @@ extern "C"
 	/// Use it only periodically and not in each frame.
 	/// @param frame The current frame
 	/// @param targets The array of targets
-	/// @param nbTarget The number of targets
-	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int nbTarget );
+	/// @param maxTarget The maximum number of targets
+	EXPORT_API void __stdcall CheckTrack( const Frame& frame,Target* targets,const int maxTarget );
 
 	/// @brief Track the objects registered and give an approximation of their location.
 	/// Mistakes can be made, and some cases are not handle for performances issues.
 	/// Can be use at each frame.
 	/// @param frame The current frame
 	/// @param targets The array of targets
-	/// @param nbTarget The number of targets
-	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int nbTarget );
+	/// @param maxTarget The maximum number of targets
+	EXPORT_API void __stdcall Track( const Frame& frame,Target* targets,const int maxTarget );
 
-	//TODO
+	/// @brief Estimate the pose of the object. 
+	/// @param target The target to estimate.
+	/// @param params The parameters needed for pose.
+	/// @return An homegenous matrix, with rotation and position, X and Y are screen cordiantes, Z is a ratio od distance relative to table.
 	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,const PoseParameters& params );
 }

@@ -33,12 +33,6 @@ public:
 	/// @return True if sucessfull, false otherwise.
 	bool update( const int id,InputArray image );
 
-	/// @brief Correct and reinitialyze a tracker.
-	/// @param id
-	/// @param image the current image.
-	/// @param boundingBoxe the corrected bounding box.
-	void correct( const int id,InputArray image,Rect2d boundingBoxe );
-
 	/// @brief Get the bounding box associated to a tracker.
 	/// @param id
 	/// @return a Rect2d
