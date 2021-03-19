@@ -13,10 +13,17 @@ using Xml2CSharp;
 /// </summary>
 public class DebugTargetsVideo : DebugTargets
 {
-	private OpencvStorage _xmlroot;
+	private OpencvStorage _xmlroot = null;
 
 	protected override bool GetRealPositionTarget(int id, out Vector3 pos, out StateTracker state)
 	{
+		if(_xmlroot == null)
+		{
+			pos = Vector3.zero;
+			state = StateTracker.Live;
+			return true;
+		}
+
 		pos = Vector3.zero;
 		state = StateTracker.Undefined;
 		XMLFrame frame = _xmlroot.ListFrames.Frames.Find(delegate (XMLFrame f)
@@ -64,7 +71,11 @@ public class DebugTargetsVideo : DebugTargets
 		{
 			throw new System.Exception("Use a video with this script !");
 		}
-		ParseXmlFile();
+
+		if(parameters.log_datas)
+		{
+			ParseXmlFile();
+		}
 	}
 
 	private void ParseXmlFile()

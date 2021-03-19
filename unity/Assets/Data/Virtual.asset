@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera_width: 256
   camera_height: 256
-  requested_camera_fps: 60
+  requested_camera_fps: 120
   starting_frame: 1
-  debug_cv: 0
+  debug_cv: 1
   log_datas: 0
   device_index: -1
   use_file_calibration: 0

@@ -3,9 +3,13 @@
 #include "multitracker.h"
 
 /* Intern memory */
+
+/// @brief Main tracking algorithm
 string trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
-//Use to imprive quality
+
+/// @brief Use to improve quality
+string trackingDetector = "COLOR";
 MultiTrackerCARDS detectors;
 
 /// @brief Handle memory space for trackers.
@@ -57,7 +61,7 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 	int id = FindFirstFreeMemoryTracker();
 	targets[id].id = id;
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
-	detectors.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( "COLOR" ) );
+	detectors.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingDetector ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
 
@@ -101,24 +105,42 @@ void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 	{
 		if(targets[i].state != StateTracker::Undefined)
 		{
-			if(!multitrackers.update( targets[i].id,img ))
+			bool tracked = multitrackers.update( targets[i].id,img );
+			bool detected = detectors.update( targets[i].id,img );
+			Rect2d bbt = multitrackers.getBoundinBox( targets[i].id );
+			Rect2d bbd = detectors.getBoundinBox( targets[i].id );
+			Vec2f vt = Vec2f( bbt.x + bbt.width / 2.0,bbt.y + bbt.height / 2.0 );
+			Vec2f vb = Vec2f( bbd.x + bbd.width / 2.0,bbd.y + bbd.width / 2.0 );
+
+			// Check distance for error multitracker and normal track
+			if(targets[i].state == StateTracker::Live && !tracked)
 			{
-				if(!detectors.update( targets[i].id,img ))
-				{
-					//TODO check last bounding box near limit screen for outofcam
-					//TODO check all bounding box for occluded, improve with spatial tree
-					targets[i].state = StateTracker::Lost;
-				}
-				else
-				{
-					targets[i].state = StateTracker::Live;
-					Rect2d bb = detectors.getBoundinBox( targets[i].id );
-					targets[i].rect = Rect2dToRectStruct( bb );
-					//Correct
-					multitrackers.remove( targets[i].id );
-					multitrackers.add( targets[i].id,img,bb,createTrackerByName( trackingAlg ) );
-				}
+				targets[i].state = StateTracker::Lost;
 			}
+			else if(targets[i].state == StateTracker::Live && tracked && detected && norm( vb - vt,NORM_L2 ) > 50.0f)
+			{
+				targets[i].state = StateTracker::Lost;
+			}
+
+			if(targets[i].state != StateTracker::Live && detected)
+			{
+				targets[i].state = StateTracker::Live;
+				targets[i].rect = Rect2dToRectStruct( bbd );
+				//Correct and expand bbd box
+				bbt = bbd;
+				bbt.x -= 15;
+				bbt.y -= 15;
+				bbt.width += 30;
+				bbt.height += 30;
+				multitrackers.remove( targets[i].id );
+				multitrackers.add( targets[i].id,img,bbt,createTrackerByName( trackingAlg ) );
+			}
+			else if(targets[i].state != StateTracker::Lost && !detected)
+			{
+				//TODO check last bounding box near limit screen for OutOfCam
+				//TODO check all bounding box for occluded, improve with spatial tree
+			}
+
 			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].id ) );
 		}
 	}

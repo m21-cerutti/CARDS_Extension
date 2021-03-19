@@ -51,7 +51,7 @@ public class SingleThread : Tracking
 				{
 					fixed(Target* outTargets = targets)
 					{
-						Debug.Log("CheckTrack");
+						//Debug.Log("CheckTrack");
 						CARDSTrackingPlugin.CheckTrackWrapped(ref frame_buffer, outTargets, max_targets);
 						if(parameters.debug_cv)
 						{

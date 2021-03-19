@@ -10,6 +10,8 @@ TrackerCOLOR::TrackerCOLOR()
 
 short TrackerCOLOR::findColor( Mat img )
 {
+	img = img( Rect( 0.25 * img.cols,0.25 * img.rows,0.75 * img.cols,0.75 * img.rows ) );
+
 	if(img.empty())
 		return 0;
 
@@ -41,11 +43,10 @@ short TrackerCOLOR::findColor( Mat img )
 
 bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 {
-
 	bgr_frame = image.getMat();
-	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	if(bgr_frame.empty())
 		return false;
+	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	//DebugMat( bgr_frame,"BGR" + color );
 	hsv_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
@@ -64,18 +65,23 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 {
 	bgr_frame = image.getMat();
+
+	if(bgr_frame.empty())
+		return false;
+
+	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 	Vec3b lower;
 	if(color - epsilon < 0)
 	{
-		lower = Vec3b( 0,100,100 );
+		lower = Vec3b( 0,50,50 );
 	}
 	else
 	{
-		lower = Vec3b( color - epsilon,100,100 );
+		lower = Vec3b( color - epsilon,50,50 );
 	}
-	Vec3b higher = Vec3b( color + epsilon,255,255 );
+	Vec3b higher = Vec3b( color + epsilon,225,225 );
 	inRange( hsv_frame,lower,higher,thresh_frame );
 	Mat tmp_frame = Mat( thresh_frame.rows,thresh_frame.cols,thresh_frame.type() );
 	erode( thresh_frame,tmp_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
@@ -86,7 +92,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 
 	if(!contours.empty())
 	{
-		Rect2d rect = boundingRect( contours[0] );
+		Rect2d rect = boundingRect( contours[0] ); //TODO Correct for largest
 		boundingBox = rect;
 	}
 //	if(rect.area() < minArea)

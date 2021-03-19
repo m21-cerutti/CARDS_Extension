@@ -25,7 +25,7 @@ private:
 
 	short color = 0;
 	//TODO #define
-	short epsilon = 10;
+	short epsilon = 15;
 	int minArea = 10;
 
 	short findColor( Mat img );

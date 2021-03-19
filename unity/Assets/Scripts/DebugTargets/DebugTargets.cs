@@ -41,6 +41,10 @@ public abstract class DebugTargets : MonoBehaviour
 
 	protected virtual void Update()
 	{
+		foreach(Target t in tracking.GetTargets())
+		{
+			SetEstimateWorldPosition(t);
+		}
 		if(tracking.NbTargets > 0 && !parameters.UseWebcam)
 		{
 			CompareEstimationtoReal();
@@ -51,7 +55,6 @@ public abstract class DebugTargets : MonoBehaviour
 	{
 		foreach(Target t in tracking.GetTargets())
 		{
-			SetEstimateWorldPosition(t);
 			Vector3 real_position;
 			StateTracker state;
 			if(GetRealPositionTarget(t.id, out real_position, out state))
@@ -86,7 +89,6 @@ public abstract class DebugTargets : MonoBehaviour
 							{
 								LogsData.Instance.DebugTargetsError("0");
 							}
-
 							break;
 					}
 
@@ -109,13 +111,13 @@ public abstract class DebugTargets : MonoBehaviour
 		if(t.state != StateTracker.Undefined)
 		{
 			Matrix4x4f mat = CARDSTrackingPlugin.EstimatePoseWrapped(ref t, ref parameters.calibration);
-			float depth = mat.c_23 * parameters.calibration.dist_cam;
-			//Debug.Log("D " + depth);
+			//float depth = mat.c_23 * parameters.calibration.dist_cam;
+
+			//TODO Debug purpose
+			float depth = parameters.calibration.dist_cam;
+
 			Vector2 screenpoint = GetCenterScreenTarget(t);
 			Vector3 worldPoint = GetScreenToWorldSpace(screenpoint, depth);
-
-			//	For debug purpose
-			worldPoint.y = 0;
 
 			/* REAL POSE TODO
 			Vector3 worldPoint = new Vector3(mat.c_03, mat.c_23, mat.c_13);
@@ -126,7 +128,6 @@ public abstract class DebugTargets : MonoBehaviour
 				estimate_pos[t.id] = Vector3.zero;
 			}
 			estimate_pos[t.id] = Vector3.Slerp(estimate_pos[t.id], worldPoint, 0.4f);
-			;
 		}
 	}
 
