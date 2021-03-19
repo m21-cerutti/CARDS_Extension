@@ -48,7 +48,7 @@ Mat Matrix3x3fToMat( const Matrix3x3f& mat );
 //Convert Mat to Matrix3x3f
 Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
-void DebugMat( const Mat& frame );
+void DebugMat( const Mat& frame,const string win_name = "DebugOpenCV" );
 
 /// @brief Debug in OpenCV window the actual frame and targets. Green if Live, Red otherwise.
 /// @param frame The current frame with objects.
