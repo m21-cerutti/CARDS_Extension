@@ -40,14 +40,16 @@ short TrackerCOLOR::findColor( Mat img )
 	return res;
 }
 
-int TrackerCOLOR::findMaxArea(vector<vector<Point>> contours)
+int TrackerCOLOR::findMaxArea( vector<vector<Point>> contours )
 {
 	double max = 0.0;
 	int max_i = 0;
 
-	for (int i = 0; i < contours.size(); i++) {
-		double area = contourArea(contours[i]);
-		if (area > max) {
+	for(int i = 0; i < contours.size(); i++)
+	{
+		double area = contourArea( contours[i] );
+		if(area >= max)
+		{
 			max = area;
 			max_i = i;
 		}
@@ -62,7 +64,7 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 	bgr_frame = image.getMat();
 	if(bgr_frame.empty())
 		return false;
-	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
+	//blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	//DebugMat( bgr_frame,"BGR" + color );
 	hsv_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
@@ -85,7 +87,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	if(bgr_frame.empty())
 		return false;
 
-	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
+	//blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 	Vec3b lower;
@@ -104,20 +106,19 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	dilate( tmp_frame,thresh_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
 
-	//DebugMat( thresh_frame,"Tresh " + to_string( color ) );
 
 	if(!contours.empty())
 	{
-		Rect2d rect = boundingRect( contours[findMaxArea(contours)] );
-		boundingBox = rect;
+		Rect2d rect = boundingRect( contours[findMaxArea( contours )] );
+		if(rect.area() > minArea)
+		{
+			//rectangle( bgr_frame,rect,Scalar( 255,255,0 ),5 );
+			//DebugMat( bgr_frame,"Tresh " + to_string( color ) );
+			boundingBox = rect;
+			return true;
+		}
 	}
-//	if(rect.area() < minArea)
-//	{
-////TODO convert rect into RectStruct (new function ?)
-//// garder rect et on prend l'angle avec le rotated
-//	}
-
-	return true;
+	return false;
 }
 
 void TrackerCOLOR::clear()

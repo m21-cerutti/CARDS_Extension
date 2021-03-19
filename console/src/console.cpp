@@ -32,7 +32,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "test.avi" );
+	VideoProviderConsole video( "test1.mp4" );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;

@@ -53,6 +53,8 @@ void MultiTrackerCARDS::remove( const int id )
 		throw runtime_error( "Error : id not used." );
 	}
 	trackers.erase( it );
+	boundingBoxes.erase( boundingBoxes.find( id ) );
+	colors.erase( colors.find( id ) );
 }
 
 bool MultiTrackerCARDS::update( const int id,InputArray image )

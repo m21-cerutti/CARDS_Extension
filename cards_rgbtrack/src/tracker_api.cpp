@@ -107,38 +107,44 @@ void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 		{
 			bool tracked = multitrackers.update( targets[i].id,img );
 			bool detected = detectors.update( targets[i].id,img );
+
 			Rect2d bbt = multitrackers.getBoundinBox( targets[i].id );
 			Rect2d bbd = detectors.getBoundinBox( targets[i].id );
+
 			Vec2f vt = Vec2f( bbt.x + bbt.width / 2.0,bbt.y + bbt.height / 2.0 );
 			Vec2f vb = Vec2f( bbd.x + bbd.width / 2.0,bbd.y + bbd.width / 2.0 );
+			float dist_track_detect = norm( vb - vt,NORM_L2 );
 
-			// Check distance for error multitracker and normal track
-			if(targets[i].state == StateTracker::Live && !tracked)
+			if(targets[i].state == StateTracker::Live && tracked && detected)
 			{
-				targets[i].state = StateTracker::Lost;
-			}
-			else if(targets[i].state == StateTracker::Live && tracked && detected && norm( vb - vt,NORM_L2 ) > 50.0f)
-			{
-				targets[i].state = StateTracker::Lost;
+				if(dist_track_detect > 50.0f)
+				{
+					tracked = false;
+					targets[i].state = StateTracker::Lost;
+				}
 			}
 
-			if(targets[i].state != StateTracker::Live && detected)
+			if(targets[i].state != StateTracker::Live && !tracked && detected)
 			{
 				targets[i].state = StateTracker::Live;
 				targets[i].rect = Rect2dToRectStruct( bbd );
 				//Correct and expand bbd box
 				bbt = bbd;
-				bbt.x -= 15;
-				bbt.y -= 15;
-				bbt.width += 30;
-				bbt.height += 30;
+				bbt.x -= 5;
+				bbt.y -= 5;
+				bbt.width += 10;
+				bbt.height += 10;
 				multitrackers.remove( targets[i].id );
 				multitrackers.add( targets[i].id,img,bbt,createTrackerByName( trackingAlg ) );
 			}
-			else if(targets[i].state != StateTracker::Lost && !detected)
+			else if(targets[i].state == StateTracker::Occluded && detected && tracked)
+			{
+				targets[i].state = StateTracker::Live;
+				//TODO check all bounding box for occluded, improve with spatial tree
+			}
+			else if(!detected && !tracked)
 			{
 				//TODO check last bounding box near limit screen for OutOfCam
-				//TODO check all bounding box for occluded, improve with spatial tree
 			}
 
 			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].id ) );

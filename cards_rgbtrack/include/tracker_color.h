@@ -25,9 +25,9 @@ private:
 
 	short color = 0;
 	//TODO #define
-	short epsilon = 15;
+	short epsilon = 10;
 	int minArea = 10;
 
 	short findColor( Mat img );
-	int findMaxArea(vector<vector<Point>> contours);
+	int findMaxArea( vector<vector<Point>> contours );
 };
