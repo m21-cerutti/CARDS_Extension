@@ -8,8 +8,8 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWorkflowVideo();
-	TestWorkflowWebcam();
+	TestWorkflowVideo();
+	//TestWorkflowWebcam();
 	//TestVideoContext();
 	//WriteXML();
 }

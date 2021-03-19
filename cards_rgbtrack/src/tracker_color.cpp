@@ -47,7 +47,6 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 	cvtColor(bgr_frame, hsv_frame, COLOR_BGR2HSV, 0);
 	thresh_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	color = findColor( Mat(hsv_frame, boundingBox) );
-	cout << "color = " << color << endl;
 	return true;
 }
 
