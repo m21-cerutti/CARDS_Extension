@@ -40,6 +40,22 @@ short TrackerCOLOR::findColor( Mat img )
 	return res;
 }
 
+int TrackerCOLOR::findMaxArea(vector<vector<Point>> contours)
+{
+	double max = 0.0;
+	int max_i = 0;
+
+	for (int i = 0; i < contours.size(); i++) {
+		double area = contourArea(contours[i]);
+		if (area > max) {
+			max = area;
+			max_i = i;
+		}
+	}
+
+	return max_i;
+}
+
 
 bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 {
@@ -92,7 +108,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 
 	if(!contours.empty())
 	{
-		Rect2d rect = boundingRect( contours[0] ); //TODO Correct for largest
+		Rect2d rect = boundingRect( contours[findMaxArea(contours)] );
 		boundingBox = rect;
 	}
 //	if(rect.area() < minArea)

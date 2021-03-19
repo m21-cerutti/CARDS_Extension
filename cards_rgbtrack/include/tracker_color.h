@@ -29,4 +29,5 @@ private:
 	int minArea = 10;
 
 	short findColor( Mat img );
+	int findMaxArea(vector<vector<Point>> contours);
 };
