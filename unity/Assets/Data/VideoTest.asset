@@ -16,7 +16,7 @@ MonoBehaviour:
   camera_height: 256
   requested_camera_fps: 60
   starting_frame: 10
-  debug_cv: 1
+  debug_cv: 0
   log_datas: 0
   device_index: -2
   use_file_calibration: 1
@@ -44,4 +44,4 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  file_path_video: ./test1.mp4
+  file_path_video: ../videos_tests/multiple_targets.mp4
