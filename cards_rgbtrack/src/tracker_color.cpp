@@ -41,20 +41,28 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 {
 
 	bgr_frame = image.getMat();
+	blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	if(bgr_frame.empty())
 		return false;
+	//DebugMat( bgr_frame,"BGR" + color );
 	hsv_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
-	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV,0 );
+	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 
+	//Mat channel[3];
+	//split( hsv_frame,channel );
+	//DebugMat( channel[0],"H" );
 	thresh_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
-	color = findColor( Mat(hsv_frame, boundingBox) );
+	Mat tmp = Mat( hsv_frame,boundingBox );
+	//DebugMat( tmp,"rect" );
+	color = findColor( tmp );
+
 	return true;
 }
 
 bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 {
 	bgr_frame = image.getMat();
-	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV,0 );
+	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 
 	Vec3b lower = Vec3b( color - epsilon,100,100 );
@@ -68,6 +76,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
 	imshow( "Thresh",thresh_frame );
+	DebugMat( thresh_frame,"Tresh " + to_string( color ) );
 
 	if(!contours.empty())
 	{
