@@ -1,5 +1,5 @@
 #include "tracker_color.h"
-
+#include "utilities.h"
 #include "opencv2/highgui.hpp"
 
 
@@ -18,7 +18,7 @@ short TrackerCOLOR::findColor( Mat img )
 	{
 		for(int j = 0; j < img.cols; j++)
 		{
-			hist[img.at<Vec3b>(i, j)[0]] += 1;
+			hist[img.at<Vec3b>( i,j )[0]] += 1;
 		}
 	}
 
@@ -37,12 +37,13 @@ short TrackerCOLOR::findColor( Mat img )
 	return res;
 }
 
-int TrackerCOLOR::maxArea(vector<vector<Point>> contours)
+int TrackerCOLOR::maxArea( vector<vector<Point>> contours )
 {
 	double max = 0.0;
 	int maxI = 0;
-	for (int i = 0; i < contours.size(); i++) {
-		if (contourArea(contours[i]) > max)
+	for(int i = 0; i < contours.size(); i++)
+	{
+		if(contourArea( contours[i] ) > max)
 			maxI = i;
 	}
 	return maxI;
@@ -76,10 +77,12 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 	Vec3b lower;
-	if (color == 0) {
-		lower = Vec3b(0, 100, 100);
+	if(color == 0)
+	{
+		lower = Vec3b( 0,100,100 );
 	}
-	else {
+	else
+	{
 		lower = Vec3b( color - epsilon,100,100 );
 	}
 	Vec3b higher = Vec3b( color + epsilon,255,255 );
@@ -88,9 +91,12 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	erode( thresh_frame,tmp_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	dilate( tmp_frame,thresh_frame,getStructuringElement( MORPH_ELLIPSE,Size( 3,3 ) ) );
 	findContours( thresh_frame,contours,RETR_EXTERNAL,CHAIN_APPROX_NONE );
+
 	DebugMat( thresh_frame,"Tresh " + to_string( color ) );
-	if (!contours.empty()) {
-		Rect2d rect = boundingRect( contours[maxArea(contours)] );
+
+	if(!contours.empty())
+	{
+		Rect2d rect = boundingRect( contours[maxArea( contours )] );
 		boundingBox = rect;
 	}
 //	if(rect.area() < minArea)
@@ -104,5 +110,5 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 
 Ptr<ITracker> TrackerCOLOR::create()
 {
-	return Ptr<ITracker>(new TrackerCOLOR());
+	return Ptr<ITracker>( new TrackerCOLOR() );
 }
