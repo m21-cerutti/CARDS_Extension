@@ -37,17 +37,6 @@ short TrackerCOLOR::findColor( Mat img )
 	return res;
 }
 
-int TrackerCOLOR::maxArea( vector<vector<Point>> contours )
-{
-	double max = 0.0;
-	int maxI = 0;
-	for(int i = 0; i < contours.size(); i++)
-	{
-		if(contourArea( contours[i] ) > max)
-			maxI = i;
-	}
-	return maxI;
-}
 
 bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 {
@@ -77,7 +66,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 	Vec3b lower;
-	if(color == 0)
+	if(color - epsilon < 0)
 	{
 		lower = Vec3b( 0,100,100 );
 	}
@@ -96,7 +85,7 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 
 	if(!contours.empty())
 	{
-		Rect2d rect = boundingRect( contours[maxArea( contours )] );
+		Rect2d rect = boundingRect( contours[0] );
 		boundingBox = rect;
 	}
 //	if(rect.area() < minArea)
