@@ -53,15 +53,19 @@ void TestWorkflow( VideoProviderConsole& provider )
 	GetPoseParameters( ".",pose_params );
 
 	int nbtargets = 0,maxTargets = 5;
+	int nbtargetsDetection = 0, maxTargetsDetection = 1;
 	Target targets[5];
+	Target targetDetection[1];
 	bool isinitialised = false;
+	bool zoneDetected = false;
+	Frame frbg;
 
 	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = provider.GetFrame();
+		const Frame& fr = provider.GetFrame(false);
 		if(fr.rawData == nullptr)
 		{
 			break;
@@ -75,40 +79,59 @@ void TestWorkflow( VideoProviderConsole& provider )
 
 			if(waitKey( 25 ) == 27)
 			{
+				Init(targetDetection, nbtargetsDetection, maxTargetsDetection);
 				Init( targets,nbtargets,maxTargets );
 				isinitialised = true;
 			}
 		}
 		else if(isinitialised)
 		{
-			//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
-
-			if(i == 0)
+			// Press s to select an area for detection
+			if (waitKey(25) == 's')
 			{
-				ManualRegister( fr,targets,nbtargets,maxTargets );
+				zoneDetected = true;
+				const Frame &frBackground = provider.GetFrame(true);
+				frbg = frBackground;
+				ManualRegister(fr, targetDetection, nbtargetsDetection, maxTargetsDetection);
+				
 			}
-			else if(i % detect_freq == 0)
+			if (zoneDetected == true)
+			{
+				// Press enter to detect object in the area
+				if (waitKey(25) == 13)
+					Detect(fr, frbg, targetDetection[0].rect, targets, nbtargets, maxTargets);
+			}
+
+			/*if (i == 0)
+			{
+				ManualRegister(fr, targets, nbtargets, maxTargets);
+			}*/
+			if (i % detect_freq == 0)
 			{
 				//std::cout << "CheckTrack" << endl;
 				//CheckTrack( fr,zoneDetection,targets,nbTarget,maxTarget );
 			}
 			else
 			{
-				Track( fr,targets,nbtargets );
-				if(targets[0].state != StateTracker::Undefined)
+				Track(fr, targets, nbtargets);
+				if (targets[0].state != StateTracker::Undefined)
 				{
-					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
+					Matrix4x4f matpos = EstimatePose(targets[0], pose_params);
 					//cout << matpos.c_03 << endl; // X
 					//cout << matpos.c_13 << endl; // Y
 					cout << matpos.c_23 << endl; // Z
 				}
 			}
-			DebugTargets( fr,targets,nbtargets );
+			DebugTargets(fr, targets, nbtargets);
+
 			i++;
+			if (waitKey(25) == 'q')
+				break;
 		}
 	}
 
 	cv::destroyAllWindows();
+	Close(targetDetection, nbtargetsDetection, maxTargetsDetection);
 	Close( targets,nbtargets,maxTargets );
 }
 
@@ -160,7 +183,7 @@ void WriteXML()
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = video.GetFrame();
+		const Frame& fr = video.GetFrame(false);
 		if(fr.rawData == nullptr)
 		{
 			break;

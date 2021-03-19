@@ -80,12 +80,66 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	return;
 }
 
-void Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
+void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = FrameToCVMat( frame );
-	//TODO
+	Mat img = FrameToCVMat(frame);
+	Mat background = FrameToCVMat(frameBackground);
+	
+	Rect2d zone = Rect2dToRectStruct(zoneDetection);
+
+	Mat zoneImg = img(zone);
+	Mat zoneBackground = background(zone);
+	Mat imgGray, backgroundGray;
+	cvtColor(zoneImg, imgGray, CV_RGB2GRAY);
+	cvtColor(zoneBackground, backgroundGray, CV_RGB2GRAY);
+	Mat foregroundMask;
+	threshold(abs(backgroundGray - imgGray), foregroundMask, 40, 255, THRESH_BINARY);
+	
+	erode(foregroundMask, foregroundMask, Mat(), Point(-1, -1), 2, 1, 1);
+	Mat binaryBackground = foregroundMask;
+	
+
+	foregroundMask.convertTo(foregroundMask, CV_32F, 1.0 / 255.0);
+
+	Mat tmpImg;
+	tmpImg = foregroundMask.mul(foregroundMask);
+
+	Scalar s = sum(tmpImg);
+	double sse = s.val[0] + s.val[1] + s.val[2];
+	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
+
+	double mseLimit = 0.0005;
+
+	if (mseLimit < mse) {
+		vector<Vec4i> hierarchy;
+		vector<vector<Point> > contours;
+		Mat range_out;
+		findContours(binaryBackground, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+		vector<vector<Point> > contours_poly(contours.size());
+		vector<Rect> boundRect(contours.size());
+		vector<Point2f>center(contours.size());
+		vector<float>radius(contours.size());
+
+		for (int i = 0; i < contours.size(); i++)
+		{
+			approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
+			boundRect[i] = boundingRect(Mat(contours_poly[i]));
+			Scalar color = Scalar(255, 0, 255);
+			rectangle(img(zone), boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0);
+			const RectStruct& zoneObject = Rect2dToRectStruct(boundRect[i]);
+			// A revoir
+			if (targets[nbTarget].state != StateTracker::Undefined)
+				UnRegister(targets[nbTarget].id, targets, nbTarget);
+			Register(frame, zoneObject, targets, nbTarget, maxTarget);
+			
+		}
+
+		imshow("objet détecté",img);
+		
+	}
 	return;
 }
+
 
 void CheckTrack( const Frame& frame,Target* targets,const int nbTarget )
 {

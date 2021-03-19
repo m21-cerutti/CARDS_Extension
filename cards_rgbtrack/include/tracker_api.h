@@ -191,7 +191,7 @@ extern "C"
 	/// @param targets The array of targets
 	/// @param nbTarget The number of targets
 	/// @param maxTarget The maximum number of targets
-	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
+	EXPORT_API void __stdcall Detect(const Frame& frame, const Frame& frameBackground, const RectStruct& zoneDetection, Target* targets, int& nbTarget, const int maxTarget);
 
 	/// @brief Check if the Track algorithm have made mistakes, and correct it.
 	/// Also permit to research object lost, occluded or out of camera to actualise their state.

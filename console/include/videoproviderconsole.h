@@ -20,11 +20,12 @@ public:
 
 	~VideoProviderConsole();
 
-	virtual const Frame& GetFrame();
+	virtual const Frame& GetFrame(bool isBackground);
 
 private:
 	void InitCameraFrame( int width,int height );
 
 	VideoCapture _cap;
 	Frame _frame;
+	Frame _frameBackground;
 };
