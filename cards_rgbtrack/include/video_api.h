@@ -26,4 +26,8 @@ extern "C"
 	/// @param frame 
 	/// @return 
 	EXPORT_API bool __stdcall GetFrame( VideoProvider* video,Frame& frame );
+
+	EXPORT_API bool __stdcall GetCopyFrame(VideoProvider* video, Frame& frame);
+
+	EXPORT_API bool __stdcall freeFrame(VideoProvider* video, Frame& frame);
 }

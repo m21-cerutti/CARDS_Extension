@@ -33,56 +33,51 @@ VideoProviderConsole::~VideoProviderConsole()
 	_cap.release();
 }
 
-const Frame& VideoProviderConsole::GetFrame(bool isBackground)
+const Frame& VideoProviderConsole::GetFrame()
 {
-	Mat mat, mat1, mat2;
+	Mat mat;
 	_cap >> mat;
-	if (isBackground == false)
+	if (mat.empty())
 	{
-		if (mat.empty())
-		{
-			cerr << "Empty frame camera.";
-			_frame.rawData = nullptr;
-			return _frame;
-		}
-		if (_frame.rawData == nullptr)
-		{
-			InitCameraFrame(mat.cols, mat.rows);
-		}
-		mat.copyTo(mat1);
-		cvtColor(mat1, mat1, CV_BGR2RGBA);
-		memcpy(_frame.rawData, mat1.data, 4 * mat1.total());
-		//Due to Unity space
-		_frame.flip_mode = FlipMode::FlipY;
+		cerr << "Empty frame camera.";
+		_frame.rawData = nullptr;
 		return _frame;
 	}
-	else {
-		if (mat.empty())
-		{
-			cerr << "Empty frame camera.";
-			_frameBackground.rawData = nullptr;
-			return _frameBackground;
-		}
-		if (_frameBackground.rawData == nullptr)
-		{
-			InitCameraFrame(mat.cols, mat.rows);
-		}
-		mat.copyTo(mat2);
-		cvtColor(mat2, mat2, CV_BGR2RGBA);
-		memcpy(_frameBackground.rawData, mat2.data, 4 * mat2.total());
-		//Due to Unity space
-		_frameBackground.flip_mode = FlipMode::FlipY;
-		return _frameBackground;
+	if (_frame.rawData == nullptr)
+	{
+		InitCameraFrame(mat.cols, mat.rows);
 	}
-	
+	cvtColor(mat, mat, CV_BGR2RGBA);
+	memcpy(_frame.rawData, mat.data, 4 * mat.total());
+	//Due to Unity space
+	_frame.flip_mode = FlipMode::FlipY;
+	return _frame;
+
+}
+
+const Frame& VideoProviderConsole::CopyFrame() {
+
+	Mat mat(_frame.height, _frame.width, CV_8UC4, _frame.rawData);
+	cvtColor(mat, mat, cv::COLOR_RGBA2BGR);
+	flip(mat, mat, 0);
+	int flip_code = (int)_frame.flip_mode - 2;
+	if (flip_code >= -1)
+	{
+		flip(mat, mat, flip_code);
+	}
+
+	Mat matCopy;
+	mat.copyTo(matCopy);
+	cvtColor(matCopy, matCopy, CV_BGR2RGBA);
+	flip(matCopy, matCopy, 0);
+	memcpy(_frameBackground.rawData, matCopy.data, matCopy.channels() * matCopy.total());
+	return _frameBackground;
 }
 
 void VideoProviderConsole::InitCameraFrame( int width,int height )
 {
-	_frame.height = height;
-	_frame.width = width;
+	_frame.height = _frameBackground.height = height;
+	_frame.width = _frameBackground.height = width;
 	_frame.rawData = new Color32[(size_t)height * width];
-	_frameBackground.height = height;
-	_frameBackground.width = width;
 	_frameBackground.rawData = new Color32[(size_t)height * width];
 }

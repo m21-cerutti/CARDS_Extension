@@ -84,7 +84,6 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 {
 	Mat img = FrameToCVMat(frame);
 	Mat background = FrameToCVMat(frameBackground);
-	
 	Rect2d zone = Rect2dToRectStruct(zoneDetection);
 
 	Mat zoneImg = img(zone);
@@ -98,7 +97,6 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	erode(foregroundMask, foregroundMask, Mat(), Point(-1, -1), 2, 1, 1);
 	Mat binaryBackground = foregroundMask;
 	
-
 	foregroundMask.convertTo(foregroundMask, CV_32F, 1.0 / 255.0);
 
 	Mat tmpImg;
@@ -119,22 +117,43 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		vector<Rect> boundRect(contours.size());
 		vector<Point2f>center(contours.size());
 		vector<float>radius(contours.size());
+		RectStruct zoneObject;
+		int biggerRect = 0;
+		int indexRect = 0;
 
 		for (int i = 0; i < contours.size(); i++)
 		{
 			approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
 			boundRect[i] = boundingRect(Mat(contours_poly[i]));
-			Scalar color = Scalar(255, 0, 255);
-			rectangle(img(zone), boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0);
-			const RectStruct& zoneObject = Rect2dToRectStruct(boundRect[i]);
-			// A revoir
-			if (targets[nbTarget].state != StateTracker::Undefined)
-				UnRegister(targets[nbTarget].id, targets, nbTarget);
-			Register(frame, zoneObject, targets, nbTarget, maxTarget);
+			int areaRect = boundRect[i].width * boundRect[i].height;
+			if (areaRect > biggerRect) 
+			{
+				biggerRect = areaRect;
+				indexRect = i;
+			}
 			
 		}
+		boundRect[indexRect].y = boundRect[indexRect].y + frame.height / 2;
+		zoneObject = Rect2dToRectStruct(boundRect[indexRect]);
 
-		imshow("objet détecté",img);
+		int indexTarget = 0;
+		bool isDetected = false;
+		for (int i = 0; i < maxTarget; i++)
+		{
+			if (targets[i].id == -1)
+			{
+				cout << targets[i].id << endl;
+				Register(frame, zoneObject, targets, nbTarget, maxTarget);
+				indexTarget = i;
+				isDetected = true;
+				break;
+			}
+		}
+		for (int i = 0; i < maxTarget; i++)
+		{
+			if (i != indexTarget && targets[i].id == targets[indexTarget].id && isDetected == true)
+				UnRegister(targets[i].id, targets, nbTarget);
+		}
 		
 	}
 	return;

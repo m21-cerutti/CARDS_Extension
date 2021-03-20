@@ -26,6 +26,12 @@ Mat FrameToCVMat( const Frame& frame );
 // Fill the rawdata field with mat texture
 void CVMatToFrameRawData( const Mat& src,Frame& dst );
 
+// Copy one frame to another
+Frame CopyFrame(const Frame& src);
+
+// Free frame data
+void freeFrame(const Frame& frame);
+
 //Convert Rect2d to Rect
 RectStruct Rect2dToRectStruct( const Rect2d& rect );
 

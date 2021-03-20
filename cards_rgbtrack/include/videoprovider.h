@@ -21,6 +21,7 @@ public:
 	~VideoProvider();
 
 	virtual const Frame& GetFrame();
+	virtual const Frame& GetCopyFrame();
 
 private:
 	void InitCameraFrame( int width,int height );

@@ -53,19 +53,18 @@ void TestWorkflow( VideoProviderConsole& provider )
 	GetPoseParameters( ".",pose_params );
 
 	int nbtargets = 0,maxTargets = 5;
-	int nbtargetsDetection = 0, maxTargetsDetection = 1;
 	Target targets[5];
-	Target targetDetection[1];
 	bool isinitialised = false;
 	bool zoneDetected = false;
 	Frame frbg;
+	RectStruct zoneDetection;
 
 	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = provider.GetFrame(false);
+		const Frame& fr = provider.GetFrame();
 		if(fr.rawData == nullptr)
 		{
 			break;
@@ -79,27 +78,29 @@ void TestWorkflow( VideoProviderConsole& provider )
 
 			if(waitKey( 25 ) == 27)
 			{
-				Init(targetDetection, nbtargetsDetection, maxTargetsDetection);
 				Init( targets,nbtargets,maxTargets );
 				isinitialised = true;
 			}
 		}
 		else if(isinitialised)
 		{
-			// Press s to select an area for detection
+			// Press s to save the background
 			if (waitKey(25) == 's')
 			{
 				zoneDetected = true;
-				const Frame &frBackground = provider.GetFrame(true);
+				const Frame &frBackground = provider.CopyFrame();
 				frbg = frBackground;
-				ManualRegister(fr, targetDetection, nbtargetsDetection, maxTargetsDetection);
+				zoneDetection = { (float)(frbg.width * 0.05),
+					(float)(frbg.height * 0.55),
+					(float)(frbg.width * 0.5 - frbg.width * 0.1),
+					(float)(frbg.height * 0.9 - frbg.height * 0.5) };
+				cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
 				
 			}
 			if (zoneDetected == true)
 			{
-				// Press enter to detect object in the area
-				if (waitKey(25) == 13)
-					Detect(fr, frbg, targetDetection[0].rect, targets, nbtargets, maxTargets);
+				if (i % detect_freq == 0)
+					Detect(fr, frbg, zoneDetection, targets, nbtargets, maxTargets);
 			}
 
 			/*if (i == 0)
@@ -131,7 +132,6 @@ void TestWorkflow( VideoProviderConsole& provider )
 	}
 
 	cv::destroyAllWindows();
-	Close(targetDetection, nbtargetsDetection, maxTargetsDetection);
 	Close( targets,nbtargets,maxTargets );
 }
 
@@ -183,7 +183,7 @@ void WriteXML()
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = video.GetFrame(false);
+		const Frame& fr = video.GetFrame();
 		if(fr.rawData == nullptr)
 		{
 			break;

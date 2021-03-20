@@ -41,6 +41,12 @@ const Frame& VideoProvider::GetFrame()
 	return _frame;
 }
 
+const Frame& VideoProvider::GetCopyFrame()
+{
+	Frame _copyFrame = CopyFrame(_frame);
+	return _copyFrame;
+}
+
 void VideoProvider::InitCameraFrame( int width,int height )
 {
 	_cap.set( CAP_PROP_BUFFERSIZE,3 );
