@@ -5,7 +5,7 @@
 /* Intern memory */
 
 /// @brief Main tracking algorithm
-string trackingAlg = "CSRT";
+string trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
 
 /// @brief Use to improve quality
