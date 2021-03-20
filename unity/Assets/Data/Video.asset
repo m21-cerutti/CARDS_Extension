@@ -44,4 +44,4 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  file_path_video: ../videos_tests/printed_picture.mp4
+  file_path_video: ../videos_tests/lighting_change.mp4
