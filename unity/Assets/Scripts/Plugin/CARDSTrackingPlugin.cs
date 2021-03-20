@@ -158,11 +158,11 @@ namespace Plugin
 
 		[PluginFunctionAttr("CheckTrack")]
 		public static CheckTrack check_track = null;
-		public unsafe delegate void CheckTrack(ref Frame frame, Target* targets, int nbTarget);
+		public unsafe delegate void CheckTrack(ref Frame frame, Target* targets, int maxTarget);
 
 		[PluginFunctionAttr("Track")]
 		public static Track track = null;
-		public unsafe delegate void Track(ref Frame frame, Target* targets, int nbTarget);
+		public unsafe delegate void Track(ref Frame frame, Target* targets, int maxTarget);
 
 		[PluginFunctionAttr("EstimatePose")]
 		public static EstimatePose estimate_pose = null;
@@ -184,10 +184,10 @@ namespace Plugin
 		internal unsafe static extern void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
 		
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void CheckTrack(ref Frame frame, Target* targets, int nbTarget);
+		internal unsafe static extern void CheckTrack(ref Frame frame, Target* targets, int maxTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void Track(ref Frame frame, Target* targets, int nbTarget);
+		internal unsafe static extern void Track(ref Frame frame, Target* targets, int maxTarget);
 
 		[DllImport("cards_rgbtrack")]
 		internal static extern Matrix4x4f EstimatePose( ref Target target, ref PoseParameters param);
@@ -243,21 +243,21 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe void CheckTrackWrapped(ref Frame frame, Target* targets, int nbTarget)
+		public static unsafe void CheckTrackWrapped(ref Frame frame, Target* targets, int maxTarget)
 		{
 #if UNITY_EDITOR
-			CARDSTrackingPlugin.check_track(ref frame, targets, nbTarget);
+			CARDSTrackingPlugin.check_track(ref frame, targets, maxTarget);
 #else
-            CheckTrack(ref frame, targets, nbTarget);
+            CheckTrack(ref frame, targets, maxTarget);
 #endif
 		}
 
-		public static unsafe void TrackWrapped(ref Frame frame, Target* targets, int nbTarget)
+		public static unsafe void TrackWrapped(ref Frame frame, Target* targets, int maxTarget)
 		{
 #if UNITY_EDITOR
-			CARDSTrackingPlugin.track(ref frame, targets, nbTarget);
+			CARDSTrackingPlugin.track(ref frame, targets, maxTarget);
 #else
-            Track(ref frame, targets, nbTarget);
+            Track(ref frame, targets, maxTarget);
 #endif
 		}
 

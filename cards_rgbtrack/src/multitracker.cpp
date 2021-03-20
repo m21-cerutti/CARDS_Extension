@@ -53,23 +53,13 @@ void MultiTrackerCARDS::remove( const int id )
 		throw runtime_error( "Error : id not used." );
 	}
 	trackers.erase( it );
+	boundingBoxes.erase( boundingBoxes.find( id ) );
+	colors.erase( colors.find( id ) );
 }
 
 bool MultiTrackerCARDS::update( const int id,InputArray image )
 {
 	return trackers[id]->update( image,boundingBoxes[id] );
-}
-
-void MultiTrackerCARDS::correct( const int id,InputArray image,Rect2d boundingBoxe )
-{
-	if(!trackers[id]->init( image,boundingBoxe ))
-	{
-		throw runtime_error( "Error : can't correct id " + to_string( id ) + "." );
-	}
-	if(!update( id,image ))
-	{
-		std::cerr << "Correction id " + to_string( id ) + " failed." << endl;
-	}
 }
 
 Rect2d MultiTrackerCARDS::getBoundinBox( const int id )

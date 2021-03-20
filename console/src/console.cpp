@@ -32,7 +32,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "test2.mp4" );
+	VideoProviderConsole video( "../videos_tests/multiple_targets.mp4" );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -90,27 +90,29 @@ void TestWorkflow( VideoProviderConsole& provider )
 				zoneDetected = true;
 				const Frame &frBackground = provider.CopyFrame();
 				frbg = frBackground;
+				
 				zoneDetection = { (float)(frbg.width * 0.05),
 					(float)(frbg.height * 0.55),
 					(float)(frbg.width * 0.5 - frbg.width * 0.1),
 					(float)(frbg.height * 0.9 - frbg.height * 0.5) };
 				cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
-				
 			}
 			if (zoneDetected == true)
 			{
 				if (i % detect_freq == 0)
+				{
 					Detect(fr, frbg, zoneDetection, targets, nbtargets, maxTargets);
+				}
 			}
 
-			/*if (i == 0)
+			if (i == 0)
 			{
 				ManualRegister(fr, targets, nbtargets, maxTargets);
-			}*/
+			}
 			if (i % detect_freq == 0)
 			{
 				//std::cout << "CheckTrack" << endl;
-				//CheckTrack( fr,zoneDetection,targets,nbTarget,maxTarget );
+				CheckTrack( fr,targets,nbtargets );
 			}
 			else
 			{
@@ -120,7 +122,7 @@ void TestWorkflow( VideoProviderConsole& provider )
 					Matrix4x4f matpos = EstimatePose(targets[0], pose_params);
 					//cout << matpos.c_03 << endl; // X
 					//cout << matpos.c_13 << endl; // Y
-					cout << matpos.c_23 << endl; // Z
+					//cout << matpos.c_23 << endl; // Z
 				}
 			}
 			DebugTargets(fr, targets, nbtargets);

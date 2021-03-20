@@ -8,7 +8,7 @@
 using namespace std;
 using namespace cv;
 
-/// Based on Multi-Tracker Classes ---By Tyan Vladimir---
+/// @brief MultitrackerClass, based on opencv contributions but retain only the functions signature.
 class MultiTrackerCARDS
 {
 public:
@@ -16,16 +16,31 @@ public:
 
 	~MultiTrackerCARDS();
 
+	/// @brief Add a tracker to the intern datas.
+	/// @param id The ID of the tracker to set, if already used throw an error.
+	/// @param image The initial image.
+	/// @param boundingBox the initial bounding box.
+	/// @param tracker_algorithm the pointer to the tracker to use.
 	void add( const int id,InputArray image,const Rect2d& boundingBox,Ptr<ITracker> tracker_algorithm );
 
+	/// @brief Remove a tracker
+	/// @param id the id registered, throw an error if not used.
 	void remove( const int id );
 
+	/// @brief Update the tracker registered.
+	/// @param id
+	/// @param image the current image 
+	/// @return True if sucessfull, false otherwise.
 	bool update( const int id,InputArray image );
 
-	void correct( const int id,InputArray image,Rect2d boundingBoxe );
-
+	/// @brief Get the bounding box associated to a tracker.
+	/// @param id
+	/// @return a Rect2d
 	Rect2d getBoundinBox( const int id );
 
+	/// @brief Get the color associated to a tracker.
+	/// @param id his ID
+	/// @return a Scalar representing RGB color
 	Scalar getColor( const int id );
 
 private:

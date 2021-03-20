@@ -70,14 +70,16 @@ const Frame& VideoProviderConsole::CopyFrame() {
 	mat.copyTo(matCopy);
 	cvtColor(matCopy, matCopy, CV_BGR2RGBA);
 	flip(matCopy, matCopy, 0);
-	memcpy(_frameBackground.rawData, matCopy.data, matCopy.channels() * matCopy.total());
+	memcpy(_frameBackground.rawData, matCopy.data, 4 * matCopy.total());
 	return _frameBackground;
 }
 
 void VideoProviderConsole::InitCameraFrame( int width,int height )
 {
-	_frame.height = _frameBackground.height = height;
-	_frame.width = _frameBackground.height = width;
+	_frame.height = height;
+	_frame.width = width;
+	_frameBackground.height = height;
+	_frameBackground.width = width;
 	_frame.rawData = new Color32[(size_t)height * width];
 	_frameBackground.rawData = new Color32[(size_t)height * width];
 }

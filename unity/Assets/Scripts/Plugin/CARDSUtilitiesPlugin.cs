@@ -17,7 +17,7 @@ namespace Plugin
 
 		[PluginFunctionAttr("DebugTargets")]
 		public static DebugTargets debug_targets = null;
-		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int nbTarget);
+		public unsafe delegate void DebugTargets(ref Frame frame, Target* targets, int maxTarget);
 #else
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void ManualRegister(ref Frame frame, Target* targets, ref int nbTarget, int maxTarget);
@@ -38,12 +38,12 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe void DebugTargetsWrapped(ref Frame frame, Target* targets, int nbTarget)
+		public static unsafe void DebugTargetsWrapped(ref Frame frame, Target* targets, int maxTarget)
 		{
 #if UNITY_EDITOR
-			debug_targets(ref frame, targets, nbTarget);
+			debug_targets(ref frame, targets, maxTarget);
 #else
-            DebugTargets(ref frame, targets, nbTarget);
+            DebugTargets(ref frame, targets, maxTarget);
 #endif
 		}
 

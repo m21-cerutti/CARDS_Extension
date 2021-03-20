@@ -3,8 +3,16 @@
 #include "multitracker.h"
 
 /* Intern memory */
-String trackingAlg = "CSRT";
+
+/// @brief Main tracking algorithm
+string trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
+
+/// @brief Use to improve quality
+string trackingDetector = "COLOR";
+MultiTrackerCARDS detectors;
+
+/// @brief Handle memory space for trackers.
 std::vector<bool> occupied_place;
 
 /// @brief Permit to search for the first empty space in memory.
@@ -53,6 +61,7 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 	int id = FindFirstFreeMemoryTracker();
 	targets[id].id = id;
 	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
+	detectors.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingDetector ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
 
@@ -74,6 +83,7 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	targets[id].id = -1;
 	targets[id].state = StateTracker::Undefined;
 	multitrackers.remove( id );
+	detectors.remove( id );
 
 	occupied_place[id] = false;
 	nbTarget--;
@@ -142,7 +152,6 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		{
 			if (targets[i].id == -1)
 			{
-				cout << targets[i].id << endl;
 				Register(frame, zoneObject, targets, nbTarget, maxTarget);
 				indexTarget = i;
 				isDetected = true;
@@ -159,23 +168,67 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	return;
 }
 
-
-void CheckTrack( const Frame& frame,Target* targets,const int nbTarget )
+void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
 
-	//TODO Detect and verify already targets, correct errors, handle occlusion and also put tracker of occluded on the top object.
+	for(int i = 0; i < maxTarget; i++)
+	{
+		if(targets[i].state != StateTracker::Undefined)
+		{
+			bool tracked = multitrackers.update( targets[i].id,img );
+			bool detected = detectors.update( targets[i].id,img );
 
-	return;
+			Rect2d bbt = multitrackers.getBoundinBox( targets[i].id );
+			Rect2d bbd = detectors.getBoundinBox( targets[i].id );
 
+			Vec2f vt = Vec2f( bbt.x + bbt.width / 2.0,bbt.y + bbt.height / 2.0 );
+			Vec2f vb = Vec2f( bbd.x + bbd.width / 2.0,bbd.y + bbd.width / 2.0 );
+			float dist_track_detect = norm( vb - vt,NORM_L2 );
+
+			if(targets[i].state == StateTracker::Live && tracked && detected)
+			{
+				if(dist_track_detect > 50.0f)
+				{
+					tracked = false;
+					targets[i].state = StateTracker::Lost;
+				}
+			}
+
+			if(targets[i].state != StateTracker::Live && !tracked && detected)
+			{
+				targets[i].state = StateTracker::Live;
+				targets[i].rect = Rect2dToRectStruct( bbd );
+				//Correct and expand bbd box
+				bbt = bbd;
+				bbt.x -= 5;
+				bbt.y -= 5;
+				bbt.width += 10;
+				bbt.height += 10;
+				multitrackers.remove( targets[i].id );
+				multitrackers.add( targets[i].id,img,bbt,createTrackerByName( trackingAlg ) );
+			}
+			else if(targets[i].state == StateTracker::Occluded && detected && tracked)
+			{
+				targets[i].state = StateTracker::Live;
+				//TODO check all bounding box for occluded, improve with spatial tree
+			}
+			else if(!detected && !tracked)
+			{
+				//TODO check last bounding box near limit screen for OutOfCam
+			}
+
+			targets[i].rect = Rect2dToRectStruct( multitrackers.getBoundinBox( targets[i].id ) );
+		}
+	}
 }
 
-void Track( const Frame& frame,Target* targets,const int nbTarget )
+void Track( const Frame& frame,Target* targets,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
 
 	//Update Live only
-	for(int i = 0; i < nbTarget; i++)
+	for(int i = 0; i < maxTarget; i++)
 	{
 		if(targets[i].state == StateTracker::Live)
 		{

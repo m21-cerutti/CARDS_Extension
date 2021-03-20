@@ -462,8 +462,11 @@ FodyWeavers.xsd
 ############
 ## Video
 
-*.avi
 
-videos_tests/
+############
+## Calibration
 
 camera_calibration/img_calibration/*.jpg
+
+
+BuildUnity/

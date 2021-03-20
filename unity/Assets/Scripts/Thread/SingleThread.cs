@@ -47,21 +47,18 @@ public class SingleThread : Tracking
 			//CHECK TRACK
 			if((nb_frame % parameters.checktrack_frequency) == 0)
 			{
-				/*
 				unsafe
 				{
-					fixed(Target* outTargets = _targets)
+					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("CheckTrack");
-						//TODO
-						//SARPlugin.CheckTrackWrapped(ref fr, outTargets, _nb_targets);
-						SARPlugin.DebugTargetsWrapped(ref fr, outTargets, _nb_targets);
+						CARDSTrackingPlugin.CheckTrackWrapped(ref frame_buffer, outTargets, max_targets);
+						if(parameters.debug_cv)
+						{
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
+						}
 					}
 				}
-
-				if(!_use_webcam)
-					CompareGameObjectVirtual();
-				*/
 			}
 			else // TRACK
 			{
@@ -70,10 +67,10 @@ public class SingleThread : Tracking
 					fixed(Target* outTargets = targets)
 					{
 						//Debug.Log("Track");
-						CARDSTrackingPlugin.TrackWrapped(ref frame_buffer, outTargets, nb_targets);
+						CARDSTrackingPlugin.TrackWrapped(ref frame_buffer, outTargets, max_targets);
 						if(parameters.debug_cv)
 						{
-							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, nb_targets);
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
 						}
 					}
 				}
