@@ -1,0 +1,5 @@
+# Watchout windows path
+
+./unity/Assets/Plugins/Windows/
+./unity/Resources/Plugins/
+./console/x64/Release

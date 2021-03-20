@@ -1,0 +1,3 @@
+# Watchout windows path
+
+./console/x64/Debug

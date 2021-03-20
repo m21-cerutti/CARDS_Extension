@@ -32,8 +32,6 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
-*.sln
-*.suo
 *.tmp
 *.user
 *.userprefs
@@ -460,3 +458,15 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+############
+## Video
+
+
+############
+## Calibration
+
+camera_calibration/img_calibration/*.jpg
+
+
+BuildUnity/

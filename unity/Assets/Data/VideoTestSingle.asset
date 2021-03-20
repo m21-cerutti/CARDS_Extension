@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f437b2b6b0800941b0e3abce7579d14, type: 3}
+  m_Name: VideoTestSingle
+  m_EditorClassIdentifier: 
+  camera_width: 256
+  camera_height: 256
+  requested_camera_fps: 60
+  starting_frame: 10
+  debug_cv: 0
+  log_datas: 1
+  device_index: -2
+  use_file_calibration: 1
+  path_subfolder_calibration: 
+  calibration:
+    intrinsic_camera:
+      c_00: 208.26848
+      c_01: 0
+      c_02: 165.66057
+      c_10: 0
+      c_11: 233.5745
+      c_12: 120.58227
+      c_20: 0
+      c_21: 0
+      c_22: 1
+    dist_cam: 0.6
+    meter_pixel_x_ratio: 0.003218502
+    meter_pixel_y_ratio: 0.0034813196
+  flip_mode: 0
+  checktrack_frequency: 20
+  use_detection: 0
+  rect_detection:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  file_path_video: ../videos_tests/single_target.mp4
