@@ -101,7 +101,6 @@ struct Target
 	short id;
 	RectStruct rect;
 	Vector2f original_size;
-	//TODO angle or rotation matrix
 	StateTracker state;
 };
 
@@ -211,6 +210,6 @@ extern "C"
 	/// @brief Estimate the pose of the object. 
 	/// @param target The target to estimate.
 	/// @param params The parameters needed for pose.
-	/// @return An homegenous matrix, with rotation and position, X and Y are screen cordiantes, Z is a ratio od distance relative to table.
+	/// @return An homegenous matrix, with rotation and position, X and Y are screen cordiantes, Z is a distance ratio relative to table.
 	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,const PoseParameters& params );
 }

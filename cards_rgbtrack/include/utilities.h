@@ -40,14 +40,18 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect );
 /// @return a Rect2d
 Rect2d Rect2dToRectStruct( const RectStruct& rect );
 
-/// @brief Debug an image with waitkey.
-/// @param frame 
-//Convert Matrix3x3f to Mat
+/// @brief Convert Matrix3x3f to Mat
+/// @param rect source
+/// @return a Mat OpenCV
 Mat Matrix3x3fToMat( const Matrix3x3f& mat );
 
-//Convert Mat to Matrix3x3f
+/// @brief Convert Mat to Matrix3x3f
+/// @param mat source
+/// @return a Matrix3x3f
 Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
+/// @brief Debug an image with waitkey.
+/// @param frame 
 void DebugMat( const Mat& frame,const string win_name = "DebugOpenCV" );
 
 /// @brief Debug in OpenCV window the actual frame and targets. Green if Live, Red otherwise.

@@ -81,7 +81,6 @@ Matrix3x3f MatToMatrix3x3f( const Mat& mat )
 void DebugMat( const Mat& mat,const string win_name )
 {
 	imshow( win_name,mat );
-	//TODO Delete wait
 	waitKey( 25 );
 }
 
