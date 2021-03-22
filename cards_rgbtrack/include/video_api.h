@@ -12,8 +12,8 @@ extern "C"
 
 	/// @brief Create video context VideoProvider.
 	/// @param filename The path of the video.
-	/// @param width The requested width 
-	/// @param height The requested height
+	/// @param width The requested width. 
+	/// @param height The requested height.
 	/// @return A pointer to the VideoProvider allocated.
 	EXPORT_API VideoProvider* __stdcall CreateVideoContext( const char* filename,int width,int height );
 
@@ -22,12 +22,13 @@ extern "C"
 	EXPORT_API void __stdcall FreeVideoContext( VideoProvider* video );
 
 	/// @brief Get a frame from the media open in the VideoProvider.
-	/// @param video The VideoProvider
+	/// @param video The VideoProvider.
 	/// @param frame The frame to set.
 	/// @return True if suceed, false otherwise.
 	EXPORT_API bool __stdcall GetFrame( VideoProvider* video,Frame& frame );
 
-	EXPORT_API bool __stdcall GetCopyFrame(VideoProvider* video, Frame& frame);
-
-	EXPORT_API bool __stdcall freeFrame(VideoProvider* video, Frame& frame);
+	/// @brief Copy a frame to another from the media open in the VideoProvider.
+	/// @param video The VideoProvider.
+	/// @return True if suceed, false otherwise.
+	EXPORT_API Frame __stdcall GetCopyFrame(VideoProvider* video);
 }

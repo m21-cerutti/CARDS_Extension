@@ -15,6 +15,7 @@ public abstract class Tracking : MonoBehaviour
 	protected VideoParameters parameters; //Scenario that you can interchange (Virtual, Webcam)
 
 	protected Frame frame_buffer;
+	protected Frame frame_buffer_background;
 	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;

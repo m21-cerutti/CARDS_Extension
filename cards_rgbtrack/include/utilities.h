@@ -33,11 +33,7 @@ void CVMatToFrameRawData( const Mat& src,Frame& dst );
 /// @brief Copy data of a frame.
 /// @param src The source.
 /// @return the copied frame.
-Frame CopyFrame(const Frame& src);
-
-/// @brief Free a frame.
-/// @param frame
-void freeFrame(const Frame& frame);
+void CopyFrame(const Frame& src, Frame& dst );
 
 /// @brief Convert Rect2d to Rect
 /// @param rect source

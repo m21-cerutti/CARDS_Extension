@@ -29,6 +29,11 @@ namespace Plugin
 		[PluginFunctionAttr("GetFrame")]
 		public static GetFrame get_frame = null;
 		public delegate bool GetFrame(IntPtr video, ref Frame frame);
+
+		[PluginFunctionAttr("GetCopyFrame")]
+		public static GetCopyFrame get_copy_frame = null;
+		public delegate Frame GetCopyFrame(IntPtr video);
+
 #else
         [DllImport("cards_rgbtrack")]
 		internal static extern IntPtr CreateCameraContext(int width, int height);
@@ -41,8 +46,12 @@ namespace Plugin
 
 		[DllImport("cards_rgbtrack")]
 		internal static extern bool GetFrame(IntPtr video, ref Frame frame);
-#endif
 
+		[DllImport("cards_rgbtrack")]
+		internal static extern Frame GetCopyFrame(IntPtr video);
+#endif
+		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
+		// editor or standalone mode.
 		#region Wrapped methods
 
 		public static IntPtr CreateCameraContextWrapped(int width, int height)
@@ -78,6 +87,15 @@ namespace Plugin
 			return get_frame(video, ref frame);
 #else
             return GetFrame(video, ref frame);
+#endif
+		}
+
+		public static unsafe Frame GetCopyFrameWrapped(IntPtr video)
+		{
+#if UNITY_EDITOR
+			return get_copy_frame(video);
+#else
+            return GetCopyFrame(video);
 #endif
 		}
 

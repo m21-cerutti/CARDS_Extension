@@ -107,16 +107,22 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	erode(foregroundMask, foregroundMask, Mat(), Point(-1, -1), 2, 1, 1);
 	Mat binaryBackground = foregroundMask;
 	
-	foregroundMask.convertTo(foregroundMask, CV_32F, 1.0 / 255.0);
+	foregroundMask.convertTo(foregroundMask, CV_32F);
 
 	Mat tmpImg;
 	tmpImg = foregroundMask.mul(foregroundMask);
+	Mat imgNorm;
 
-	Scalar s = sum(tmpImg);
+	normalize(tmpImg, imgNorm, 1, 0, NORM_L2);
+
+	double pixels = (double)tmpImg.rows * tmpImg.cols;
+	double min, max;
+	minMaxLoc(tmpImg, &min, &max);
+	Scalar s = sum(imgNorm);
 	double sse = s.val[0] + s.val[1] + s.val[2];
 	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
-
-	double mseLimit = 0.0005;
+	
+	double mseLimit = 0.0001;
 
 	if (mseLimit < mse) {
 		vector<Vec4i> hierarchy;

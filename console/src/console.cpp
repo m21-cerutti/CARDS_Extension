@@ -1,5 +1,4 @@
 #include "console.h"
-#include "videoproviderconsole.h"
 
 using namespace std;
 using namespace cv;
@@ -14,7 +13,7 @@ int main( int argc,char** argv )
 	//WriteXML();
 }
 
-static void TestWorkflow( VideoProviderConsole& provider );
+static void TestWorkflow( VideoProvider *provider );
 
 void TestDLL()
 {
@@ -32,7 +31,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "../videos_tests/multiple_targets.mp4" );
+	VideoProvider* video = CreateVideoContext( "../videos_tests/multiple_targets.mp4",256,256 );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -41,13 +40,13 @@ void TestWorkflowVideo()
 void TestWorkflowWebcam()
 {
 	std::cerr << "Opening camera...\r";
-	VideoProviderConsole webcam;
+	VideoProvider* webcam = CreateCameraContext(256,256);
 	TestWorkflow( webcam );
 
 	std::cout << "End test WorkflowWebcam." << endl;
 }
 
-void TestWorkflow( VideoProviderConsole& provider )
+void TestWorkflow( VideoProvider *provider )
 {
 	PoseParameters pose_params = PoseParameters();
 	GetPoseParameters( ".",pose_params );
@@ -57,15 +56,16 @@ void TestWorkflow( VideoProviderConsole& provider )
 	bool isinitialised = false;
 	bool zoneDetected = false;
 	Frame frbg;
+	Frame fr;
 	RectStruct zoneDetection;
 
 	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
+	int activeDetection = 30;
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = provider.GetFrame();
-		if(fr.rawData == nullptr)
+		if(!GetFrame(provider, fr))
 		{
 			break;
 		}
@@ -87,19 +87,20 @@ void TestWorkflow( VideoProviderConsole& provider )
 			// Press s to save the background
 			if (waitKey(25) == 's')
 			{
-				zoneDetected = true;
-				const Frame &frBackground = provider.CopyFrame();
-				frbg = frBackground;
-				
-				zoneDetection = { (float)(frbg.width * 0.05),
-					(float)(frbg.height * 0.55),
-					(float)(frbg.width * 0.5 - frbg.width * 0.1),
-					(float)(frbg.height * 0.9 - frbg.height * 0.5) };
-				cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
+				if (GetFrame(provider, frbg))
+				{
+					frbg = GetCopyFrame(provider);
+					zoneDetection = { (float)(frbg.width * 0.05),
+						(float)(frbg.height * 0.55),
+						(float)(frbg.width * 0.5 - frbg.width * 0.1),
+						(float)(frbg.height * 0.9 - frbg.height * 0.5) };
+					zoneDetected = true;
+					cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
+				}
 			}
 			if (zoneDetected == true)
 			{
-				if (i % detect_freq == 0)
+				if (i % activeDetection == 0)
 				{
 					Detect(fr, frbg, zoneDetection, targets, nbtargets, maxTargets);
 				}
@@ -169,7 +170,7 @@ void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 
-	VideoProviderConsole video( "test.avi" );
+	VideoProvider* video = CreateVideoContext( "test.avi",500,500 );
 	FileStorage fs( "test.xml",FileStorage::WRITE );
 
 	int freq_record = 20;
@@ -185,7 +186,8 @@ void WriteXML()
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = video.GetFrame();
+		Frame fr;
+		GetFrame(video, fr);
 		if(fr.rawData == nullptr)
 		{
 			break;

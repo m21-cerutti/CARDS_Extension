@@ -33,27 +33,8 @@ bool GetFrame( VideoProvider* video,Frame& frame )
 	return false;
 }
 
-bool GetCopyFrame(VideoProvider* video, Frame& frame)
+Frame GetCopyFrame(VideoProvider* video)
 {
-	if (video == nullptr)
-		return false;
-	frame = video->GetCopyFrame();
-	if (frame.rawData != nullptr)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool freeFrame(VideoProvider* video, Frame& frame)
-{
-	if (video == nullptr)
-		return false;
-	freeFrame(frame);
-
-	if (frame.rawData == nullptr)
-	{
-		return true;
-	}
-	return false;
+	Frame frame = video->GetBackgroundFrame();
+	return frame;
 }

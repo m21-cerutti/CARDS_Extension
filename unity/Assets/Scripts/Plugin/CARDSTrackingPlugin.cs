@@ -234,7 +234,7 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
+		public static unsafe void DetectWrapped(ref Frame frame, ref Frame frame_background, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
 		{
 #if UNITY_EDITOR
 			CARDSTrackingPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);

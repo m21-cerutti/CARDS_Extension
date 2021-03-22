@@ -32,18 +32,12 @@ void CVMatToFrameRawData( const Mat& src,Frame& dst )
 	memcpy( dst.rawData,img.data,img.channels() * img.total() );
 }
 
-Frame CopyFrame( const Frame& src )
+void CopyFrame( const Frame& src,Frame& dst )
 {
 	Mat mat = FrameToCVMat(src);
-	Mat matCopy = mat.clone();
-	Frame dst;
+	Mat matCopy;
+	mat.copyTo(matCopy);
 	CVMatToFrameRawData(matCopy, dst);
-	return dst;
-}
-
-void freeFrame(const Frame& frame)
-{
-	free(frame.rawData);
 }
 
 RectStruct Rect2dToRectStruct( const Rect2d& rect )
