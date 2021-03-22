@@ -3,7 +3,6 @@
 using namespace std;
 using namespace cv;
 
-//TODO tests api Google ?
 int main( int argc,char** argv )
 {
 	TestDLL();
@@ -58,8 +57,6 @@ void TestWorkflow( VideoProvider *provider )
 	Frame frbg;
 	Frame fr;
 	RectStruct zoneDetection;
-
-	//TODO Init ? Automatic calculation ?
 	int detect_freq = 20;
 	int activeDetection = 30;
 
@@ -89,7 +86,7 @@ void TestWorkflow( VideoProvider *provider )
 			{
 				if (GetFrame(provider, frbg))
 				{
-					frbg = GetCopyFrame(provider);
+					frbg = GetCopyFrame(fr);
 					zoneDetection = { (float)(frbg.width * 0.05),
 						(float)(frbg.height * 0.55),
 						(float)(frbg.width * 0.5 - frbg.width * 0.1),
@@ -112,7 +109,6 @@ void TestWorkflow( VideoProvider *provider )
 			}
 			if (i % detect_freq == 0)
 			{
-				//std::cout << "CheckTrack" << endl;
 				CheckTrack( fr,targets,nbtargets );
 			}
 			else
@@ -135,6 +131,7 @@ void TestWorkflow( VideoProvider *provider )
 	}
 
 	cv::destroyAllWindows();
+	FreeFrame(frbg);
 	Close( targets,nbtargets,maxTargets );
 }
 

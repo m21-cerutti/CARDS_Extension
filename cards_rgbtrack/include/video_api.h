@@ -27,8 +27,13 @@ extern "C"
 	/// @return True if suceed, false otherwise.
 	EXPORT_API bool __stdcall GetFrame( VideoProvider* video,Frame& frame );
 
-	/// @brief Copy a frame to another from the media open in the VideoProvider.
-	/// @param video The VideoProvider.
-	/// @return True if suceed, false otherwise.
-	EXPORT_API Frame __stdcall GetCopyFrame(VideoProvider* video);
+	/// @brief Free frame data.
+	/// @param frame to free.
+	/// @return the frame copied.
+	EXPORT_API void __stdcall FreeFrame( Frame& frame );
+
+	/// @brief Initialize a new fram then copy the frame source into it.
+	/// @param src the frame to copy.
+	/// @return the frame copied.
+	EXPORT_API Frame __stdcall GetCopyFrame( const Frame& src );
 }

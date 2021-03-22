@@ -2,7 +2,7 @@
 #include "utilities.h"
 
 VideoProvider::VideoProvider( int width,int height )
-	:_frame(), _frameBackground()
+	:_frame()
 {
 	if(!_cap.open( 0,cv::CAP_ANY ))
 	{
@@ -12,7 +12,7 @@ VideoProvider::VideoProvider( int width,int height )
 }
 
 VideoProvider::VideoProvider( string filename,int width,int height )
-	:_frame(), _frameBackground()
+	:_frame()
 {
 	if(!_cap.open( filename ))
 	{
@@ -24,7 +24,6 @@ VideoProvider::VideoProvider( string filename,int width,int height )
 VideoProvider::~VideoProvider()
 {
 	delete _frame.rawData;
-	delete _frameBackground.rawData;
 	_cap.release();
 }
 
@@ -42,12 +41,6 @@ const Frame& VideoProvider::GetFrame()
 	return _frame;
 }
 
-const Frame& VideoProvider::GetBackgroundFrame()
-{
-	CopyFrame(_frame, _frameBackground);
-	return _frameBackground;
-}
-
 void VideoProvider::InitCameraFrame( int width,int height )
 {
 	_cap.set( CAP_PROP_BUFFERSIZE,3 );
@@ -55,8 +48,7 @@ void VideoProvider::InitCameraFrame( int width,int height )
 	_cap.set( CAP_PROP_FRAME_HEIGHT,height );
 
 	//Set back width and height since capture can override the requested width and height.
-	_frame.height = _frameBackground.height = _cap.get( CAP_PROP_FRAME_HEIGHT );
-	_frame.width = _frameBackground.width = _cap.get( CAP_PROP_FRAME_WIDTH );
+	_frame.height = _cap.get( CAP_PROP_FRAME_HEIGHT );
+	_frame.width = _cap.get( CAP_PROP_FRAME_WIDTH );
 	_frame.rawData = new Color32[(size_t)_frame.height * _frame.width];
-	_frameBackground.rawData = new Color32[(size_t)_frame.height * _frame.width];
 }

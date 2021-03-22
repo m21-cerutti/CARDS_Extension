@@ -29,8 +29,6 @@ public:
 	/// @return The reference to intern frame, with field rawdata set to nullptr if not suceed.
 	virtual const Frame& GetFrame();
 
-	const Frame& GetBackgroundFrame();
-
 private:
 	/// @brief Init the intern frame and videocapture options.
 	/// @param width The requested width.
@@ -40,5 +38,4 @@ private:
 private:
 	VideoCapture _cap;
 	Frame _frame;
-	Frame _frameBackground;
 };

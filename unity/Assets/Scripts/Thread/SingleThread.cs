@@ -46,7 +46,7 @@ public class SingleThread : Tracking
 				zone_detection.height = (float)(frame_buffer.height * 0.9 - frame_buffer.height * 0.5);
 				if(nb_frame == parameters.saving_background)
                 {
-					frame_buffer_background = video.GetCopyFrame();
+					frame_buffer_background = CARDSVideoPlugin.GetCopyFrameWrapped(ref frame_buffer);
                 }
 				if ((nb_frame % parameters.detection_frequency) == 0)
 				{

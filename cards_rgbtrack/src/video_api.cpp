@@ -33,8 +33,19 @@ bool GetFrame( VideoProvider* video,Frame& frame )
 	return false;
 }
 
-Frame GetCopyFrame(VideoProvider* video)
+void FreeFrame( Frame& frame )
 {
-	Frame frame = video->GetBackgroundFrame();
-	return frame;
+	if (frame.rawData == nullptr)
+		return;
+	delete frame.rawData;
+}
+
+Frame GetCopyFrame( const Frame& src )
+{
+	Frame dst;
+	dst.width = src.width;
+	dst.height = src.height;
+	dst.rawData = new Color32[(size_t)dst.height * dst.width];
+	CopyFrame(src, dst);
+	return dst;
 }

@@ -61,11 +61,4 @@ public class WebcamTexture : FrameProvider
 		fr = new Frame();
 		return false;
 	}
-
-	public override Frame GetCopyFrame()
-	{
-		frameBackground = frame;
-		return frameBackground;
-	}
-
 }

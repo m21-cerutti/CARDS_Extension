@@ -47,10 +47,4 @@ public class VirtualCameraTexture : FrameProvider
 		fr = frame;
 		return true;
 	}
-
-	public override Frame GetCopyFrame()
-    {
-		frameBackground = frame;
-		return frameBackground;
-	}
 }

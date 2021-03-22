@@ -192,6 +192,7 @@ public abstract class Tracking : MonoBehaviour
 
 	private void FreeInternData()
 	{
+		CARDSVideoPlugin.FreeFrameWrapped(ref frame_buffer_background);
 		video.Close();
 		if(nb_frame > parameters.starting_frame)
 		{

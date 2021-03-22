@@ -50,10 +50,4 @@ public class VideoFileTexture : FrameProvider
 		fr = frame;
 		return valid;
 	}
-
-	public override Frame GetCopyFrame()
-	{
-		frameBackground = CARDSVideoPlugin.GetCopyFrameWrapped(_video);
-		return frameBackground;
-	}
 }

@@ -10,7 +10,6 @@ using UnityEngine;
 public abstract class FrameProvider
 {
 	protected Frame frame;
-	protected Frame frameBackground;
 
 	//Buffer
 	protected Color32[] pixels;
@@ -21,11 +20,10 @@ public abstract class FrameProvider
 	/// <param name="parameters">Video parameters unique to a media.</param>
 	public virtual void Init(VideoParameters parameters)
 	{
-		frame.width = frameBackground.width = parameters.camera_width;
-		frame.height = frameBackground.height =  parameters.camera_height;
+		frame.width = parameters.camera_width;
+		frame.height = parameters.camera_height;
 		frame.raw_data = new IntPtr();
-		frameBackground.raw_data = new IntPtr();
-		frame.flip_mode = frameBackground.flip_mode = parameters.flip_mode;
+		frame.flip_mode = parameters.flip_mode;
 
 		pixels = new Color32[parameters.camera_width * parameters.camera_height];
 	}
@@ -43,12 +41,5 @@ public abstract class FrameProvider
 	/// <param name="fr">The frame structure filled.</param>
 	/// <returns>True if suceed, false if fail.</returns>
 	public abstract bool GetFrame(out Frame fr);
-
-	/// <summary>
-	/// Get a copied frame.
-	/// </summary>
-	/// <returns>The frame copied.</returns>
-	public abstract Frame GetCopyFrame();
-
 
 }
