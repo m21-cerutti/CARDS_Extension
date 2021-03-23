@@ -139,11 +139,11 @@ public abstract class DebugTargets : MonoBehaviour
 	/// <param name="point">The screen point.</param>
 	/// <param name="depth">The depth set.</param>
 	/// <returns></returns>
-	protected Vector3 GetScreenToWorldSpace(Vector2 point, float depth = -1)
+	virtual protected Vector3 GetScreenToWorldSpace(Vector2 point, float depth = -1)
 	{
 		if(depth < 0)
 		{
-			depth = camera_table.transform.position.magnitude;
+			depth = parameters.calibration.dist_cam;
 		}
 
 		return camera_table.ScreenToWorldPoint(new Vector3(point.x, point.y, depth));

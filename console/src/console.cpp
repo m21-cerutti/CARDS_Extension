@@ -99,7 +99,7 @@ void TestWorkflow( VideoProvider *provider )
 			{
 				if (i % activeDetection == 0)
 				{
-					// Détected object is flipped from axis X on this test but works on unity
+					// D?tected object is flipped from axis X on this test but works on unity
 					Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets );
 				}
 			}
@@ -140,7 +140,7 @@ void TestVideoContext()
 {
 	std::cerr << "Opening video...\r";
 
-	VideoProvider* video = CreateVideoContext( "./test.avi",256,256 );
+	VideoProvider* video = CreateVideoContext( "../videos_tests/multiple_targets.mp4",256,256 );
 
 
 	for(int i = 0;; i++)

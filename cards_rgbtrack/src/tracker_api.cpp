@@ -259,8 +259,6 @@ Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 	pose.c_13 = Yscreen;
 	pose.c_23 = Z;
 
-	//TODO ROTATION
-
 	//Homogenous
 	pose.c_30 = 1;
 	pose.c_31 = 1;
