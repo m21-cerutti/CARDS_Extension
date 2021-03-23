@@ -97,7 +97,7 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe Frame GetCopyFrameWrapped(ref Frame frame)
+		public static Frame GetCopyFrameWrapped(ref Frame frame)
 		{
 #if UNITY_EDITOR
 			return get_copy_frame(ref frame);
@@ -106,7 +106,7 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe void FreeFrameWrapped(ref Frame frame)
+		public static void FreeFrameWrapped(ref Frame frame)
 		{
 #if UNITY_EDITOR
 			get_copy_frame(ref frame);

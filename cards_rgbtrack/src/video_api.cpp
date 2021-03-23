@@ -46,6 +46,6 @@ Frame GetCopyFrame( const Frame& src )
 	dst.width = src.width;
 	dst.height = src.height;
 	dst.rawData = new Color32[(size_t)dst.height * dst.width];
-	CopyFrame(src, dst);
+	CopyFrame( src,dst );
 	return dst;
 }

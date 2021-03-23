@@ -34,10 +34,10 @@ void CVMatToFrameRawData( const Mat& src,Frame& dst )
 
 void CopyFrame( const Frame& src,Frame& dst )
 {
-	Mat mat = FrameToCVMat(src);
+	Mat mat = FrameToCVMat( src );
 	Mat matCopy;
-	mat.copyTo(matCopy);
-	CVMatToFrameRawData(matCopy, dst);
+	mat.copyTo( matCopy );
+	CVMatToFrameRawData( matCopy,dst );
 }
 
 RectStruct Rect2dToRectStruct( const Rect2d& rect )

@@ -6,8 +6,8 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWorkflowVideo();
-	TestWorkflowWebcam();
+	TestWorkflowVideo();
+	//TestWorkflowWebcam();
 	//TestVideoContext();
 	//WriteXML();
 }
@@ -66,7 +66,7 @@ void TestWorkflow( VideoProvider *provider )
 		{
 			break;
 		}
-
+		
 		if(!isinitialised)
 		{
 			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
@@ -82,11 +82,11 @@ void TestWorkflow( VideoProvider *provider )
 		else if(isinitialised)
 		{
 			// Press s to save the background
-			if (waitKey(25) == 's')
+			if (waitKey( 25 ) == 's')
 			{
-				if (GetFrame(provider, frbg))
+				if (GetFrame( provider,frbg ))
 				{
-					frbg = GetCopyFrame(fr);
+					frbg = GetCopyFrame( fr );
 					zoneDetection = { (float)(frbg.width * 0.05),
 						(float)(frbg.height * 0.55),
 						(float)(frbg.width * 0.5 - frbg.width * 0.1),
@@ -99,13 +99,14 @@ void TestWorkflow( VideoProvider *provider )
 			{
 				if (i % activeDetection == 0)
 				{
-					Detect(fr, frbg, zoneDetection, targets, nbtargets, maxTargets);
+					// Détected object is flipped from axis X on this test but works on unity
+					Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets );
 				}
 			}
 
 			if (i == 0)
 			{
-				ManualRegister(fr, targets, nbtargets, maxTargets);
+				ManualRegister( fr,targets,nbtargets,maxTargets );
 			}
 			if (i % detect_freq == 0)
 			{
@@ -113,7 +114,7 @@ void TestWorkflow( VideoProvider *provider )
 			}
 			else
 			{
-				Track(fr, targets, nbtargets);
+				Track( fr,targets,nbtargets );
 				if (targets[0].state != StateTracker::Undefined)
 				{
 					Matrix4x4f matpos = EstimatePose(targets[0], pose_params);
@@ -122,10 +123,10 @@ void TestWorkflow( VideoProvider *provider )
 					//cout << matpos.c_23 << endl; // Z
 				}
 			}
-			DebugTargets(fr, targets, nbtargets);
+			DebugTargets( fr,targets,nbtargets );
 
 			i++;
-			if (waitKey(25) == 'q')
+			if (waitKey( 25 ) == 'q')
 				break;
 		}
 	}

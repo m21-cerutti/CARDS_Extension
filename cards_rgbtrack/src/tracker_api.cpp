@@ -92,55 +92,49 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 
 void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
-	Mat img = FrameToCVMat(frame);
-	Mat background = FrameToCVMat(frameBackground);
-	Rect2d zone = Rect2dToRectStruct(zoneDetection);
-
-	Mat zoneImg = img(zone);
-	Mat zoneBackground = background(zone);
+	Mat img = FrameToCVMat( frame );
+	Mat background = FrameToCVMat( frameBackground );
+	Rect2d zone = Rect2dToRectStruct( zoneDetection );
+	Mat zoneImg = img( zone );
+	Mat zoneBackground = background( zone );
 	Mat imgGray, backgroundGray;
-	cvtColor(zoneImg, imgGray, CV_RGB2GRAY);
-	cvtColor(zoneBackground, backgroundGray, CV_RGB2GRAY);
+	cvtColor( zoneImg,imgGray,CV_RGB2GRAY );
+	cvtColor( zoneBackground,backgroundGray,CV_RGB2GRAY );
 	Mat foregroundMask;
-	threshold(abs(backgroundGray - imgGray), foregroundMask, 40, 255, THRESH_BINARY);
-	
-	erode(foregroundMask, foregroundMask, Mat(), Point(-1, -1), 2, 1, 1);
+
+	threshold( abs( backgroundGray - imgGray ),foregroundMask,40,255,THRESH_BINARY );
+	erode( foregroundMask,foregroundMask,Mat(),Point( -1,-1 ),2,1,1 );
 	Mat binaryBackground = foregroundMask;
-	
 	foregroundMask.convertTo(foregroundMask, CV_32F);
 
 	Mat tmpImg;
-	tmpImg = foregroundMask.mul(foregroundMask);
+	tmpImg = foregroundMask.mul( foregroundMask );
 	Mat imgNorm;
+	resize( tmpImg,imgNorm,cv::Size(),(double) 200 / tmpImg.cols, (double) 200 / tmpImg.rows );
 
-	normalize(tmpImg, imgNorm, 1, 0, NORM_L2);
-
-	double pixels = (double)tmpImg.rows * tmpImg.cols;
-	double min, max;
-	minMaxLoc(tmpImg, &min, &max);
-	Scalar s = sum(imgNorm);
+	Scalar s = sum( imgNorm );
 	double sse = s.val[0] + s.val[1] + s.val[2];
-	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
-	
-	double mseLimit = 0.0001;
+	double mse = sse / (double)( zoneImg.channels() * zoneImg.total() );
 
-	if (mseLimit < mse) {
+	double mseLimit = 1000 * (imgNorm.rows * imgNorm.cols)/(tmpImg.rows * tmpImg.cols);
+
+	if (mseLimit < mse) 
+	{
 		vector<Vec4i> hierarchy;
 		vector<vector<Point> > contours;
-		Mat range_out;
-		findContours(binaryBackground, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-		vector<vector<Point> > contours_poly(contours.size());
-		vector<Rect> boundRect(contours.size());
-		vector<Point2f>center(contours.size());
-		vector<float>radius(contours.size());
+		findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
+		vector<vector<Point> > contours_poly( contours.size() );
+		vector<Rect> boundRect( contours.size() );
+		vector<Point2f>center( contours.size() );
+		vector<float>radius( contours.size() );
 		RectStruct zoneObject;
 		int biggerRect = 0;
 		int indexRect = 0;
 
 		for (int i = 0; i < contours.size(); i++)
 		{
-			approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
-			boundRect[i] = boundingRect(Mat(contours_poly[i]));
+			approxPolyDP( Mat(contours[i]),contours_poly[i],3,true );
+			boundRect[i] = boundingRect( Mat(contours_poly[i]) );
 			int areaRect = boundRect[i].width * boundRect[i].height;
 			if (areaRect > biggerRect) 
 			{
@@ -149,27 +143,21 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 			}
 			
 		}
-		boundRect[indexRect].y = boundRect[indexRect].y + frame.height / 2;
+
 		zoneObject = Rect2dToRectStruct(boundRect[indexRect]);
 
 		int indexTarget = 0;
 		bool isDetected = false;
 		for (int i = 0; i < maxTarget; i++)
 		{
-			if (targets[i].id == -1)
+			if (targets[i].state == StateTracker::Undefined)
 			{
-				Register(frame, zoneObject, targets, nbTarget, maxTarget);
+				Register( frame,zoneObject,targets,nbTarget,maxTarget );
 				indexTarget = i;
 				isDetected = true;
 				break;
 			}
 		}
-		for (int i = 0; i < maxTarget; i++)
-		{
-			if (i != indexTarget && targets[i].id == targets[indexTarget].id && isDetected == true)
-				UnRegister(targets[i].id, targets, nbTarget);
-		}
-		
 	}
 	return;
 }

@@ -16,6 +16,7 @@ public abstract class Tracking : MonoBehaviour
 
 	protected Frame frame_buffer;
 	protected Frame frame_buffer_background;
+	protected RectStruct zone_detection;
 	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;
@@ -192,7 +193,10 @@ public abstract class Tracking : MonoBehaviour
 
 	private void FreeInternData()
 	{
-		CARDSVideoPlugin.FreeFrameWrapped(ref frame_buffer_background);
+		if ((parameters.use_detection == true) && (parameters.saving_background <= parameters.starting_frame))
+		{
+			CARDSVideoPlugin.FreeFrameWrapped(ref frame_buffer_background);
+		}
 		video.Close();
 		if(nb_frame > parameters.starting_frame)
 		{

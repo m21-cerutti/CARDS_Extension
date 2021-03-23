@@ -25,7 +25,6 @@ public class SingleThread : Tracking
 					Time.timeScale = 0;
 					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref frame_buffer, outTargets, ref nb_targets, max_targets);
 					Time.timeScale = 1;
-					parameters.use_detection = true;
 				}
 			}
 		}
@@ -34,21 +33,16 @@ public class SingleThread : Tracking
 			//DETECTION
 			if(parameters.use_detection)
 			{
-				parameters.rect_detection.x = (float)(frame_buffer.width * 0.05);
-				parameters.rect_detection.y = (float)(frame_buffer.height * 0.55);
-				parameters.rect_detection.width = (float)(frame_buffer.width * 0.5 - frame_buffer.width * 0.1);
-				parameters.rect_detection.height = (float)(frame_buffer.height * 0.9 - frame_buffer.height * 0.5);
-
-				RectStruct zone_detection;
-				zone_detection.x = (float)(frame_buffer.width * 0.05);
-				zone_detection.y = (float)(frame_buffer.height * 0.55);
-				zone_detection.width = (float)(frame_buffer.width * 0.5 - frame_buffer.width * 0.1);
-				zone_detection.height = (float)(frame_buffer.height * 0.9 - frame_buffer.height * 0.5);
-				if(nb_frame == parameters.saving_background)
+				zone_detection.x = parameters.rect_detection.x;
+				zone_detection.y = parameters.rect_detection.y;
+				zone_detection.width = parameters.rect_detection.width;
+				zone_detection.height = parameters.rect_detection.height;
+				if(nb_frame == parameters.saving_background + parameters.starting_frame)
                 {
 					frame_buffer_background = CARDSVideoPlugin.GetCopyFrameWrapped(ref frame_buffer);
-                }
-				if ((nb_frame % parameters.detection_frequency) == 0)
+					
+				}
+				if (((nb_frame % parameters.detection_frequency) == 0) && (nb_frame > (parameters.saving_background + parameters.starting_frame)))
 				{
 					unsafe
 					{
@@ -56,6 +50,10 @@ public class SingleThread : Tracking
 						{
 							//Debug.Log("Detect");
 							CARDSTrackingPlugin.DetectWrapped(ref frame_buffer, ref frame_buffer_background, ref zone_detection, outTargets, ref nb_targets, max_targets);
+							if (parameters.debug_cv)
+							{
+								CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
+							}
 						}
 					}
 				}
@@ -70,7 +68,7 @@ public class SingleThread : Tracking
 					{
 						//Debug.Log("CheckTrack");
 						CARDSTrackingPlugin.CheckTrackWrapped(ref frame_buffer, outTargets, max_targets);
-						if(parameters.debug_cv)
+						if (parameters.debug_cv)
 						{
 							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
 						}
