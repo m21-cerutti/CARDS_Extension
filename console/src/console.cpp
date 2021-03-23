@@ -116,7 +116,7 @@ void TestVideoContext()
 {
 	std::cerr << "Opening video...\r";
 
-	VideoProvider* video = CreateVideoContext( "./test.avi",256,256 );
+	VideoProvider* video = CreateVideoContext( "../videos_tests/multiple_targets.mp4",256,256 );
 
 
 	for(int i = 0;; i++)
@@ -144,7 +144,7 @@ void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 
-	VideoProviderConsole video( "test.avi" );
+	VideoProviderConsole video( "../videos_tests/multiple_targets.mp4" );
 	FileStorage fs( "test.xml",FileStorage::WRITE );
 
 	int freq_record = 20;
