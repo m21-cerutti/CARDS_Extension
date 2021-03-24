@@ -127,9 +127,9 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
 
 	//Debug
-	//Mat debugzoneimg = img.clone();
-	//rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
-	//DebugMat( debugzoneimg,"Detect" );
+	Mat debugzoneimg = img.clone();
+	rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
+	DebugMat( debugzoneimg,"Detect" );
 
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
@@ -156,7 +156,7 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	if(mse > mseLimit)
 	{
-		if(mode != 0)
+		if(mode == 0)
 		{
 			vector<Vec4i> hierarchy;
 			vector<vector<Point> > contours;
@@ -167,22 +167,15 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 			int MaxAreaRect = 0;
 			int indexRect = 0;
 
-			for(int i = 0; i < contours.size(); i++)
-			{
-				approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
-				boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
-				int areaRect = boundRect[i].width * boundRect[i].height;
-				if(areaRect > MaxAreaRect)
-				{
-					MaxAreaRect = areaRect;
-					indexRect = i;
-				}
-			}
+			RectStruct area;
+			area.x = zone.x + boundRect[indexRect].x;
+			area.y = zone.y + boundRect[indexRect].y;
+			area.width = boundRect[indexRect].width;
+			area.height = boundRect[indexRect].height;
 
-			RectStruct zoneObject = Rect2dToRectStruct( boundRect[indexRect] );
-			Register( frame,zoneObject,targets,nbTarget,maxTarget );
-		   //rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
-		   //DebugMat( binaryBackground,"Register" );
+			Register( frame,area,targets,nbTarget,maxTarget );
+			rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
+			DebugMat( binaryBackground,"Register" );
 		}
 		return true;
 	}
