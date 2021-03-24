@@ -7,7 +7,8 @@ using namespace cv;
 
 Mat FrameToCVMat( const Frame& src )
 {
-	if (src.rawData == NULL || src.height == 0 || src.width == 0) {
+	if(src.rawData == NULL || src.height == 0 || src.width == 0)
+	{
 		return Mat();
 	}
 	Mat mat( src.height,src.width,CV_8UC4,src.rawData );
@@ -36,10 +37,11 @@ void CVMatToFrameRawData( const Mat& src,Frame& dst )
 
 void CopyFrame( const Frame& src,Frame& dst )
 {
-	Mat mat = FrameToCVMat( src );
-	Mat matCopy;
-	mat.copyTo( matCopy );
-	CVMatToFrameRawData( matCopy,dst );
+	dst.width = src.width;
+	dst.height = src.height;
+	if(dst.rawData == nullptr)
+		dst.rawData = new Color32[(size_t)dst.height * dst.width];
+	memcpy( dst.rawData,src.rawData,sizeof( Color32 ) * dst.width * dst.height );
 }
 
 RectStruct Rect2dToRectStruct( const Rect2d& rect )

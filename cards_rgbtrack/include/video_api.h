@@ -30,7 +30,7 @@ extern "C"
 	/// @brief Free frame data.
 	/// @param frame to free.
 	/// @return the frame copied.
-	EXPORT_API void __stdcall FreeFrame( Frame& frame );
+	EXPORT_API void __stdcall FreeCopyFrame( Frame& frame );
 
 	/// @brief Initialize a new fram then copy the frame source into it.
 	/// @param src the frame to copy.
