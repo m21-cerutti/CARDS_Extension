@@ -55,7 +55,7 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect )
 	return rectstruct;
 }
 
-Rect2d Rect2dToRectStruct( const RectStruct& rect )
+Rect2d RectStructToRect2d( const RectStruct& rect )
 {
 	Rect2d rect2d( (double)rect.x,
 				   (double)rect.y,
@@ -107,7 +107,7 @@ void DebugCVTargets( const Mat& mat,const Target* targets,const int maxTarget )
 		if(targets[i].state != StateTracker::Undefined)
 		{
 			cv::rectangle( img,
-						   Rect2dToRectStruct( targets[i].rect ),
+						   RectStructToRect2d( targets[i].rect ),
 						   targets[i].state == StateTracker::Live ? Scalar( 0,255,0 ) : Scalar( 0,0,255 ),
 						   2,
 						   cv::LINE_8 );

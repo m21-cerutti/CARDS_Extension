@@ -43,7 +43,7 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect );
 /// @brief Convert Rect to Rect2d
 /// @param rect Source
 /// @return A Rect2d
-Rect2d Rect2dToRectStruct( const RectStruct& rect );
+Rect2d RectStructToRect2d( const RectStruct& rect );
 
 /// @brief Convert Matrix3x3f to Mat
 /// @param rect Source

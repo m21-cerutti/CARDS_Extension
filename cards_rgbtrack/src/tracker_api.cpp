@@ -65,8 +65,8 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 
 	int id = FindFirstFreeMemoryTracker();
 	targets[id].id = id;
-	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
-	detectors.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingDetector ) );
+	multitrackers.add( id,img,RectStructToRect2d( zone ),createTrackerByName( trackingAlg ) );
+	detectors.add( id,img,RectStructToRect2d( zone ),createTrackerByName( trackingDetector ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
 
@@ -124,7 +124,7 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	Mat img = FrameToCVMat( frame );
 	Mat background = FrameToCVMat( frameBackground );
-	Rect2d zone = Rect2dToRectStruct( zoneDetection );
+	Rect2d zone = RectStructToRect2d( zoneDetection );
 
 	//Debug
 	Mat debugzoneimg = img.clone();
@@ -156,27 +156,27 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	if(mse > mseLimit)
 	{
-		if(mode == 0)
-		{
-			vector<Vec4i> hierarchy;
-			vector<vector<Point> > contours;
-			findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
+		/*if(mode == 0)
+		{*/
+		vector<Vec4i> hierarchy;
+		vector<vector<Point> > contours;
+		findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
 
-			vector<vector<Point> > contours_poly( contours.size() );
-			vector<Rect> boundRect( contours.size() );
-			int MaxAreaRect = 0;
-			int indexRect = 0;
+		vector<vector<Point> > contours_poly( contours.size() );
+		vector<Rect> boundRect( contours.size() );
+		int MaxAreaRect = 0;
+		int indexRect = 0;
 
-			RectStruct area;
-			area.x = zone.x + boundRect[indexRect].x;
-			area.y = zone.y + boundRect[indexRect].y;
-			area.width = boundRect[indexRect].width;
-			area.height = boundRect[indexRect].height;
+		RectStruct area;
+		area.x = zone.x + boundRect[indexRect].x;
+		area.y = zone.y + boundRect[indexRect].y;
+		area.width = boundRect[indexRect].width;
+		area.height = boundRect[indexRect].height;
 
-			Register( frame,area,targets,nbTarget,maxTarget );
-			rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
-			DebugMat( binaryBackground,"Register" );
-		}
+		Register( frame,area,targets,nbTarget,maxTarget );
+		rectangle( debugzoneimg,RectStructToRect2d( area ),Scalar( 255,0,0 ),5 );
+		DebugMat( debugzoneimg,"Register" );
+	/*}*/
 		return true;
 	}
 	return false;
