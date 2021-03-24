@@ -7,7 +7,9 @@ using namespace cv;
 
 Mat FrameToCVMat( const Frame& src )
 {
-	// TODO Need some checks (frame raw_data initialised etc)
+	if (src.rawData == NULL || src.height == 0 || src.width == 0) {
+		return Mat();
+	}
 	Mat mat( src.height,src.width,CV_8UC4,src.rawData );
 	cvtColor( mat,mat,cv::COLOR_RGBA2BGR );
 	flip( mat,mat,0 );

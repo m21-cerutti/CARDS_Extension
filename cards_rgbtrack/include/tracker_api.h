@@ -147,6 +147,7 @@ struct Frame
 	int height;
 	FlipMode flip_mode;
 	Color32* rawData;
+
 };
 
 #pragma endregion
