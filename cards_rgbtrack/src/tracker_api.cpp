@@ -128,18 +128,25 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	//Debug
 	Mat debugzoneimg = img.clone();
-	rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
-	DebugMat( debugzoneimg,"Detect" );
+	//rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
+	//DebugMat( debugzoneimg,"Detect" );
 
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
 	Mat imgGray,backgroundGray;
-	cvtColor( zoneImg,imgGray,CV_RGB2GRAY );
-	cvtColor( zoneBackground,backgroundGray,CV_RGB2GRAY );
+	cvtColor( zoneImg,imgGray,CV_BGR2HSV );
+	cvtColor( zoneBackground,backgroundGray,CV_BGR2HSV );
+
+	vector<Mat> channels( 3 );
+	vector<Mat> channelsBackground( 3 );
+	split( imgGray,channels );
+	split( backgroundGray,channelsBackground );
+	imgGray = channels[0];
+	backgroundGray = channelsBackground[0];
+
 	Mat foregroundMask;
 
-	threshold( abs( backgroundGray - imgGray ),foregroundMask,40,255,THRESH_BINARY );
-	erode( foregroundMask,foregroundMask,Mat(),Point( -1,-1 ),2,1,1 );
+	threshold( abs( backgroundGray - imgGray ),foregroundMask,20,180,THRESH_BINARY );
 	Mat binaryBackground = foregroundMask;
 	foregroundMask.convertTo( foregroundMask,CV_32F );
 
@@ -154,29 +161,43 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	double mseLimit = 500 * (imgNorm.rows * imgNorm.cols) / (tmpImg.rows * tmpImg.cols);
 
+	DebugMat( binaryBackground,"Tresh" );
+
 	if(mse > mseLimit)
 	{
-		/*if(mode == 0)
-		{*/
-		vector<Vec4i> hierarchy;
-		vector<vector<Point> > contours;
-		findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
+		if(mode == 0)
+		{
+			vector<Vec4i> hierarchy;
+			vector<vector<Point> > contours;
+			findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
 
-		vector<vector<Point> > contours_poly( contours.size() );
-		vector<Rect> boundRect( contours.size() );
-		int MaxAreaRect = 0;
-		int indexRect = 0;
+			vector<vector<Point> > contours_poly( contours.size() );
+			vector<Rect> boundRect( contours.size() );
+			int MaxAreaRect = 0;
+			int indexRect = 0;
 
-		RectStruct area;
-		area.x = zone.x + boundRect[indexRect].x;
-		area.y = zone.y + boundRect[indexRect].y;
-		area.width = boundRect[indexRect].width;
-		area.height = boundRect[indexRect].height;
+			for(int i = 0; i < contours.size(); i++)
+			{
+				approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
+				boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
+				int areaRect = boundRect[i].width * boundRect[i].height;
+				if(areaRect > MaxAreaRect)
+				{
+					MaxAreaRect = areaRect;
+					indexRect = i;
+				}
+			}
 
-		Register( frame,area,targets,nbTarget,maxTarget );
-		rectangle( debugzoneimg,RectStructToRect2d( area ),Scalar( 255,0,0 ),5 );
-		DebugMat( debugzoneimg,"Register" );
-	/*}*/
+			RectStruct area;
+			area.x = zone.x + boundRect[indexRect].x;
+			area.y = zone.y + boundRect[indexRect].y;
+			area.width = boundRect[indexRect].width;
+			area.height = boundRect[indexRect].height;
+
+			Register( frame,area,targets,nbTarget,maxTarget );
+			//rectangle( debugzoneimg,RectStructToRect2d( area ),Scalar( 255,0,255 ),5 );
+			//DebugMat( debugzoneimg,"Register" );
+		}
 		return true;
 	}
 	return false;

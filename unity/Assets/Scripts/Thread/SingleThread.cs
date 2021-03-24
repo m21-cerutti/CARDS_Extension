@@ -50,9 +50,9 @@ public class SingleThread : Tracking
 					{
 						fixed(Target* out_targets = targets)
 						{
-							Debug.Log("Detect");
 							have_detected = CARDSTrackingPlugin.DetectWrapped(ref frame_buffer, ref frame_buffer_background, ref zone_detection, out_targets, ref nb_targets, max_targets, have_detected ? 1 : 0);
-							Debug.Log(have_detected);
+							if(have_detected)
+								Debug.Log("New detect");
 						}
 					}
 				}

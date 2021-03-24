@@ -42,8 +42,8 @@ MonoBehaviour:
   use_detection: 1
   rect_detection:
     serializedVersion: 2
-    x: 0
-    y: 0
+    x: 128
+    y: 128
     width: 100
     height: 100
   file_path_video: 
