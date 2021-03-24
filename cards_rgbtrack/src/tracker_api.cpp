@@ -126,15 +126,15 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Mat background = FrameToCVMat( frameBackground );
 	Rect2d zone = RectStructToRect2d( zoneDetection );
 
-	Mat zoneImg = img(zone);
-	Mat zoneBackground = background(zone);
-	Mat imgGray, backgroundGray;
-	cvtColor(zoneImg, imgGray, CV_RGB2GRAY);
-	cvtColor(zoneBackground, backgroundGray, CV_RGB2GRAY);
+	Mat zoneImg = img( zone );
+	Mat zoneBackground = background( zone );
+	Mat imgGray,backgroundGray;
+	cvtColor( zoneImg,imgGray,CV_RGB2GRAY );
+	cvtColor( zoneBackground,backgroundGray,CV_RGB2GRAY );
 	Mat foregroundMask;
 
-	threshold(abs(backgroundGray - imgGray), foregroundMask, 40, 255, THRESH_BINARY);
-	erode(foregroundMask, foregroundMask, Mat(), Point(-1, -1), 2, 1, 1);
+	threshold( abs( backgroundGray - imgGray ),foregroundMask,40,255,THRESH_BINARY );
+	erode( foregroundMask,foregroundMask,Mat(),Point( -1,-1 ),2,1,1 );
 	Mat binaryBackground = foregroundMask;
 	foregroundMask.convertTo( foregroundMask,CV_32F );
 
@@ -148,8 +148,6 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
 
 	double mseLimit = 250 * (imgNorm.rows * imgNorm.cols) / (tmpImg.rows * tmpImg.cols);
-
-	DebugMat( binaryBackground,"Tresh" );
 
 	if(mse > mseLimit)
 	{
