@@ -129,7 +129,6 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	//Debug
 	Mat debugzoneimg = img.clone();
 	rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
-	DebugMat( debugzoneimg,"Detect" );
 
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
@@ -180,7 +179,11 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 		}
 
-		zoneObject = Rect2dToRectStruct( boundRect[indexRect] );
+		RectStruct area;
+		area.x = zone.x + boundRect[indexRect].x;
+		area.y = zone.y + boundRect[indexRect].y;
+		area.width = boundRect[indexRect].width;
+		area.height = boundRect[indexRect].height;
 
 		int indexTarget = 0;
 		bool isDetected = false;
@@ -188,10 +191,7 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		{
 			if(targets[i].state == StateTracker::Undefined)
 			{
-				rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
-				DebugMat( binaryBackground,"Register" );
-
-				Register( frame,zoneObject,targets,nbTarget,maxTarget );
+				Register( frame,area,targets,nbTarget,maxTarget );
 				indexTarget = i;
 				isDetected = true;
 				break;
