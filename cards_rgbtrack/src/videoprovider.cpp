@@ -4,7 +4,7 @@
 VideoProvider::VideoProvider( int width,int height )
 	:_frame()
 {
-	if(!_cap.open( 0,cv::CAP_ANY ))
+	if(!_cap.open( 0,cv::CAP_DSHOW ))
 	{
 		throw std::runtime_error( "Can't open camera." );
 	}
