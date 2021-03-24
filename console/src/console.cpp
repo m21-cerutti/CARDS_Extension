@@ -6,8 +6,8 @@ using namespace cv;
 int main( int argc,char** argv )
 {
 	TestDLL();
-	//TestWorkflowVideo();
-	TestWorkflowWebcam();
+	TestWorkflowVideo();
+	//TestWorkflowWebcam();
 	//TestVideoContext();
 	//WriteXML();
 }
@@ -69,10 +69,6 @@ void TestWorkflow( VideoProvider* provider )
 
 		if(!isinitialised)
 		{
-			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
-			cvtColor( texture,texture,COLOR_RGBA2BGR );
-			cv::imshow( "Init",texture );
-
 			if(waitKey( 25 ) == 27)
 			{
 				Init( targets,nbtargets,maxTargets );
@@ -97,7 +93,6 @@ void TestWorkflow( VideoProvider* provider )
 		{
 			if(i % activeDetection == 0)
 			{
-				// Detected object is flipped from axis X on this test but works on unity
 				Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets,0 );
 			}
 		}

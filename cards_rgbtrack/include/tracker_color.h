@@ -41,7 +41,7 @@ private:
 
 	/// @brief Build a color histogram in HSV space to find the most present color within the frame.
 	/// @param img The HSV frame within the most present present color is searched.
-	/// @return The hue component of the most present color in the frame.
+	/// @return The hue value of the most present color in the frame.
 	short findColor( Mat img );
 
 	/// @brief Search for the contour with the maximum area.

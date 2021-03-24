@@ -57,7 +57,6 @@ public class SingleThread : Tracking
 					}
 				}
 			}
-
 			//CHECK TRACK
 			if((nb_frame % parameters.checktrack_frequency) == 0)
 			{

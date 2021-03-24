@@ -57,6 +57,7 @@ Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
 /// @brief Debug an image with waitkey.
 /// @param Frame 
+/// @param win_name The name of window for special debug, default "DebugOpenCV"
 void DebugMat( const Mat& frame,const string win_name = "DebugOpenCV" );
 
 /// @brief Debug in OpenCV window the actual frame and targets. Green if Live, Red otherwise.

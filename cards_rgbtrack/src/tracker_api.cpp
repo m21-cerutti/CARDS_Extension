@@ -4,11 +4,11 @@
 
 /* Intern memory */
 
-/// @brief Main tracking algorithm
+/// @brief Main tracking implementation
 string trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
 
-/// @brief Use to improve quality
+/// @brief Secondary tracking implementation. Use to improve quality
 string trackingDetector = "COLOR";
 MultiTrackerCARDS detectors;
 
@@ -126,11 +126,6 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Mat background = FrameToCVMat( frameBackground );
 	Rect2d zone = RectStructToRect2d( zoneDetection );
 
-	//Debug
-	Mat debugzoneimg = img.clone();
-	//rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
-	//DebugMat( debugzoneimg,"Detect" );
-
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
 	Mat imgGray,backgroundGray;
@@ -145,7 +140,6 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	backgroundGray = channelsBackground[0];
 
 	Mat foregroundMask;
-
 	threshold( abs( backgroundGray - imgGray ),foregroundMask,20,180,THRESH_BINARY );
 	Mat binaryBackground = foregroundMask;
 	foregroundMask.convertTo( foregroundMask,CV_32F );
@@ -189,14 +183,12 @@ bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 			}
 
 			RectStruct area;
-			area.x = zone.x + boundRect[indexRect].x;
-			area.y = zone.y + boundRect[indexRect].y;
-			area.width = boundRect[indexRect].width;
-			area.height = boundRect[indexRect].height;
+			area.x = zone.x + (float)boundRect[indexRect].x;
+			area.y = zone.y + (float)boundRect[indexRect].y;
+			area.width = (float)boundRect[indexRect].width;
+			area.height = (float)boundRect[indexRect].height;
 
 			Register( frame,area,targets,nbTarget,maxTarget );
-			//rectangle( debugzoneimg,RectStructToRect2d( area ),Scalar( 255,0,255 ),5 );
-			//DebugMat( debugzoneimg,"Register" );
 		}
 		return true;
 	}
@@ -285,7 +277,7 @@ void Track( const Frame& frame,Target* targets,const int maxTarget )
 	//Update Live only
 	for(int i = 0; i < maxTarget; i++)
 	{
-		if(targets[i].state == StateTracker::Live)
+		if(targets[i].state == StateTracker::Live || targets[i].state == StateTracker::Occluded || targets[i].state == StateTracker::Lost)
 		{
 			if(!multitrackers.update( targets[i].id,img ))
 			{
