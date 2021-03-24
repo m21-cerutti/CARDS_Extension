@@ -20,6 +20,7 @@ MonoBehaviour:
   log_datas: 0
   device_index: 0
   use_file_calibration: 1
+  path_subfolder_calibration: 
   calibration:
     intrinsic_camera:
       c_00: 0
@@ -32,15 +33,17 @@ MonoBehaviour:
       c_21: 0
       c_22: 0
     dist_cam: 0
-    pixel_mm_x_ratio: 0
-    pixel_mm_y_ratio: 0
+    meter_pixel_x_ratio: 0
+    meter_pixel_y_ratio: 0
   flip_mode: 3
   checktrack_frequency: 20
-  use_detection: 0
+  detection_frequency: 90
+  saving_background: 20
+  use_detection: 1
   rect_detection:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 10
+    y: 10
+    width: 100
+    height: 100
   file_path_video: 

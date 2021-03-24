@@ -97,6 +97,8 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 
 void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
+	if (frameBackground.rawData == nullptr)
+		return;
 	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
 		cerr << "Frame is empty" << endl;
 		return;
@@ -113,6 +115,7 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		cerr << "Unvalid list of targets" << endl;
 		return;
 	}
+
 	Mat img = FrameToCVMat( frame );
 	Mat background = FrameToCVMat( frameBackground );
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
@@ -137,7 +140,7 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	double sse = s.val[0] + s.val[1] + s.val[2];
 	double mse = sse / (double)( zoneImg.channels() * zoneImg.total() );
 
-	double mseLimit = 1000 * (imgNorm.rows * imgNorm.cols)/(tmpImg.rows * tmpImg.cols);
+	double mseLimit = 500 * (imgNorm.rows * imgNorm.cols)/(tmpImg.rows * tmpImg.cols);
 
 	if (mseLimit < mse) 
 	{
