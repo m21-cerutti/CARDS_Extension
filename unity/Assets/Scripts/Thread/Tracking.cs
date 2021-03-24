@@ -174,9 +174,10 @@ public abstract class Tracking : MonoBehaviour
 		if(parameters.use_detection)
 		{
 			zone_detection.x = parameters.rect_detection.x;
-			zone_detection.y = parameters.rect_detection.y;
+			zone_detection.y = parameters.camera_height - parameters.rect_detection.y;
 			zone_detection.width = parameters.rect_detection.width;
 			zone_detection.height = parameters.rect_detection.height;
+			//zone_detection = ConvertRectToUnityScreen(zone_detection);
 		}
 
 		nb_frame = -1;

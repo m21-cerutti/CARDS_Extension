@@ -98,28 +98,25 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 
 void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
-	if(frameBackground.rawData == nullptr)
-	{
-		cerr << "Frame is non initialised" << endl;
-		return;
-	}
-
-	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == nullptr)
 	{
 		cerr << "Frame is empty" << endl;
 		return;
 	}
-	if(frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == NULL)
+	if(frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == nullptr)
 	{
 		cerr << "Background frame is empty" << endl;
 		return;
 	}
-	if(zoneDetection.width == 0 || zoneDetection.height == 0)
+
+	if(zoneDetection.y <= 0 || zoneDetection.x <= 0 ||
+		zoneDetection.width <= 0 || zoneDetection.height <= 0 ||
+		zoneDetection.y + zoneDetection.height > frameBackground.height || zoneDetection.x + zoneDetection.width > frameBackground.width)
 	{
-		cerr << "Detection zone is not a rectangle" << endl;
+		cerr << "Detection zone is not in the image. " << endl;
 		return;
 	}
-	if(targets == NULL)
+	if(targets == nullptr)
 	{
 		cerr << "Unvalid list of targets" << endl;
 		return;
@@ -128,6 +125,12 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Mat img = FrameToCVMat( frame );
 	Mat background = FrameToCVMat( frameBackground );
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
+
+	//Debug
+	Mat zoneimg = background.clone();
+	rectangle( zoneimg,zone,Scalar( 255,0,0 ),5 );
+	DebugMat( zoneimg,"Detect" );
+
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
 	Mat imgGray,backgroundGray;
@@ -185,6 +188,8 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		{
 			if(targets[i].state == StateTracker::Undefined)
 			{
+				rectangle( img,boundRect[indexRect],Scalar( 255,0,0 ),5 );
+				DebugMat( zoneimg,"Register" );
 				Register( frame,zoneObject,targets,nbTarget,maxTarget );
 				indexTarget = i;
 				isDetected = true;
