@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class SingleThread : Tracking
 {
+	private bool have_detected;
+
 	/// <summary>
 	/// Implementation in one thread.
 	/// </summary>
@@ -28,11 +30,11 @@ public class SingleThread : Tracking
 		{
 			unsafe
 			{
-				fixed(Target* outTargets = targets)
+				fixed(Target* out_targets = targets)
 				{
 					//Debug.Log("Register manual");
 					Time.timeScale = 0;
-					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref frame_buffer, outTargets, ref nb_targets, max_targets);
+					CARDSUtilitiesPlugin.ManualRegisterWrapped(ref frame_buffer, out_targets, ref nb_targets, max_targets);
 					Time.timeScale = 1;
 				}
 			}
@@ -49,7 +51,8 @@ public class SingleThread : Tracking
 						fixed(Target* out_targets = targets)
 						{
 							Debug.Log("Detect");
-							CARDSTrackingPlugin.DetectWrapped(ref frame_buffer, ref frame_buffer_background, ref zone_detection, out_targets, ref nb_targets, max_targets);
+							have_detected = CARDSTrackingPlugin.DetectWrapped(ref frame_buffer, ref frame_buffer_background, ref zone_detection, out_targets, ref nb_targets, max_targets, have_detected ? 1 : 0);
+							Debug.Log(have_detected);
 						}
 					}
 				}
@@ -60,13 +63,13 @@ public class SingleThread : Tracking
 			{
 				unsafe
 				{
-					fixed(Target* outTargets = targets)
+					fixed(Target* out_targets = targets)
 					{
 						//Debug.Log("CheckTrack");
-						CARDSTrackingPlugin.CheckTrackWrapped(ref frame_buffer, outTargets, max_targets);
+						CARDSTrackingPlugin.CheckTrackWrapped(ref frame_buffer, out_targets, max_targets);
 						if(parameters.debug_cv)
 						{
-							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, out_targets, max_targets);
 						}
 					}
 				}
@@ -75,13 +78,13 @@ public class SingleThread : Tracking
 			{
 				unsafe
 				{
-					fixed(Target* outTargets = targets)
+					fixed(Target* out_targets = targets)
 					{
 						//Debug.Log("Track");
-						CARDSTrackingPlugin.TrackWrapped(ref frame_buffer, outTargets, max_targets);
+						CARDSTrackingPlugin.TrackWrapped(ref frame_buffer, out_targets, max_targets);
 						if(parameters.debug_cv)
 						{
-							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, outTargets, max_targets);
+							CARDSUtilitiesPlugin.DebugTargetsWrapped(ref frame_buffer, out_targets, max_targets);
 						}
 					}
 				}

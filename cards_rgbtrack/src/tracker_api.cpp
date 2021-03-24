@@ -96,17 +96,17 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	return;
 }
 
-void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
+bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget,const int mode )
 {
 	if(frame.height == 0 || frame.width == 0 || frame.rawData == nullptr)
 	{
 		cerr << "Frame is empty" << endl;
-		return;
+		return false;
 	}
 	if(frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == nullptr)
 	{
 		cerr << "Background frame is empty" << endl;
-		return;
+		return false;
 	}
 
 	if(zoneDetection.y < 0 || zoneDetection.x < 0 ||
@@ -114,12 +114,12 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		zoneDetection.y + zoneDetection.height > frameBackground.height || zoneDetection.x + zoneDetection.width > frameBackground.width)
 	{
 		cerr << "Detection zone is not in the image. " << endl;
-		return;
+		return false;
 	}
 	if(targets == nullptr)
 	{
 		cerr << "Unvalid list of targets" << endl;
-		return;
+		return false;
 	}
 
 	Mat img = FrameToCVMat( frame );
@@ -127,9 +127,9 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
 
 	//Debug
-	Mat debugzoneimg = img.clone();
-	rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
-	DebugMat( debugzoneimg,"Detect" );
+	//Mat debugzoneimg = img.clone();
+	//rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
+	//DebugMat( debugzoneimg,"Detect" );
 
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
@@ -154,51 +154,39 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 	double mseLimit = 500 * (imgNorm.rows * imgNorm.cols) / (tmpImg.rows * tmpImg.cols);
 
-	if(mseLimit < mse)
+	if(mse > mseLimit)
 	{
-		vector<Vec4i> hierarchy;
-		vector<vector<Point> > contours;
-		findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
-		vector<vector<Point> > contours_poly( contours.size() );
-		vector<Rect> boundRect( contours.size() );
-		vector<Point2f>center( contours.size() );
-		vector<float>radius( contours.size() );
-		RectStruct zoneObject;
-		int biggerRect = 0;
-		int indexRect = 0;
-
-		for(int i = 0; i < contours.size(); i++)
+		if(mode != 0)
 		{
-			approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
-			boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
-			int areaRect = boundRect[i].width * boundRect[i].height;
-			if(areaRect > biggerRect)
+			vector<Vec4i> hierarchy;
+			vector<vector<Point> > contours;
+			findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
+
+			vector<vector<Point> > contours_poly( contours.size() );
+			vector<Rect> boundRect( contours.size() );
+			int MaxAreaRect = 0;
+			int indexRect = 0;
+
+			for(int i = 0; i < contours.size(); i++)
 			{
-				biggerRect = areaRect;
-				indexRect = i;
+				approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
+				boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
+				int areaRect = boundRect[i].width * boundRect[i].height;
+				if(areaRect > MaxAreaRect)
+				{
+					MaxAreaRect = areaRect;
+					indexRect = i;
+				}
 			}
 
+			RectStruct zoneObject = Rect2dToRectStruct( boundRect[indexRect] );
+			Register( frame,zoneObject,targets,nbTarget,maxTarget );
+		   //rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
+		   //DebugMat( binaryBackground,"Register" );
 		}
-
-		zoneObject = Rect2dToRectStruct( boundRect[indexRect] );
-
-		int indexTarget = 0;
-		bool isDetected = false;
-		for(int i = 0; i < maxTarget; i++)
-		{
-			if(targets[i].state == StateTracker::Undefined)
-			{
-				rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
-				DebugMat( binaryBackground,"Register" );
-
-				Register( frame,zoneObject,targets,nbTarget,maxTarget );
-				indexTarget = i;
-				isDetected = true;
-				break;
-			}
-		}
+		return true;
 	}
-	return;
+	return false;
 }
 
 void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
