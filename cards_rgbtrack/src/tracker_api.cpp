@@ -30,7 +30,8 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 {
 	if(targets == nullptr)
 	{
-		throw std::runtime_error( "Error: targets not initialised !" );
+		cerr << "Error: targets not initialised !" << endl;
+		return;
 	}
 	occupied_place.resize( maxTarget,false );
 	nbTarget = 0;
@@ -38,24 +39,27 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 
 void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
-	for(int i = 0; i < maxTarget; i++)
-	{
-		if(targets[i].state != StateTracker::Undefined)
+	if (targets != NULL) {
+		for(int i = 0; i < maxTarget; i++)
 		{
-			UnRegister( targets[i].id,targets,nbTarget );
+			if(targets[i].state != StateTracker::Undefined)
+			{
+				UnRegister( targets[i].id,targets,nbTarget );
+			}
 		}
+		occupied_place.clear();
 	}
-	occupied_place.clear();
 }
 
 int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
 
-	if(targets[nbTarget].state != StateTracker::Undefined)
+	if(targets[nbTarget].state != StateTracker::Undefined ||
+		img.empty() || targets == NULL || zone.height == 0 || zone.width == 0)
 	{
-		// TODO Code error
-		throw std::runtime_error( "Error: Already existing ID or init to not Undefined !" );
+		cerr << "Error: Already existing ID or init to not Undefined !" << endl;
+		return -1;
 	}
 
 	int id = FindFirstFreeMemoryTracker();
@@ -75,9 +79,10 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 
 void UnRegister( const int id,Target* targets,int& nbTarget )
 {
-	if(targets[id].state == StateTracker::Undefined)
+	if(targets[id].state == StateTracker::Undefined || targets == NULL)
 	{
-		throw std::runtime_error( "Error: Free an non valid tracker !" );
+		cerr << "Error: Free an non valid tracker !" << endl;
+		return;
 	}
 
 	targets[id].id = -1;
@@ -94,6 +99,23 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 {
 	if (frameBackground.rawData == nullptr)
 		return;
+	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+		cerr << "Frame is empty" << endl;
+		return;
+	}
+	if (frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == NULL) {
+		cerr << "Background frame is empty" << endl;
+		return;
+	}
+	if (zoneDetection.width == 0 || zoneDetection.height == 0) {
+		cerr << "Detection zone is not a rectangle" << endl;
+		return;
+	}
+	if (targets == NULL) {
+		cerr << "Unvalid list of targets" << endl;
+		return;
+	}
+
 	Mat img = FrameToCVMat( frame );
 	Mat background = FrameToCVMat( frameBackground );
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
@@ -166,6 +188,14 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 {
+	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+		cerr << "Frame is empty" << endl;
+		return;
+	}
+	if (targets == NULL) {
+		cerr << "Unvalid list of targets" << endl;
+		return;
+	}
 	Mat img = FrameToCVMat( frame );
 
 	for(int i = 0; i < maxTarget; i++)
@@ -221,6 +251,14 @@ void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 
 void Track( const Frame& frame,Target* targets,const int maxTarget )
 {
+	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+		cerr << "Frame is empty" << endl;
+		return;
+	}
+	if (targets == NULL) {
+		cerr << "Unvalid list of targets" << endl;
+		return;
+	}
 	Mat img = FrameToCVMat( frame );
 
 	//Update Live only
