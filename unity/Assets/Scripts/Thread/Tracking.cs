@@ -169,6 +169,16 @@ public abstract class Tracking : MonoBehaviour
 				CARDSTrackingPlugin.InitWrapped(outTargets, ref nb_targets, max_targets);
 			}
 		}
+
+		//Init detection
+		if(parameters.use_detection)
+		{
+			zone_detection.x = parameters.rect_detection.x;
+			zone_detection.y = parameters.rect_detection.y;
+			zone_detection.width = parameters.rect_detection.width;
+			zone_detection.height = parameters.rect_detection.height;
+		}
+
 		nb_frame = -1;
 	}
 
@@ -193,19 +203,19 @@ public abstract class Tracking : MonoBehaviour
 
 	private void FreeInternData()
 	{
-		if ((parameters.use_detection == true) && (parameters.saving_background <= parameters.starting_frame))
-		{
-			CARDSVideoPlugin.FreeFrameWrapped(ref frame_buffer_background);
-		}
 		video.Close();
 		if(nb_frame > parameters.starting_frame)
 		{
+			if(parameters.use_detection == true)
+			{
+				CARDSVideoPlugin.FreeCopyFrameWrapped(ref frame_buffer_background);
+			}
 			unsafe
 			{
-				fixed(Target* outTargets = targets)
+				fixed(Target* out_targets = targets)
 				{
 					Debug.Log("Free targets");
-					CARDSTrackingPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
+					CARDSTrackingPlugin.CloseWrapped(out_targets, ref nb_targets, max_targets);
 				}
 			}
 		}

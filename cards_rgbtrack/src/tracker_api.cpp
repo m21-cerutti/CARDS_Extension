@@ -39,7 +39,8 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 
 void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
-	if (targets != NULL) {
+	if(targets != NULL)
+	{
 		for(int i = 0; i < maxTarget; i++)
 		{
 			if(targets[i].state != StateTracker::Undefined)
@@ -97,21 +98,29 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 
 void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
 {
-	if (frameBackground.rawData == nullptr)
+	if(frameBackground.rawData == nullptr)
+	{
+		cerr << "Frame is non initialised" << endl;
 		return;
-	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+	}
+
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	{
 		cerr << "Frame is empty" << endl;
 		return;
 	}
-	if (frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == NULL) {
+	if(frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == NULL)
+	{
 		cerr << "Background frame is empty" << endl;
 		return;
 	}
-	if (zoneDetection.width == 0 || zoneDetection.height == 0) {
+	if(zoneDetection.width == 0 || zoneDetection.height == 0)
+	{
 		cerr << "Detection zone is not a rectangle" << endl;
 		return;
 	}
-	if (targets == NULL) {
+	if(targets == NULL)
+	{
 		cerr << "Unvalid list of targets" << endl;
 		return;
 	}
@@ -121,7 +130,7 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
-	Mat imgGray, backgroundGray;
+	Mat imgGray,backgroundGray;
 	cvtColor( zoneImg,imgGray,CV_RGB2GRAY );
 	cvtColor( zoneBackground,backgroundGray,CV_RGB2GRAY );
 	Mat foregroundMask;
@@ -129,20 +138,20 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	threshold( abs( backgroundGray - imgGray ),foregroundMask,40,255,THRESH_BINARY );
 	erode( foregroundMask,foregroundMask,Mat(),Point( -1,-1 ),2,1,1 );
 	Mat binaryBackground = foregroundMask;
-	foregroundMask.convertTo(foregroundMask, CV_32F);
+	foregroundMask.convertTo( foregroundMask,CV_32F );
 
 	Mat tmpImg;
 	tmpImg = foregroundMask.mul( foregroundMask );
 	Mat imgNorm;
-	resize( tmpImg,imgNorm,cv::Size(),(double) 200 / tmpImg.cols, (double) 200 / tmpImg.rows );
+	resize( tmpImg,imgNorm,cv::Size(),(double)200 / tmpImg.cols,(double)200 / tmpImg.rows );
 
 	Scalar s = sum( imgNorm );
 	double sse = s.val[0] + s.val[1] + s.val[2];
-	double mse = sse / (double)( zoneImg.channels() * zoneImg.total() );
+	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
 
-	double mseLimit = 500 * (imgNorm.rows * imgNorm.cols)/(tmpImg.rows * tmpImg.cols);
+	double mseLimit = 500 * (imgNorm.rows * imgNorm.cols) / (tmpImg.rows * tmpImg.cols);
 
-	if (mseLimit < mse) 
+	if(mseLimit < mse)
 	{
 		vector<Vec4i> hierarchy;
 		vector<vector<Point> > contours;
@@ -155,26 +164,26 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		int biggerRect = 0;
 		int indexRect = 0;
 
-		for (int i = 0; i < contours.size(); i++)
+		for(int i = 0; i < contours.size(); i++)
 		{
-			approxPolyDP( Mat(contours[i]),contours_poly[i],3,true );
-			boundRect[i] = boundingRect( Mat(contours_poly[i]) );
+			approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
+			boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
 			int areaRect = boundRect[i].width * boundRect[i].height;
-			if (areaRect > biggerRect) 
+			if(areaRect > biggerRect)
 			{
 				biggerRect = areaRect;
 				indexRect = i;
 			}
-			
+
 		}
 
-		zoneObject = Rect2dToRectStruct(boundRect[indexRect]);
+		zoneObject = Rect2dToRectStruct( boundRect[indexRect] );
 
 		int indexTarget = 0;
 		bool isDetected = false;
-		for (int i = 0; i < maxTarget; i++)
+		for(int i = 0; i < maxTarget; i++)
 		{
-			if (targets[i].state == StateTracker::Undefined)
+			if(targets[i].state == StateTracker::Undefined)
 			{
 				Register( frame,zoneObject,targets,nbTarget,maxTarget );
 				indexTarget = i;
@@ -188,11 +197,13 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 
 void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 {
-	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	{
 		cerr << "Frame is empty" << endl;
 		return;
 	}
-	if (targets == NULL) {
+	if(targets == NULL)
+	{
 		cerr << "Unvalid list of targets" << endl;
 		return;
 	}
@@ -251,11 +262,13 @@ void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 
 void Track( const Frame& frame,Target* targets,const int maxTarget )
 {
-	if (frame.height == 0 || frame.width == 0 || frame.rawData == NULL) {
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	{
 		cerr << "Frame is empty" << endl;
 		return;
 	}
-	if (targets == NULL) {
+	if(targets == NULL)
+	{
 		cerr << "Unvalid list of targets" << endl;
 		return;
 	}

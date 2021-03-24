@@ -32,11 +32,11 @@ namespace Plugin
 
 		[PluginFunctionAttr("GetCopyFrame")]
 		public static GetCopyFrame get_copy_frame = null;
-		public delegate Frame GetCopyFrame(ref Frame src);
+		public delegate bool GetCopyFrame(ref Frame src, ref Frame dst);
 
-		[PluginFunctionAttr("FreeFrame")]
-		public static FreeFrame free_frame = null;
-		public delegate void FreeFrame(ref Frame frame);
+		[PluginFunctionAttr("FreeCopyFrame")]
+		public static FreeCopyFrame free_frame = null;
+		public delegate void FreeCopyFrame(ref Frame frame);
 
 #else
         [DllImport("cards_rgbtrack")]
@@ -52,10 +52,10 @@ namespace Plugin
 		internal static extern bool GetFrame(IntPtr video, ref Frame frame);
 
 		[DllImport("cards_rgbtrack")]
-		internal static extern Frame GetCopyFrame(ref Frame src);
+		internal static extern bool GetCopyFrame(ref Frame src, ref Frame dst);
 
 		[DllImport("cards_rgbtrack")]
-		internal static extern void FreeFrame(ref Frame frame);
+		internal static extern void FreeCopyFrame(ref Frame frame);
 #endif
 		// The plugin methods are wrapped in order to be transparent for the users when they are being executed in 
 		// editor or standalone mode.
@@ -97,21 +97,21 @@ namespace Plugin
 #endif
 		}
 
-		public static Frame GetCopyFrameWrapped(ref Frame frame)
+		public static bool GetCopyFrameWrapped(ref Frame src, ref Frame dst)
 		{
 #if UNITY_EDITOR
-			return get_copy_frame(ref frame);
+			return get_copy_frame(ref src, ref dst);
 #else
-            return GetCopyFrame(frame);
+            return GetCopyFrame(ref src, ref dst);
 #endif
 		}
 
-		public static void FreeFrameWrapped(ref Frame frame)
+		public static void FreeCopyFrameWrapped(ref Frame frame)
 		{
 #if UNITY_EDITOR
-			get_copy_frame(ref frame);
+			free_frame(ref frame);
 #else
-            GetCopyFrame(frame);
+            FreeCopyFrame(frame);
 #endif
 		}
 

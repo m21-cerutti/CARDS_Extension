@@ -84,55 +84,52 @@ void TestWorkflow( VideoProvider* provider )
 			// Press s to save the background
 			if(waitKey( 25 ) == 's')
 			{
-				if(GetFrame( provider,frbg ))
-				{
-					frbg = GetCopyFrame( fr );
-					zoneDetection = { (float)(frbg.width * 0.05),
-						(float)(frbg.height * 0.55),
-						(float)(frbg.width * 0.5 - frbg.width * 0.1),
-						(float)(frbg.height * 0.9 - frbg.height * 0.5) };
-					zoneDetected = true;
-					cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
-				}
+				GetCopyFrame( fr,frbg );
+				zoneDetection = { (float)(frbg.width * 0.05),
+					(float)(frbg.height * 0.55),
+					(float)(frbg.width * 0.5 - frbg.width * 0.1),
+					(float)(frbg.height * 0.9 - frbg.height * 0.5) };
+				zoneDetected = true;
+				cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
 			}
-			if(zoneDetected == true)
-			{
-				if(i % activeDetection == 0)
-				{
-					// Detected object is flipped from axis X on this test but works on unity
-					Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets );
-				}
-			}
-
-			if(i == 0)
-			{
-				ManualRegister( fr,targets,nbtargets,maxTargets );
-			}
-			if(i % detect_freq == 0)
-			{
-				CheckTrack( fr,targets,nbtargets );
-			}
-			else
-			{
-				Track( fr,targets,nbtargets );
-				if(targets[0].state != StateTracker::Undefined)
-				{
-					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
-					//cout << matpos.c_03 << endl; // X
-					//cout << matpos.c_13 << endl; // Y
-					//cout << matpos.c_23 << endl; // Z
-				}
-			}
-			DebugTargets( fr,targets,nbtargets );
-
-			i++;
-			if(waitKey( 25 ) == 'q')
-				break;
 		}
+		if(zoneDetected == true)
+		{
+			if(i % activeDetection == 0)
+			{
+				// Detected object is flipped from axis X on this test but works on unity
+				Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets );
+			}
+		}
+
+		if(i == 0)
+		{
+			ManualRegister( fr,targets,nbtargets,maxTargets );
+		}
+		if(i % detect_freq == 0)
+		{
+			CheckTrack( fr,targets,nbtargets );
+		}
+		else
+		{
+			Track( fr,targets,nbtargets );
+			if(targets[0].state != StateTracker::Undefined)
+			{
+				Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
+				//cout << matpos.c_03 << endl; // X
+				//cout << matpos.c_13 << endl; // Y
+				//cout << matpos.c_23 << endl; // Z
+			}
+		}
+		DebugTargets( fr,targets,nbtargets );
+
+		i++;
+		if(waitKey( 25 ) == 'q')
+			break;
 	}
 
 	cv::destroyAllWindows();
-	FreeFrame( frbg );
+	FreeCopyFrame( frbg );
 	Close( targets,nbtargets,maxTargets );
 }
 
