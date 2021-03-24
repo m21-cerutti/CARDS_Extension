@@ -127,9 +127,9 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 	Rect2d zone = Rect2dToRectStruct( zoneDetection );
 
 	//Debug
-	Mat zoneimg = background.clone();
-	rectangle( zoneimg,zone,Scalar( 255,0,0 ),5 );
-	DebugMat( zoneimg,"Detect" );
+	Mat debugzoneimg = img.clone();
+	rectangle( debugzoneimg,zone,Scalar( 255,0,0 ),5 );
+	DebugMat( debugzoneimg,"Detect" );
 
 	Mat zoneImg = img( zone );
 	Mat zoneBackground = background( zone );
@@ -188,8 +188,9 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		{
 			if(targets[i].state == StateTracker::Undefined)
 			{
-				rectangle( img,boundRect[indexRect],Scalar( 255,0,0 ),5 );
-				DebugMat( zoneimg,"Register" );
+				rectangle( binaryBackground,boundRect[indexRect],Scalar( 255,0,0 ),5 );
+				DebugMat( binaryBackground,"Register" );
+
 				Register( frame,zoneObject,targets,nbTarget,maxTarget );
 				indexTarget = i;
 				isDetected = true;
