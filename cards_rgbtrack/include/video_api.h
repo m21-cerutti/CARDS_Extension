@@ -27,13 +27,13 @@ extern "C"
 	/// @return True if suceed, false otherwise.
 	EXPORT_API bool __stdcall GetFrame( VideoProvider* video,Frame& frame );
 
-	/// @brief Free frame data.
+	/// @brief Free frame data. Use only when a manual copy have been done with GetCopyFrame.
 	/// @param frame to free.
-	/// @return the frame copied.
 	EXPORT_API void __stdcall FreeCopyFrame( Frame& frame );
 
-	/// @brief Initialize a new fram then copy the frame source into it.
+	/// @brief Copy the source frame to destination.
 	/// @param src the frame to copy.
-	/// @return the frame copied.
-	EXPORT_API Frame __stdcall GetCopyFrame( const Frame& src );
+	/// @param dst the destination frame.
+	/// @return True if suceed, false otherwise.
+	EXPORT_API bool __stdcall GetCopyFrame( const Frame& src,Frame& dst );
 }
