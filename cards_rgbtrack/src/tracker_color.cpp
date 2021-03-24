@@ -64,17 +64,11 @@ bool TrackerCOLOR::init( InputArray image,const Rect2d& boundingBox )
 	bgr_frame = image.getMat();
 	if(bgr_frame.empty())
 		return false;
-	//blur( bgr_frame,bgr_frame,Size( 5,5 ) );
-	//DebugMat( bgr_frame,"BGR" + color );
 	hsv_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 
-	//Mat channel[3];
-	//split( hsv_frame,channel );
-	//DebugMat( channel[0],"H" );
 	thresh_frame = Mat( bgr_frame.rows,bgr_frame.cols,bgr_frame.type() );
 	Mat tmp = Mat( hsv_frame,boundingBox );
-	//DebugMat( tmp,"rect" );
 	color = findColor( tmp );
 
 	return true;
@@ -87,7 +81,6 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 	if(bgr_frame.empty())
 		return false;
 
-	//blur( bgr_frame,bgr_frame,Size( 5,5 ) );
 	cvtColor( bgr_frame,hsv_frame,COLOR_BGR2HSV );
 	vector<vector<Point>> contours;
 	Vec3b lower;
@@ -112,8 +105,6 @@ bool TrackerCOLOR::update( InputArray image,Rect2d& boundingBox )
 		Rect2d rect = boundingRect( contours[findMaxArea( contours )] );
 		if(rect.area() > minArea)
 		{
-			//rectangle( bgr_frame,rect,Scalar( 255,255,0 ),5 );
-			//DebugMat( bgr_frame,"Tresh " + to_string( color ) );
 			boundingBox = rect;
 			return true;
 		}

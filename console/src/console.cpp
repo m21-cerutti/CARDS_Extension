@@ -1,10 +1,8 @@
 #include "console.h"
-#include "videoproviderconsole.h"
 
 using namespace std;
 using namespace cv;
 
-//TODO tests api Google ?
 int main( int argc,char** argv )
 {
 	TestDLL();
@@ -14,7 +12,7 @@ int main( int argc,char** argv )
 	//WriteXML();
 }
 
-static void TestWorkflow( VideoProviderConsole& provider );
+static void TestWorkflow( VideoProvider* provider );
 
 void TestDLL()
 {
@@ -32,7 +30,7 @@ void TestWorkflowVideo()
 {
 	std::cerr << "Opening test video ..." << endl;
 
-	VideoProviderConsole video( "../videos_tests/multiple_targets.mp4" );
+	VideoProvider* video = CreateVideoContext( "../videos_tests/multiple_targets.mp4",256,256 );
 	TestWorkflow( video );
 
 	std::cout << "End test WorkflowWebcam." << endl;
@@ -41,13 +39,13 @@ void TestWorkflowVideo()
 void TestWorkflowWebcam()
 {
 	std::cerr << "Opening camera...\r";
-	VideoProviderConsole webcam;
+	VideoProvider* webcam = CreateCameraContext( 256,256 );
 	TestWorkflow( webcam );
 
 	std::cout << "End test WorkflowWebcam." << endl;
 }
 
-void TestWorkflow( VideoProviderConsole& provider )
+void TestWorkflow( VideoProvider* provider )
 {
 	PoseParameters pose_params = PoseParameters();
 	GetPoseParameters( ".",pose_params );
@@ -55,24 +53,22 @@ void TestWorkflow( VideoProviderConsole& provider )
 	int nbtargets = 0,maxTargets = 5;
 	Target targets[5];
 	bool isinitialised = false;
-
-	//TODO Init ? Automatic calculation ?
+	bool zoneDetected = false;
+	Frame frbg;
+	Frame fr;
+	RectStruct zoneDetection;
 	int detect_freq = 20;
+	int activeDetection = 30;
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = provider.GetFrame();
-		if(fr.rawData == nullptr)
+		if(!GetFrame( provider,fr ))
 		{
 			break;
 		}
 
 		if(!isinitialised)
 		{
-			Mat texture( fr.height,fr.width,CV_8UC4,fr.rawData );
-			cvtColor( texture,texture,COLOR_RGBA2BGR );
-			cv::imshow( "Init",texture );
-
 			if(waitKey( 25 ) == 27)
 			{
 				Init( targets,nbtargets,maxTargets );
@@ -81,34 +77,54 @@ void TestWorkflow( VideoProviderConsole& provider )
 		}
 		else if(isinitialised)
 		{
-			//Detect( fr,zoneDetection,targets,nbTarget,maxTarget );
-
-			if(i == 0)
+			// Press s to save the background
+			if(waitKey( 25 ) == 's')
 			{
-				ManualRegister( fr,targets,nbtargets,maxTargets );
+				GetCopyFrame( fr,frbg );
+				zoneDetection = { (float)(frbg.width * 0.05),
+					(float)(frbg.height * 0.55),
+					(float)(frbg.width * 0.5 - frbg.width * 0.1),
+					(float)(frbg.height * 0.9 - frbg.height * 0.5) };
+				zoneDetected = true;
+				cout << "Detect zone in the bottom left corner, wait until the object is detected then move it away." << endl;
 			}
-			else if(i % detect_freq == 0)
-			{
-				//std::cout << "CheckTrack" << endl;
-				CheckTrack( fr,targets,nbtargets );
-			}
-			else
-			{
-				Track( fr,targets,nbtargets );
-				if(targets[0].state != StateTracker::Undefined)
-				{
-					Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
-					//cout << matpos.c_03 << endl; // X
-					//cout << matpos.c_13 << endl; // Y
-					//cout << matpos.c_23 << endl; // Z
-				}
-			}
-			DebugTargets( fr,targets,nbtargets );
-			i++;
 		}
+		if(zoneDetected == true)
+		{
+			if(i % activeDetection == 0)
+			{
+				Detect( fr,frbg,zoneDetection,targets,nbtargets,maxTargets,0 );
+			}
+		}
+
+		if(i == 0)
+		{
+			ManualRegister( fr,targets,nbtargets,maxTargets );
+		}
+		if(i % detect_freq == 0)
+		{
+			CheckTrack( fr,targets,nbtargets );
+		}
+		else
+		{
+			Track( fr,targets,nbtargets );
+			if(targets[0].state != StateTracker::Undefined)
+			{
+				Matrix4x4f matpos = EstimatePose( targets[0],pose_params );
+				//cout << matpos.c_03 << endl; // X
+				//cout << matpos.c_13 << endl; // Y
+				//cout << matpos.c_23 << endl; // Z
+			}
+		}
+		DebugTargets( fr,targets,nbtargets );
+
+		i++;
+		if(waitKey( 25 ) == 'q')
+			break;
 	}
 
 	cv::destroyAllWindows();
+	FreeCopyFrame( frbg );
 	Close( targets,nbtargets,maxTargets );
 }
 
@@ -144,7 +160,7 @@ void WriteXML()
 {
 	std::cerr << "Opening video test.avi ...\r";
 
-	VideoProviderConsole video( "../videos_tests/multiple_targets.mp4" );
+	VideoProvider* video = CreateVideoContext( "test.avi",500,500 );
 	FileStorage fs( "test.xml",FileStorage::WRITE );
 
 	int freq_record = 20;
@@ -160,7 +176,8 @@ void WriteXML()
 
 	for(int i = 0;;)
 	{
-		const Frame& fr = video.GetFrame();
+		Frame fr;
+		GetFrame( video,fr );
 		if(fr.rawData == nullptr)
 		{
 			break;

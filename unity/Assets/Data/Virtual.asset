@@ -37,11 +37,13 @@ MonoBehaviour:
     meter_pixel_y_ratio: 0.749
   flip_mode: 0
   checktrack_frequency: 20
-  use_detection: 0
+  detection_frequency: 60
+  saving_background: 20
+  use_detection: 1
   rect_detection:
     serializedVersion: 2
-    x: 10
-    y: 10
+    x: 128
+    y: 128
     width: 100
     height: 100
   file_path_video: 

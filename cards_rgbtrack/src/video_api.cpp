@@ -32,3 +32,18 @@ bool GetFrame( VideoProvider* video,Frame& frame )
 	}
 	return false;
 }
+
+void FreeCopyFrame( Frame& frame )
+{
+	if(frame.rawData == nullptr)
+		return;
+	delete frame.rawData;
+}
+
+bool GetCopyFrame( const Frame& src,Frame& dst )
+{
+	if(src.rawData == nullptr)
+		return false;
+	CopyFrame( src,dst );
+	return true;
+}

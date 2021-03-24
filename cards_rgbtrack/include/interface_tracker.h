@@ -237,7 +237,7 @@ public:
 	CardsCSRT()
 	{
 		TrackerCSRT::Params params;
-		params.scale_lr = 0.2;
+		params.scale_lr = 0.2f;
 		tracker = TrackerCSRT::create( params );
 	}
 

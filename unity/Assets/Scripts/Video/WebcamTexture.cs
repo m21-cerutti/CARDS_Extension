@@ -61,5 +61,4 @@ public class WebcamTexture : FrameProvider
 		fr = new Frame();
 		return false;
 	}
-
 }

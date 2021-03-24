@@ -3,7 +3,8 @@
 
 void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int maxTarget )
 {
-	//TODO verify targets
+	if(targets == nullptr)
+		return;
 
 	Mat img = FrameToCVMat( frame );
 
@@ -20,6 +21,8 @@ void ManualRegister( const Frame& frame,Target* targets,int& nbTarget,const int 
 
 void DebugTargets( const Frame& frame,Target* targets,const int maxTarget )
 {
+	if(targets == nullptr)
+		return;
 	Mat img = FrameToCVMat( frame );
 	DebugCVTargets( img,targets,maxTarget );
 }

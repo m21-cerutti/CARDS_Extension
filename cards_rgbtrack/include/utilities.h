@@ -21,7 +21,7 @@ extern struct Target;
 extern struct Frame;
 
 /// @brief Convert texture in rawdata frame to Mat OpenCV
-/// @param frame the frame to convert.
+/// @param frame Yhe frame to convert.
 /// @return The resulting Mat in BGR format.
 Mat FrameToCVMat( const Frame& frame );
 
@@ -30,28 +30,34 @@ Mat FrameToCVMat( const Frame& frame );
 /// @param dst The destination. Other fields than rawData are not touched, verify before the matrix correspond to frame.
 void CVMatToFrameRawData( const Mat& src,Frame& dst );
 
+/// @brief Copy data of a frame.
+/// @param src The source.
+/// @return The copied frame.
+void CopyFrame( const Frame& src,Frame& dst );
+
 /// @brief Convert Rect2d to Rect
-/// @param rect source
-/// @return a RectStruct.
+/// @param rect Source
+/// @return A RectStruct.
 RectStruct Rect2dToRectStruct( const Rect2d& rect );
 
 /// @brief Convert Rect to Rect2d
-/// @param rect source
-/// @return a Rect2d
-Rect2d Rect2dToRectStruct( const RectStruct& rect );
+/// @param rect Source
+/// @return A Rect2d
+Rect2d RectStructToRect2d( const RectStruct& rect );
 
 /// @brief Convert Matrix3x3f to Mat
-/// @param rect source
-/// @return a Mat OpenCV
+/// @param rect Source
+/// @return A Mat OpenCV
 Mat Matrix3x3fToMat( const Matrix3x3f& mat );
 
 /// @brief Convert Mat to Matrix3x3f
-/// @param mat source
-/// @return a Matrix3x3f
+/// @param mat Source
+/// @return A Matrix3x3f
 Matrix3x3f MatToMatrix3x3f( const Mat& mat );
 
 /// @brief Debug an image with waitkey.
-/// @param frame 
+/// @param Frame 
+/// @param win_name The name of window for special debug, default "DebugOpenCV"
 void DebugMat( const Mat& frame,const string win_name = "DebugOpenCV" );
 
 /// @brief Debug in OpenCV window the actual frame and targets. Green if Live, Red otherwise.
