@@ -1,5 +1,5 @@
 ﻿using Plugin;
-
+using System;
 using UnityEngine;
 
 public class SingleThread : Tracking
@@ -37,12 +37,13 @@ public class SingleThread : Tracking
 				zone_detection.y = parameters.rect_detection.y;
 				zone_detection.width = parameters.rect_detection.width;
 				zone_detection.height = parameters.rect_detection.height;
-				if(nb_frame == parameters.saving_background + parameters.starting_frame)
+				if(nb_frame == parameters.saving_background)
                 {
 					frame_buffer_background = CARDSVideoPlugin.GetCopyFrameWrapped(ref frame_buffer);
+					Debug.LogError(frame_buffer_background.raw_data != IntPtr.Zero);
 					
 				}
-				if (((nb_frame % parameters.detection_frequency) == 0) && (nb_frame > (parameters.saving_background + parameters.starting_frame)))
+				if (((nb_frame % parameters.detection_frequency) == 0) && (frame_buffer_background.raw_data != null))
 				{
 					unsafe
 					{
