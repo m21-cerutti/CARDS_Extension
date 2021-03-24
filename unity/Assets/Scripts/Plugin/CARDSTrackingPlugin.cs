@@ -154,7 +154,7 @@ namespace Plugin
 
 		[PluginFunctionAttr("Detect")]
 		public static Detect detect = null;
-		public unsafe delegate void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
+		public unsafe delegate bool Detect(ref Frame frame, ref Frame frameBackground, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget, int mode);
 
 		[PluginFunctionAttr("CheckTrack")]
 		public static CheckTrack check_track = null;
@@ -181,7 +181,7 @@ namespace Plugin
 		internal unsafe static extern void UnRegister(int id, Target* targets, ref int nbTarget);
 
 		[DllImport("cards_rgbtrack")]
-		internal unsafe static extern void Detect(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget);
+		internal unsafe static extern bool Detect(ref Frame frame, ref Frame frameBackground, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget, int mode);
 		
 		[DllImport("cards_rgbtrack")]
 		internal unsafe static extern void CheckTrack(ref Frame frame, Target* targets, int maxTarget);
@@ -234,12 +234,12 @@ namespace Plugin
 #endif
 		}
 
-		public static unsafe void DetectWrapped(ref Frame frame, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget)
+		public static unsafe bool DetectWrapped(ref Frame frame, ref Frame frameBackground, ref RectStruct zoneDetection, Target* targets, ref int nbTarget, int maxTarget, int mode)
 		{
 #if UNITY_EDITOR
-			CARDSTrackingPlugin.detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+			return CARDSTrackingPlugin.detect(ref frame, ref frameBackground, ref zoneDetection, targets, ref nbTarget, maxTarget, mode);
 #else
-            Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget);
+            return Detect(ref frame, ref zoneDetection, targets, ref nbTarget, maxTarget, mode);
 #endif
 		}
 

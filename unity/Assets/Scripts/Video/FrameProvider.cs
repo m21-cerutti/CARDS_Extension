@@ -42,5 +42,4 @@ public abstract class FrameProvider
 	/// <returns>True if suceed, false if fail.</returns>
 	public abstract bool GetFrame(out Frame fr);
 
-
 }

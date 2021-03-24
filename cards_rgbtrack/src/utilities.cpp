@@ -7,7 +7,10 @@ using namespace cv;
 
 Mat FrameToCVMat( const Frame& src )
 {
-	// TODO Need some checks (frame raw_data initialised etc)
+	if(src.rawData == NULL || src.height == 0 || src.width == 0)
+	{
+		return Mat();
+	}
 	Mat mat( src.height,src.width,CV_8UC4,src.rawData );
 	cvtColor( mat,mat,cv::COLOR_RGBA2BGR );
 	flip( mat,mat,0 );
@@ -32,6 +35,15 @@ void CVMatToFrameRawData( const Mat& src,Frame& dst )
 	memcpy( dst.rawData,img.data,img.channels() * img.total() );
 }
 
+void CopyFrame( const Frame& src,Frame& dst )
+{
+	dst.width = src.width;
+	dst.height = src.height;
+	if(dst.rawData == nullptr)
+		dst.rawData = new Color32[(size_t)dst.height * dst.width];
+	memcpy( dst.rawData,src.rawData,sizeof( Color32 ) * dst.width * dst.height );
+}
+
 RectStruct Rect2dToRectStruct( const Rect2d& rect )
 {
 	RectStruct rectstruct = {
@@ -43,7 +55,7 @@ RectStruct Rect2dToRectStruct( const Rect2d& rect )
 	return rectstruct;
 }
 
-Rect2d Rect2dToRectStruct( const RectStruct& rect )
+Rect2d RectStructToRect2d( const RectStruct& rect )
 {
 	Rect2d rect2d( (double)rect.x,
 				   (double)rect.y,
@@ -81,7 +93,6 @@ Matrix3x3f MatToMatrix3x3f( const Mat& mat )
 void DebugMat( const Mat& mat,const string win_name )
 {
 	imshow( win_name,mat );
-	//TODO Delete wait
 	waitKey( 25 );
 }
 
@@ -96,7 +107,7 @@ void DebugCVTargets( const Mat& mat,const Target* targets,const int maxTarget )
 		if(targets[i].state != StateTracker::Undefined)
 		{
 			cv::rectangle( img,
-						   Rect2dToRectStruct( targets[i].rect ),
+						   RectStructToRect2d( targets[i].rect ),
 						   targets[i].state == StateTracker::Live ? Scalar( 0,255,0 ) : Scalar( 0,0,255 ),
 						   2,
 						   cv::LINE_8 );

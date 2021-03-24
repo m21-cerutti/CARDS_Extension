@@ -101,7 +101,6 @@ struct Target
 	short id;
 	RectStruct rect;
 	Vector2f original_size;
-	//TODO angle or rotation matrix
 	StateTracker state;
 };
 
@@ -148,6 +147,7 @@ struct Frame
 	int height;
 	FlipMode flip_mode;
 	Color32* rawData;
+
 };
 
 #pragma endregion
@@ -159,7 +159,7 @@ extern "C"
 
 	/// @brief Init the tracking context and internal memory.
 	/// @param targets The array of targets, need to be initialised in memory.
-	/// @param nbTarget The number of targets tyhat will be set to zero.
+	/// @param nbTarget The number of targets that will be set to zero.
 	/// @param maxTarget The maximum number of targets this context will handle.
 	EXPORT_API void __stdcall Init( Target* targets,int& nbTarget,const int maxTarget );
 
@@ -183,16 +183,18 @@ extern "C"
 	/// @param nbTarget The number of targets
 	EXPORT_API void __stdcall UnRegister( const int id,Target* targets,int& nbTarget );
 
-	/// @brief Permit to detect if a new object is inserted to the zoneDetection, and register it.
+	/// @brief Permit to detect if a new object is inserted to the zoneDetection, and register it according to the mode.
 	/// Watchout to already registered objects, unregister before.
 	/// @param frame The current frame
-	/// @param zoneDetection The zone of area of detection, watchout see convention for more information.
+	/// @param zoneDetection The zone of area of detection, watchout for cordinates, see convention for more information.
 	/// @param targets The array of targets
 	/// @param nbTarget The number of targets
 	/// @param maxTarget The maximum number of targets
-	EXPORT_API void __stdcall Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget );
+	/// @param mode 0 if we want to register new objects, 1 otherwise. Will permit to detect but not register.
+	/// @return True if have detected an object, false otherwise.
+	EXPORT_API bool __stdcall Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget,const int mode );
 
-	/// @brief Check if the Track algorithm have made mistakes, and correct it.
+	/// @brief Check if the Track function have made mistakes, and correct it.
 	/// Also permit to research object lost, occluded or out of camera to actualise their state.
 	/// Use it only periodically and not in each frame.
 	/// @param frame The current frame
@@ -211,6 +213,6 @@ extern "C"
 	/// @brief Estimate the pose of the object. 
 	/// @param target The target to estimate.
 	/// @param params The parameters needed for pose.
-	/// @return An homegenous matrix, with rotation and position, X and Y are screen cordiantes, Z is a ratio od distance relative to table.
+	/// @return An homegenous matrix, with only position writted, X and Y postion are screen cordinates, Z is a distance ratio relative to table.
 	EXPORT_API Matrix4x4f __stdcall EstimatePose( const Target& target,const PoseParameters& params );
 }

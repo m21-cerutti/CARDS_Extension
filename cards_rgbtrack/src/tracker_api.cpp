@@ -4,11 +4,11 @@
 
 /* Intern memory */
 
-/// @brief Main tracking algorithm
+/// @brief Main tracking implementation
 string trackingAlg = "MOSSE";
 MultiTrackerCARDS multitrackers;
 
-/// @brief Use to improve quality
+/// @brief Secondary tracking implementation. Use to improve quality
 string trackingDetector = "COLOR";
 MultiTrackerCARDS detectors;
 
@@ -30,7 +30,8 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 {
 	if(targets == nullptr)
 	{
-		throw std::runtime_error( "Error: targets not initialised !" );
+		cerr << "Error: targets not initialised !" << endl;
+		return;
 	}
 	occupied_place.resize( maxTarget,false );
 	nbTarget = 0;
@@ -38,30 +39,34 @@ void Init( Target* targets,int& nbTarget,const int maxTarget )
 
 void Close( Target* targets,int& nbTarget,const int maxTarget )
 {
-	for(int i = 0; i < maxTarget; i++)
+	if(targets != NULL)
 	{
-		if(targets[i].state != StateTracker::Undefined)
+		for(int i = 0; i < maxTarget; i++)
 		{
-			UnRegister( targets[i].id,targets,nbTarget );
+			if(targets[i].state != StateTracker::Undefined)
+			{
+				UnRegister( targets[i].id,targets,nbTarget );
+			}
 		}
+		occupied_place.clear();
 	}
-	occupied_place.clear();
 }
 
 int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbTarget,const int maxTarget )
 {
 	Mat img = FrameToCVMat( frame );
 
-	if(targets[nbTarget].state != StateTracker::Undefined)
+	if(targets[nbTarget].state != StateTracker::Undefined ||
+		img.empty() || targets == NULL || zone.height == 0 || zone.width == 0)
 	{
-		// TODO Code error
-		throw std::runtime_error( "Error: Already existing ID or init to not Undefined !" );
+		cerr << "Error: Already existing ID or init to not Undefined !" << endl;
+		return -1;
 	}
 
 	int id = FindFirstFreeMemoryTracker();
 	targets[id].id = id;
-	multitrackers.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingAlg ) );
-	detectors.add( id,img,Rect2dToRectStruct( zone ),createTrackerByName( trackingDetector ) );
+	multitrackers.add( id,img,RectStructToRect2d( zone ),createTrackerByName( trackingAlg ) );
+	detectors.add( id,img,RectStructToRect2d( zone ),createTrackerByName( trackingDetector ) );
 	targets[id].state = StateTracker::Live;
 	targets[id].rect = zone;
 
@@ -75,9 +80,10 @@ int Register( const Frame& frame,const RectStruct& zone,Target* targets,int& nbT
 
 void UnRegister( const int id,Target* targets,int& nbTarget )
 {
-	if(targets[id].state == StateTracker::Undefined)
+	if(targets[id].state == StateTracker::Undefined || targets == NULL)
 	{
-		throw std::runtime_error( "Error: Free an non valid tracker !" );
+		cerr << "Error: Free an non valid tracker !" << endl;
+		return;
 	}
 
 	targets[id].id = -1;
@@ -90,15 +96,109 @@ void UnRegister( const int id,Target* targets,int& nbTarget )
 	return;
 }
 
-void Detect( const Frame& frame,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget )
+bool Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& zoneDetection,Target* targets,int& nbTarget,const int maxTarget,const int mode )
 {
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == nullptr)
+	{
+		cerr << "Frame is empty" << endl;
+		return false;
+	}
+	if(frameBackground.height == 0 || frameBackground.width == 0 || frameBackground.rawData == nullptr)
+	{
+		cerr << "Background frame is empty" << endl;
+		return false;
+	}
+
+	if(zoneDetection.y < 0 || zoneDetection.x < 0 ||
+		zoneDetection.width <= 0 || zoneDetection.height <= 0 ||
+		zoneDetection.y + zoneDetection.height > frameBackground.height || zoneDetection.x + zoneDetection.width > frameBackground.width)
+	{
+		cerr << "Detection zone is not in the image. " << endl;
+		return false;
+	}
+	if(targets == nullptr)
+	{
+		cerr << "Unvalid list of targets" << endl;
+		return false;
+	}
+
 	Mat img = FrameToCVMat( frame );
-	//TODO
-	return;
+	Mat background = FrameToCVMat( frameBackground );
+	Rect2d zone = RectStructToRect2d( zoneDetection );
+
+	Mat zoneImg = img( zone );
+	Mat zoneBackground = background( zone );
+	Mat imgGray,backgroundGray;
+	cvtColor( zoneImg,imgGray,CV_RGB2GRAY );
+	cvtColor( zoneBackground,backgroundGray,CV_RGB2GRAY );
+	Mat foregroundMask;
+
+	threshold( abs( backgroundGray - imgGray ),foregroundMask,40,255,THRESH_BINARY );
+	erode( foregroundMask,foregroundMask,Mat(),Point( -1,-1 ),2,1,1 );
+	Mat binaryBackground = foregroundMask;
+	foregroundMask.convertTo( foregroundMask,CV_32F );
+
+	Mat tmpImg;
+	tmpImg = foregroundMask.mul( foregroundMask );
+	Mat imgNorm;
+	resize( tmpImg,imgNorm,cv::Size(),(double)200 / tmpImg.cols,(double)200 / tmpImg.rows );
+
+	Scalar s = sum( imgNorm );
+	double sse = s.val[0] + s.val[1] + s.val[2];
+	double mse = sse / (double)(zoneImg.channels() * zoneImg.total());
+
+	double mseLimit = 250 * (imgNorm.rows * imgNorm.cols) / (tmpImg.rows * tmpImg.cols);
+
+	if(mse > mseLimit)
+	{
+		if(mode == 0)
+		{
+			vector<Vec4i> hierarchy;
+			vector<vector<Point> > contours;
+			findContours( binaryBackground,contours,hierarchy,CV_RETR_EXTERNAL,CHAIN_APPROX_SIMPLE );
+
+			vector<vector<Point> > contours_poly( contours.size() );
+			vector<Rect> boundRect( contours.size() );
+			int MaxAreaRect = 0;
+			int indexRect = 0;
+
+			for(int i = 0; i < contours.size(); i++)
+			{
+				approxPolyDP( Mat( contours[i] ),contours_poly[i],3,true );
+				boundRect[i] = boundingRect( Mat( contours_poly[i] ) );
+				int areaRect = boundRect[i].width * boundRect[i].height;
+				if(areaRect > MaxAreaRect)
+				{
+					MaxAreaRect = areaRect;
+					indexRect = i;
+				}
+			}
+
+			RectStruct area;
+			area.x = zone.x + (float)boundRect[indexRect].x;
+			area.y = zone.y + (float)boundRect[indexRect].y;
+			area.width = (float)boundRect[indexRect].width;
+			area.height = (float)boundRect[indexRect].height;
+
+			Register( frame,area,targets,nbTarget,maxTarget );
+		}
+		return true;
+	}
+	return false;
 }
 
 void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 {
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	{
+		cerr << "Frame is empty" << endl;
+		return;
+	}
+	if(targets == NULL)
+	{
+		cerr << "Unvalid list of targets" << endl;
+		return;
+	}
 	Mat img = FrameToCVMat( frame );
 
 	for(int i = 0; i < maxTarget; i++)
@@ -154,12 +254,22 @@ void CheckTrack( const Frame& frame,Target* targets,const int maxTarget )
 
 void Track( const Frame& frame,Target* targets,const int maxTarget )
 {
+	if(frame.height == 0 || frame.width == 0 || frame.rawData == NULL)
+	{
+		cerr << "Frame is empty" << endl;
+		return;
+	}
+	if(targets == NULL)
+	{
+		cerr << "Unvalid list of targets" << endl;
+		return;
+	}
 	Mat img = FrameToCVMat( frame );
 
 	//Update Live only
 	for(int i = 0; i < maxTarget; i++)
 	{
-		if(targets[i].state == StateTracker::Live)
+		if(targets[i].state == StateTracker::Live || targets[i].state == StateTracker::Occluded || targets[i].state == StateTracker::Lost)
 		{
 			if(!multitrackers.update( targets[i].id,img ))
 			{
@@ -193,8 +303,6 @@ Matrix4x4f EstimatePose( const Target& target,const PoseParameters& params )
 	pose.c_03 = Xscreen;
 	pose.c_13 = Yscreen;
 	pose.c_23 = Z;
-
-	//TODO ROTATION
 
 	//Homogenous
 	pose.c_30 = 1;

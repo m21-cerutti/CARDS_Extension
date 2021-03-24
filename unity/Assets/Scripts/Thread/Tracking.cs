@@ -15,6 +15,8 @@ public abstract class Tracking : MonoBehaviour
 	protected VideoParameters parameters; //Scenario that you can interchange (Virtual, Webcam)
 
 	protected Frame frame_buffer;
+	protected Frame frame_buffer_background;
+	protected RectStruct zone_detection;
 	protected FrameProvider video;
 	protected int nb_targets = 0, max_targets = 5;
 	protected Target[] targets;
@@ -99,6 +101,19 @@ public abstract class Tracking : MonoBehaviour
 		return rect;
 	}
 
+	protected RectStruct ConvertUnityScreenToRect(Rect rect)
+	{
+		RectStruct rect_s;
+		Vector2 pt1 = parameters.rect_detection.min;
+		Vector2 pt2 = parameters.rect_detection.max;
+
+		rect_s.x = pt1.x;
+		rect_s.y = parameters.camera_height - pt2.y;
+		rect_s.width = parameters.rect_detection.width;
+		rect_s.height = parameters.rect_detection.height;
+		return rect_s;
+	}
+
 	protected void Awake()
 	{
 		targets = new Target[5];
@@ -167,6 +182,13 @@ public abstract class Tracking : MonoBehaviour
 				CARDSTrackingPlugin.InitWrapped(outTargets, ref nb_targets, max_targets);
 			}
 		}
+
+		//Init detection
+		if(parameters.use_detection)
+		{
+			zone_detection = ConvertUnityScreenToRect(parameters.rect_detection);
+		}
+
 		nb_frame = -1;
 	}
 
@@ -194,12 +216,16 @@ public abstract class Tracking : MonoBehaviour
 		video.Close();
 		if(nb_frame > parameters.starting_frame)
 		{
+			if(parameters.use_detection == true)
+			{
+				CARDSVideoPlugin.FreeCopyFrameWrapped(ref frame_buffer_background);
+			}
 			unsafe
 			{
-				fixed(Target* outTargets = targets)
+				fixed(Target* out_targets = targets)
 				{
 					Debug.Log("Free targets");
-					CARDSTrackingPlugin.CloseWrapped(outTargets, ref nb_targets, max_targets);
+					CARDSTrackingPlugin.CloseWrapped(out_targets, ref nb_targets, max_targets);
 				}
 			}
 		}

@@ -17,8 +17,14 @@ public class VideoParameters : ScriptableObject
 
 	public int starting_frame = 10;
 
+	/// <summary>
+	/// Use it for having OpenCV windows.
+	/// </summary>
 	public bool debug_cv = true;
 
+	/// <summary>
+	/// Use it for having datas in log folder. See more information on LogsDatas script and log folder in Unity documentation.
+	/// </summary>
 	public bool log_datas = false;
 
 	/// <summary>
@@ -43,11 +49,16 @@ public class VideoParameters : ScriptableObject
 
 	public FlipMode flip_mode = 0;
 
+	/// <summary>
+	/// The frequency of checktrack dll function.
+	/// </summary>
 	public int checktrack_frequency = 20;
+	public int detection_frequency = 30;
+	public int saving_background = 20;
 
 	public bool use_detection = false;
 	[ShowWhen("use_detection", true)]
-	public Rect rect_detection = new Rect(0, 0, 1, 1);
+	public Rect rect_detection;
 
 	/// <summary>
 	/// Used only in video media.
