@@ -101,6 +101,19 @@ public abstract class Tracking : MonoBehaviour
 		return rect;
 	}
 
+	protected RectStruct ConvertUnityScreenToRect(Rect rect)
+	{
+		RectStruct rect_s;
+		Vector2 pt1 = parameters.rect_detection.min;
+		Vector2 pt2 = parameters.rect_detection.max;
+
+		rect_s.x = pt1.x;
+		rect_s.y = parameters.camera_height - pt2.y;
+		rect_s.width = parameters.rect_detection.width;
+		rect_s.height = parameters.rect_detection.height;
+		return rect_s;
+	}
+
 	protected void Awake()
 	{
 		targets = new Target[5];
@@ -173,11 +186,7 @@ public abstract class Tracking : MonoBehaviour
 		//Init detection
 		if(parameters.use_detection)
 		{
-			zone_detection.x = parameters.rect_detection.x;
-			zone_detection.y = parameters.camera_height - parameters.rect_detection.y;
-			zone_detection.width = parameters.rect_detection.width;
-			zone_detection.height = parameters.rect_detection.height;
-			//zone_detection = ConvertRectToUnityScreen(zone_detection);
+			zone_detection = ConvertUnityScreenToRect(parameters.rect_detection);
 		}
 
 		nb_frame = -1;

@@ -181,10 +181,8 @@ public abstract class DebugTargets : MonoBehaviour
 		//Detection zone debug
 		if(parameters.use_detection)
 		{
-			Vector3 pt1 = GetScreenToWorldSpace(new Vector2(parameters.rect_detection.x, parameters.rect_detection.y));
-			Vector3 pt2 = GetScreenToWorldSpace(new Vector2(
-				parameters.rect_detection.x + parameters.rect_detection.width,
-				parameters.rect_detection.y + parameters.rect_detection.height));
+			Vector3 pt1 = GetScreenToWorldSpace(parameters.rect_detection.min);
+			Vector3 pt2 = GetScreenToWorldSpace(parameters.rect_detection.max);
 
 			Gizmos.color = Color.black;
 			Vector3 pt3 = pt1;

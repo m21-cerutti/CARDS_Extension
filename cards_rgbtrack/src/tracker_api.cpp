@@ -109,7 +109,7 @@ void Detect( const Frame& frame,const Frame& frameBackground,const RectStruct& z
 		return;
 	}
 
-	if(zoneDetection.y <= 0 || zoneDetection.x <= 0 ||
+	if(zoneDetection.y < 0 || zoneDetection.x < 0 ||
 		zoneDetection.width <= 0 || zoneDetection.height <= 0 ||
 		zoneDetection.y + zoneDetection.height > frameBackground.height || zoneDetection.x + zoneDetection.width > frameBackground.width)
 	{
